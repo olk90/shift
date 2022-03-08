@@ -1,0 +1,7 @@
+altgraph==0.17.2
+greenlet==1.1.2
+pyinstaller==4.10
+pyinstaller-hooks-contrib==2022.2
+PySide6==6.2.3
+shiboken6==6.2.3
+SQLAlchemy==1.4.32
