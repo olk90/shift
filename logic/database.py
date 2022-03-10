@@ -3,8 +3,9 @@ import sys
 from PySide6.QtGui import Qt
 from PySide6.QtSql import QSqlQueryModel, QSqlDatabase
 from sqlalchemy import create_engine as ce
+from sqlalchemy.orm import sessionmaker as sm
 
-from logic.model import create_tables
+from logic.model import create_tables, Employee
 
 from logic.queries import employeeQuery
 
@@ -34,3 +35,10 @@ def configure_employee_model() -> QSqlQueryModel:
     model.setHeaderData(1, Qt.Horizontal, "Last Name")
     model.setHeaderData(2, Qt.Horizontal, "E-Mail")
     return model
+
+
+def persist_employee(employee: Employee):
+    session = sm(bind=db)
+    s = session()
+    s.add(employee)
+    s.commit()
