@@ -89,7 +89,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="cancelUserEditButton">
+        <widget class="QPushButton" name="revertButton">
          <property name="minimumSize">
           <size>
            <width>94</width>
@@ -102,7 +102,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="confirmUserEditButton">
+        <widget class="QPushButton" name="commitButton">
          <property name="minimumSize">
           <size>
            <width>94</width>

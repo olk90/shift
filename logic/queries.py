@@ -2,6 +2,7 @@ employeeQuery = """
 select
     firstname,
     lastname,
-    email
+    email,
+    id
 from Employee
 """

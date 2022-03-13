@@ -34,6 +34,7 @@ def configure_employee_model() -> QSqlQueryModel:
     model.setHeaderData(0, Qt.Horizontal, "First Name")
     model.setHeaderData(1, Qt.Horizontal, "Last Name")
     model.setHeaderData(2, Qt.Horizontal, "E-Mail")
+    model.setHeaderData(3, Qt.Horizontal, "ID")
     return model
 
 
@@ -41,4 +42,19 @@ def persist_employee(employee: Employee):
     session = sm(bind=db)
     s = session()
     s.add(employee)
+    s.commit()
+
+
+def find_employee_by_id(e_id) -> Employee:
+    session = sm(bind=db)
+    s = session()
+    employee: Employee = s.query(Employee).filter_by(id=e_id).first()
+    s.close()
+    return employee
+
+
+def delete_employee(employee: Employee):
+    session = sm(bind=db)
+    s = session()
+    s.delete(employee)
     s.commit()

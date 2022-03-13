@@ -2,7 +2,7 @@ from PySide6.QtCore import QModelIndex, QItemSelectionModel
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAbstractItemView, QDialog
 
-from logic.database import configure_employee_model, persist_employee
+from logic.database import configure_employee_model, persist_employee, find_employee_by_id, delete_employee
 from logic.model import Employee
 from views.editorDialogs import EmployeeEditorWidget
 from views.helpers import load_ui_file
@@ -47,6 +47,9 @@ class EmployeeWidget(QWidget):
         tableview.setSortingEnabled(True)
         tableview.selectionModel().selectionChanged.connect(lambda x: self.reload_editor())
 
+        # ID column is just used for loading the object from the DB tu the editor
+        tableview.setColumnHidden(3, True)
+
         header = tableview.horizontalHeader()
         for i in range(0, 3):
             header.setSectionResizeMode(i, QHeaderView.Stretch)
@@ -55,23 +58,38 @@ class EmployeeWidget(QWidget):
         model = configure_employee_model()
         tableview: QTableView = self.get_table()
         tableview.setModel(model)
+        tableview.selectionModel().selectionChanged.connect(lambda x: self.reload_editor())
 
     def reload_editor(self):
+        employee = self.get_selected_employee()
+
+        e_id = employee.id
+        first_name = employee.firstname
+        last_name = employee.lastname
+        email = employee.email
+        self.editor.fill_text_fields(e_id, first_name, last_name, email)
+
+    def get_selected_employee(self):
         tableview: QTableView = self.get_table()
         selection_model: QItemSelectionModel = tableview.selectionModel()
         indexes: QModelIndex = selection_model.selectedRows()
         model = tableview.model()
-        for index in indexes:
-            first_name = model.data(model.index(index.row(), 0))
-            last_name = model.data(model.index(index.row(), 1))
-            email = model.data(model.index(index.row(), 2))
-            self.editor.fill_text_fields(first_name, last_name, email)
+        index = indexes[0]
+        employee_id = model.data(model.index(index.row(), 3))
+        employee = find_employee_by_id(employee_id)
+        return employee
 
     def configure_buttons(self):
         self.table_widget.addButton.clicked.connect(self.add_employee)  # noqa -> button loaded from ui file
+        self.table_widget.deleteButton.clicked.connect(self.delete_employee)  # noqa -> button loaded from ui file
 
     def add_employee(self):
         self.add_employee_dialog.exec_()
+
+    def delete_employee(self):
+        employee = self.get_selected_employee()
+        delete_employee(employee)
+        self.reload_table_contents()
 
 
 class AddEmployeeDialog(QDialog):
@@ -92,11 +110,12 @@ class AddEmployeeDialog(QDialog):
         self.layout = QHBoxLayout(self)
         self.layout.addWidget(self.widget)
 
+        self.clear_fields()
         self.configure_buttons()
 
     def configure_buttons(self):
-        self.widget.confirmUserEditButton.clicked.connect(self.commit)  # noqa
-        self.widget.cancelUserEditButton.clicked.connect(self.close)  # noqa
+        self.widget.commitButton.clicked.connect(self.commit)  # noqa
+        self.widget.revertButton.clicked.connect(self.close)  # noqa
 
     def commit(self):
         first_name: str = self.widget.firstNameEdit.text()  # noqa
@@ -106,3 +125,8 @@ class AddEmployeeDialog(QDialog):
         persist_employee(employee)
         self.parent.reload_table_contents()
         self.close()
+
+    def clear_fields(self):
+        self.widget.firstNameEdit.setText("")  # noqa
+        self.widget.lastNameEdit.setText("")  # noqa
+        self.widget.emailEdit.setText("")  # noqa
