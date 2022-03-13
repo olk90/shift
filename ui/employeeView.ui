@@ -23,7 +23,7 @@
    <item>
     <layout class="QVBoxLayout" name="layout" stretch="3,0,0">
      <item>
-      <widget class="QLineEdit" name="search">
+      <widget class="QLineEdit" name="searchLine">
        <property name="placeholderText">
         <string>Search ...</string>
        </property>

@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker as sm
 
 from logic.model import create_tables, Employee
 
-from logic.queries import employeeQuery
+from logic.queries import build_employee_query
 
 db = ce("sqlite:///shiftPlanner.db")
 
@@ -28,7 +28,8 @@ def init_database():
         sys.exit(1)
 
 
-def configure_employee_model() -> QSqlQueryModel:
+def configure_employee_model(search: str = "") -> QSqlQueryModel:
+    employeeQuery = build_employee_query(search)
     model = QSqlQueryModel()
     model.setQuery(employeeQuery)
     model.setHeaderData(0, Qt.Horizontal, "First Name")

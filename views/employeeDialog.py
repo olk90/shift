@@ -1,6 +1,6 @@
 from PySide6.QtCore import QModelIndex, QItemSelectionModel
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAbstractItemView, QDialog
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAbstractItemView, QDialog, QLineEdit
 
 from logic.database import configure_employee_model, persist_employee, find_employee_by_id, delete_employee
 from logic.model import Employee
@@ -21,6 +21,7 @@ class EmployeeWidget(QWidget):
         table_file = load_ui_file(table_ui_name)
         self.table_widget = loader.load(table_file)
         table_file.close()
+        self.searchLine: QLineEdit = self.table_widget.searchLine
 
         editor_ui_name = "ui/employeeEditor.ui"
         editor_file = load_ui_file(editor_ui_name)
@@ -33,6 +34,7 @@ class EmployeeWidget(QWidget):
 
         self.setup_table()
         self.configure_buttons()
+        self.configure_search()
 
     def get_table(self):
         return self.table_widget.table  # noqa -> loaded from ui file
@@ -54,8 +56,8 @@ class EmployeeWidget(QWidget):
         for i in range(0, 3):
             header.setSectionResizeMode(i, QHeaderView.Stretch)
 
-    def reload_table_contents(self):
-        model = configure_employee_model()
+    def reload_table_contents(self, search: str = ""):
+        model = configure_employee_model(search)
         tableview: QTableView = self.get_table()
         tableview.setModel(model)
         tableview.selectionModel().selectionChanged.connect(lambda x: self.reload_editor())
@@ -90,6 +92,12 @@ class EmployeeWidget(QWidget):
         employee = self.get_selected_employee()
         delete_employee(employee)
         self.reload_table_contents()
+
+    def configure_search(self):
+        self.searchLine.textChanged.connect(lambda x: self.text_changed(self.searchLine.text()))
+
+    def text_changed(self, text):
+        self.reload_table_contents(text)
 
 
 class AddEmployeeDialog(QDialog):
