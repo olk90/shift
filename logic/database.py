@@ -32,10 +32,11 @@ def configure_employee_model(search: str = "") -> QSqlQueryModel:
     employeeQuery = build_employee_query(search)
     model = QSqlQueryModel()
     model.setQuery(employeeQuery)
-    model.setHeaderData(0, Qt.Horizontal, "First Name")
-    model.setHeaderData(1, Qt.Horizontal, "Last Name")
-    model.setHeaderData(2, Qt.Horizontal, "E-Mail")
-    model.setHeaderData(3, Qt.Horizontal, "ID")
+    model.setHeaderData(0, Qt.Horizontal, "ID")
+    model.setHeaderData(1, Qt.Horizontal, "First Name")
+    model.setHeaderData(2, Qt.Horizontal, "Last Name")
+    model.setHeaderData(3, Qt.Horizontal, "Reference Value")
+    model.setHeaderData(4, Qt.Horizontal, "Type")
     return model
 
 

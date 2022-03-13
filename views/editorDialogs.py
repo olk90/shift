@@ -1,6 +1,7 @@
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout
 
+from logic.model import EmployeeType, Employee
 from views.helpers import load_ui_file
 
 
@@ -23,16 +24,20 @@ class EmployeeEditorWidget(QWidget):
 
         self.firstNameEdit = self.widget.firstNameEdit  # noqa
         self.lastNameEdit = self.widget.lastNameEdit  # noqa
-        self.emailEdit = self.widget.emailEdit  # noqa
+        self.typeCombobox = self.widget.typeCombobox  # noqa
+        self.referenceSpinner = self.widget.referenceSpinner  # noqa
+
+        self.typeCombobox.addItems(EmployeeType.types)
 
         self.commit_button: QPushButton = self.widget.commitButton  # noqa
         self.revert_button: QPushButton = self.widget.revertButton  # noqa
 
-    def fill_text_fields(self, e_id: int, first_name: str, last_name: str, email: str):
-        self.employee_id = e_id
-        self.firstNameEdit.setText(first_name)
-        self.lastNameEdit.setText(last_name)
-        self.emailEdit.setText(email)
+    def fill_text_fields(self, employee: Employee):
+        self.employee_id = employee.id
+        self.firstNameEdit.setText(employee.firstname)
+        self.lastNameEdit.setText(employee.lastname)
+        self.referenceSpinner.setValue(employee.referenceValue)  # noqa
+        self.typeCombobox.setCurrentIndex(EmployeeType.types.index(employee.e_type))  # noqa
 
     def configure_buttons(self):
         pass

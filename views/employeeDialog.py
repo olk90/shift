@@ -3,7 +3,7 @@ from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAbstractItemView, QDialog, QLineEdit
 
 from logic.database import configure_employee_model, persist_employee, find_employee_by_id, delete_employee
-from logic.model import Employee
+from logic.model import Employee, EmployeeType
 from views.editorDialogs import EmployeeEditorWidget
 from views.helpers import load_ui_file
 
@@ -21,7 +21,7 @@ class EmployeeWidget(QWidget):
         table_file = load_ui_file(table_ui_name)
         self.table_widget = loader.load(table_file)
         table_file.close()
-        self.searchLine: QLineEdit = self.table_widget.searchLine
+        self.searchLine: QLineEdit = self.table_widget.searchLine  # noqa
 
         editor_ui_name = "ui/employeeEditor.ui"
         editor_file = load_ui_file(editor_ui_name)
@@ -50,10 +50,10 @@ class EmployeeWidget(QWidget):
         tableview.selectionModel().selectionChanged.connect(lambda x: self.reload_editor())
 
         # ID column is just used for loading the object from the DB tu the editor
-        tableview.setColumnHidden(3, True)
+        tableview.setColumnHidden(0, True)
 
         header = tableview.horizontalHeader()
-        for i in range(0, 3):
+        for i in range(1, 5):
             header.setSectionResizeMode(i, QHeaderView.Stretch)
 
     def reload_table_contents(self, search: str = ""):
@@ -64,12 +64,7 @@ class EmployeeWidget(QWidget):
 
     def reload_editor(self):
         employee = self.get_selected_employee()
-
-        e_id = employee.id
-        first_name = employee.firstname
-        last_name = employee.lastname
-        email = employee.email
-        self.editor.fill_text_fields(e_id, first_name, last_name, email)
+        self.editor.fill_text_fields(employee)
 
     def get_selected_employee(self):
         tableview: QTableView = self.get_table()
@@ -77,7 +72,7 @@ class EmployeeWidget(QWidget):
         indexes: QModelIndex = selection_model.selectedRows()
         model = tableview.model()
         index = indexes[0]
-        employee_id = model.data(model.index(index.row(), 3))
+        employee_id = model.data(model.index(index.row(), 0))
         employee = find_employee_by_id(employee_id)
         return employee
 
@@ -86,6 +81,7 @@ class EmployeeWidget(QWidget):
         self.table_widget.deleteButton.clicked.connect(self.delete_employee)  # noqa -> button loaded from ui file
 
     def add_employee(self):
+        self.add_employee_dialog.clear_fields()
         self.add_employee_dialog.exec_()
 
     def delete_employee(self):
@@ -116,11 +112,10 @@ class AddEmployeeDialog(QDialog):
         ui_file.close()
 
         self.widget.editorTitle.setText("Add Employee")  # noqa
+        self.widget.typeCombobox.addItems(EmployeeType.types)  # noqa
 
         self.layout = QHBoxLayout(self)
         self.layout.addWidget(self.widget)
-
-        self.clear_fields()
         self.configure_buttons()
 
     def configure_buttons(self):
@@ -130,8 +125,9 @@ class AddEmployeeDialog(QDialog):
     def commit(self):
         first_name: str = self.widget.firstNameEdit.text()  # noqa
         last_name: str = self.widget.lastNameEdit.text()  # noqa
-        email: str = self.widget.emailEdit.text()  # noqa
-        employee = Employee(firstname=first_name, lastname=last_name, email=email)
+        reference: str = self.widget.referenceSpinner.text()  # noqa
+        e_type: str = self.widget.typeCombobox.currentText()  # noqa
+        employee = Employee(firstname=first_name, lastname=last_name, referenceValue=reference, e_type=e_type)
         persist_employee(employee)
         self.parent.reload_table_contents()
         self.close()
@@ -139,4 +135,5 @@ class AddEmployeeDialog(QDialog):
     def clear_fields(self):
         self.widget.firstNameEdit.setText("")  # noqa
         self.widget.lastNameEdit.setText("")  # noqa
-        self.widget.emailEdit.setText("")  # noqa
+        self.widget.referenceSpinner.setValue(0)  # noqa
+        self.widget.typeCombobox.setCurrentIndex(0)  # noqa
