@@ -11,7 +11,7 @@ class MainWindow(QMainWindow):
         super().__init__(parent=form)
         self.adjustSize()
 
-        form.setWindowTitle("Shift Planner")
+        form.setWindowTitle("Shift")
 
         self.layout = QVBoxLayout(form)
 

@@ -129,7 +129,7 @@ dmypy.json
 .pyre/
 
 # database
-/shiftPlanner.db
+/shift.db
 
 # PyCharm
 .idea/

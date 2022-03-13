@@ -9,7 +9,7 @@ from logic.model import create_tables, Employee
 
 from logic.queries import build_employee_query
 
-db = ce("sqlite:///shiftPlanner.db")
+db = ce("sqlite:///shift.db")
 
 
 def init_database():
@@ -21,7 +21,7 @@ def init_database():
 
     print("Connect database to PySide")
     database = QSqlDatabase.addDatabase("QSQLITE")
-    database.setDatabaseName("shiftPlanner.db")
+    database.setDatabaseName("shift.db")
 
     if not database.open():
         print("Unable to open database")
