@@ -107,6 +107,8 @@ class AddEmployeeDialog(QDialog):
         self.widget = loader.load(ui_file)
         ui_file.close()
 
+        self.widget.editorTitle.setText("Add Employee")  # noqa
+
         self.layout = QHBoxLayout(self)
         self.layout.addWidget(self.widget)
 
