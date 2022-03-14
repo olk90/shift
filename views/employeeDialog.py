@@ -2,7 +2,8 @@ from PySide6.QtCore import QModelIndex, QItemSelectionModel
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAbstractItemView, QDialog, QLineEdit
 
-from logic.database import configure_employee_model, persist_employee, find_employee_by_id, delete_employee
+from logic.database import configure_employee_model, persist_employee, find_employee_by_id, delete_employee, \
+    update_employee
 from logic.model import Employee, EmployeeType
 from views.editorDialogs import EmployeeEditorWidget
 from views.helpers import load_ui_file
@@ -79,6 +80,8 @@ class EmployeeWidget(QWidget):
     def configure_buttons(self):
         self.table_widget.addButton.clicked.connect(self.add_employee)  # noqa -> button loaded from ui file
         self.table_widget.deleteButton.clicked.connect(self.delete_employee)  # noqa -> button loaded from ui file
+        self.editor.commitButton.clicked.connect(self.commit_changes)
+        self.editor.revertButton.clicked.connect(self.revert_changes)
 
     def add_employee(self):
         self.add_employee_dialog.clear_fields()
@@ -94,6 +97,15 @@ class EmployeeWidget(QWidget):
 
     def text_changed(self, text):
         self.reload_table_contents(text)
+
+    def commit_changes(self):
+        value_dict: dict = self.editor.get_values()
+        update_employee(value_dict)
+        self.reload_table_contents(self.searchLine.text())
+
+    def revert_changes(self):
+        employee: Employee = find_employee_by_id(self.editor.employee_id)
+        self.editor.fill_text_fields(employee)
 
 
 class AddEmployeeDialog(QDialog):

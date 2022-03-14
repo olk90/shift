@@ -29,8 +29,8 @@ class EmployeeEditorWidget(QWidget):
 
         self.typeCombobox.addItems(EmployeeType.types)
 
-        self.commit_button: QPushButton = self.widget.commitButton  # noqa
-        self.revert_button: QPushButton = self.widget.revertButton  # noqa
+        self.commitButton: QPushButton = self.widget.commitButton  # noqa
+        self.revertButton: QPushButton = self.widget.revertButton  # noqa
 
     def fill_text_fields(self, employee: Employee):
         self.employee_id = employee.id
@@ -39,5 +39,11 @@ class EmployeeEditorWidget(QWidget):
         self.referenceSpinner.setValue(employee.referenceValue)  # noqa
         self.typeCombobox.setCurrentIndex(EmployeeType.types.index(employee.e_type))  # noqa
 
-    def configure_buttons(self):
-        pass
+    def get_values(self) -> dict:
+        return {
+            "e_id": self.employee_id,
+            "firstname": self.firstNameEdit.text(),
+            "lastname": self.lastNameEdit.text(),
+            "reference_value": self.referenceSpinner.value(),
+            "e_type": self.typeCombobox.currentText()
+        }
