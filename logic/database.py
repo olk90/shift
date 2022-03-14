@@ -5,7 +5,7 @@ from PySide6.QtSql import QSqlQueryModel, QSqlDatabase
 from sqlalchemy import create_engine as ce
 from sqlalchemy.orm import sessionmaker as sm
 
-from logic.model import create_tables, Employee, EmployeeType
+from logic.model import create_tables, Employee
 from logic.queries import build_employee_query
 
 db = ce("sqlite:///shift.db")
