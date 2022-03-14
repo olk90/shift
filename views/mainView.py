@@ -1,6 +1,7 @@
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QMainWindow, QVBoxLayout
 
+from views.editorDialogs import OptionsEditorDialog
 from views.helpers import load_ui_file
 from views.employeeDialog import EmployeeWidget
 
@@ -14,6 +15,7 @@ class MainWindow(QMainWindow):
         form.setWindowTitle("Shift")
 
         self.layout = QVBoxLayout(form)
+        self.options_dialog = OptionsEditorDialog(self)
 
         ui_file_name = "ui/main.ui"
         ui_file = load_ui_file(ui_file_name)
@@ -21,6 +23,8 @@ class MainWindow(QMainWindow):
         loader = QUiLoader()
         self.widget = loader.load(ui_file, form)
         ui_file.close()
+
+        self.optionsButton = self.widget.optionsButton  # noqa
 
         self.configure_buttons()
         self.configure_tabview()
@@ -36,4 +40,7 @@ class MainWindow(QMainWindow):
         tabview.addTab(employee_widget, "Employees")
 
     def configure_buttons(self):
-        pass
+        self.optionsButton.clicked.connect(self.open_options)
+
+    def open_options(self):
+        self.options_dialog.exec_()
