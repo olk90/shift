@@ -80,8 +80,8 @@ class EmployeeWidget(QWidget):
     def configure_buttons(self):
         self.table_widget.addButton.clicked.connect(self.add_employee)  # noqa -> button loaded from ui file
         self.table_widget.deleteButton.clicked.connect(self.delete_employee)  # noqa -> button loaded from ui file
-        self.editor.commitButton.clicked.connect(self.commit_changes)
-        self.editor.revertButton.clicked.connect(self.revert_changes)
+        self.editor.buttonBox.accepted.connect(self.commit_changes)
+        self.editor.buttonBox.rejected.connect(self.revert_changes)
 
     def add_employee(self):
         self.add_employee_dialog.clear_fields()

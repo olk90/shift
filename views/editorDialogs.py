@@ -80,8 +80,8 @@ class AddEmployeeDialog(QDialog):
         self.configure_buttons()
 
     def configure_buttons(self):
-        self.widget.commitButton.clicked.connect(self.commit)  # noqa
-        self.widget.revertButton.clicked.connect(self.close)  # noqa
+        self.widget.buttonBox.accepted.connect(self.commit)  # noqa
+        self.widget.buttonBox.rejected.connect(self.close)  # noqa
 
     def commit(self):
         first_name: str = self.widget.firstNameEdit.text()  # noqa
@@ -124,8 +124,7 @@ class EmployeeEditorWidget(QWidget):
 
         self.typeCombobox.addItems(EmployeeType.types)
 
-        self.commitButton: QPushButton = self.widget.commitButton  # noqa
-        self.revertButton: QPushButton = self.widget.revertButton  # noqa
+        self.buttonBox: QDialogButtonBox = self.widget.buttonBox  # noqa
 
     def fill_text_fields(self, employee: Employee):
         self.employee_id = employee.id
