@@ -1,6 +1,8 @@
+import qdarktheme
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialog, QMainWindow
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialog, QMainWindow, QApplication
 
+from logic.config import properties
 from logic.database import persist_employee
 from logic.model import EmployeeType, Employee
 from views.helpers import load_ui_file
@@ -21,8 +23,38 @@ class OptionsEditorDialog(QDialog):
         self.widget = loader.load(ui_file)
         ui_file.close()
 
+        self.themeBox: QComboBox = self.widget.themeBox  # noqa
+        self.buttonBox: QDialogButtonBox = self.widget.buttonBox  # noqa
+
+        self.configure_widgets()
+
         self.layout = QHBoxLayout(self)
         self.layout.addWidget(self.widget)
+
+    def configure_widgets(self):
+        self.themeBox.addItems(properties.themes)
+        self.themeBox.setCurrentIndex(properties.theme_index)
+
+        self.buttonBox.accepted.connect(self.apply_changes)
+        self.buttonBox.rejected.connect(self.cancel)
+
+    def apply_changes(self):
+        selected_index = self.themeBox.currentIndex()
+        properties.theme_index = selected_index
+
+        app = QApplication.instance()
+        if selected_index == 0:
+            app.setStyleSheet(qdarktheme.load_stylesheet())
+        elif selected_index == 1:
+            app.setStyleSheet(qdarktheme.load_stylesheet("light"))
+        else:
+            app.setStyleSheet(None)
+
+        properties.write_config_file()
+        self.close()
+
+    def cancel(self):
+        self.close()
 
 
 class AddEmployeeDialog(QDialog):
