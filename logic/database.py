@@ -27,16 +27,16 @@ def init_database():
         sys.exit(1)
 
 
-def configure_employee_model(search: str = "") -> QSqlQueryModel:
-    employeeQuery = build_employee_query(search)
-    model = QSqlQueryModel()
-    model.setQuery(employeeQuery)
-    model.setHeaderData(0, Qt.Horizontal, "ID")
-    model.setHeaderData(1, Qt.Horizontal, "First Name")
-    model.setHeaderData(2, Qt.Horizontal, "Last Name")
-    model.setHeaderData(3, Qt.Horizontal, "Reference Value")
-    model.setHeaderData(4, Qt.Horizontal, "Type")
-    return model
+class EmployeeModel(QSqlQueryModel):
+    def __init__(self, search: str = ""):
+        super().__init__()
+        employeeQuery = build_employee_query(search)
+        self.setQuery(employeeQuery)
+        self.setHeaderData(0, Qt.Horizontal, "ID")
+        self.setHeaderData(1, Qt.Horizontal, self.tr("First Name"))
+        self.setHeaderData(2, Qt.Horizontal, self.tr("Last Name"))
+        self.setHeaderData(3, Qt.Horizontal, self.tr("Reference Value"))
+        self.setHeaderData(4, Qt.Horizontal, self.tr("Type"))
 
 
 def persist_employee(employee: Employee):

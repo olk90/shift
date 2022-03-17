@@ -2,6 +2,7 @@ import sys
 
 import qdarktheme
 from PySide6 import QtCore
+from PySide6.QtCore import QTranslator, QLocale
 from PySide6.QtWidgets import QApplication, QWidget
 
 from logic.config import properties
@@ -15,6 +16,12 @@ if __name__ == "__main__":
     properties.load_config_file()
 
     app = QApplication()
+
+    translator = QTranslator(app)
+    path = './translations'
+    if properties.locale_index == 1:
+        translator.load(QLocale(QLocale.German, QLocale.Germany), 'base', '_', path)
+        app.installTranslator(translator)
 
     if properties.theme_index == 0:
         app.setStyleSheet(qdarktheme.load_stylesheet())

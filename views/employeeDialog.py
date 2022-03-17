@@ -2,8 +2,8 @@ from PySide6.QtCore import QModelIndex, QItemSelectionModel
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAbstractItemView, QLineEdit
 
-from logic.database import configure_employee_model, find_employee_by_id, delete_employee, \
-    update_employee
+from logic.database import find_employee_by_id, delete_employee, \
+    update_employee, EmployeeModel
 from logic.model import Employee
 from views.editorDialogs import EmployeeEditorWidget, AddEmployeeDialog
 from views.helpers import load_ui_file
@@ -41,7 +41,7 @@ class EmployeeWidget(QWidget):
         return self.table_widget.table  # noqa -> loaded from ui file
 
     def setup_table(self):
-        model = configure_employee_model()
+        model = EmployeeModel()
 
         tableview: QTableView = self.get_table()
         tableview.setModel(model)
@@ -58,7 +58,7 @@ class EmployeeWidget(QWidget):
             header.setSectionResizeMode(i, QHeaderView.Stretch)
 
     def reload_table_contents(self, search: str = ""):
-        model = configure_employee_model(search)
+        model = EmployeeModel(search)
         tableview: QTableView = self.get_table()
         tableview.setModel(model)
         tableview.selectionModel().selectionChanged.connect(lambda x: self.reload_editor())

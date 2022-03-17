@@ -1,4 +1,5 @@
 import qdarktheme
+from PySide6.QtCore import QLibraryInfo, QTranslator, QLocale
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialog, QMainWindow, QApplication
 
@@ -23,6 +24,7 @@ class OptionsEditorDialog(QDialog):
         self.widget = loader.load(ui_file)
         ui_file.close()
 
+        self.localeBox: QComboBox = self.widget.localeBox  # noqa
         self.themeBox: QComboBox = self.widget.themeBox  # noqa
         self.buttonBox: QDialogButtonBox = self.widget.buttonBox  # noqa
 
@@ -32,16 +34,40 @@ class OptionsEditorDialog(QDialog):
         self.layout.addWidget(self.widget)
 
     def configure_widgets(self):
-        self.themeBox.addItems(properties.themes)
+        self.localeBox.addItems(properties.locales)
+        self.localeBox.setCurrentIndex(properties.locale_index)
+
+        self.themeBox.addItems(properties.get_themes())
         self.themeBox.setCurrentIndex(properties.theme_index)
 
         self.buttonBox.accepted.connect(self.apply_changes)
         self.buttonBox.rejected.connect(self.cancel)
 
     def apply_changes(self):
+        self.update_locale()
+        self.update_theme()
+
+        properties.write_config_file()
+        self.close()
+
+    def update_locale(self):
+        selected_index = self.localeBox.currentIndex()
+        properties.locale_index = selected_index
+        app = QApplication.instance()
+
+        path = QLibraryInfo.location(QLibraryInfo.TranslationsPath)
+        translator = QTranslator(app)
+        if translator.load(QLocale.system(), 'qtbase', '_', path):
+            app.installTranslator(translator)
+        translator = QTranslator(app)
+        path = './translations'
+        if selected_index == 1:
+            translator.load(QLocale(QLocale.German, QLocale.Germany), 'base', '_', path)
+            app.installTranslator(translator)
+
+    def update_theme(self):
         selected_index = self.themeBox.currentIndex()
         properties.theme_index = selected_index
-
         app = QApplication.instance()
         if selected_index == 0:
             app.setStyleSheet(qdarktheme.load_stylesheet())
@@ -49,9 +75,6 @@ class OptionsEditorDialog(QDialog):
             app.setStyleSheet(qdarktheme.load_stylesheet("light"))
         else:
             app.setStyleSheet(None)
-
-        properties.write_config_file()
-        self.close()
 
     def cancel(self):
         self.close()
@@ -72,7 +95,7 @@ class AddEmployeeDialog(QDialog):
         self.widget = loader.load(ui_file)
         ui_file.close()
 
-        self.widget.editorTitle.setText("Add Employee")  # noqa
+        self.widget.editorTitle.setText(self.tr("Add Employee"))  # noqa
         self.widget.typeCombobox.addItems(EmployeeType.types)  # noqa
 
         self.layout = QHBoxLayout(self)

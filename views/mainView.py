@@ -2,8 +2,8 @@ from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QMainWindow, QVBoxLayout
 
 from views.editorDialogs import OptionsEditorDialog
-from views.helpers import load_ui_file
 from views.employeeDialog import EmployeeWidget
+from views.helpers import load_ui_file
 
 
 class MainWindow(QMainWindow):
@@ -37,7 +37,7 @@ class MainWindow(QMainWindow):
         tabview = self.widget.tabview  # noqa -> tabview is loaded from ui file
 
         employee_widget = EmployeeWidget()
-        tabview.addTab(employee_widget, "Employees")
+        tabview.addTab(employee_widget, self.tr("Employees"))
 
     def configure_buttons(self):
         self.optionsButton.clicked.connect(self.open_options)
