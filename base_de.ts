@@ -4,9 +4,32 @@
 <context>
     <name>AddEmployeeDialog</name>
     <message>
-        <location filename="views/editorDialogs.py" line="98"/>
+        <location filename="views/editorDialogs.py" line="100"/>
         <source>Add Employee</source>
         <translation>Mitarbeiter hinzufügen</translation>
+    </message>
+    <message>
+        <location filename="views/editorDialogs.py" line="112"/>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <location filename="views/editorDialogs.py" line="113"/>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
+    </message>
+</context>
+<context>
+    <name>EmployeeEditorWidget</name>
+    <message>
+        <location filename="views/editorDialogs.py" line="157"/>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <location filename="views/editorDialogs.py" line="158"/>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
     </message>
 </context>
 <context>
@@ -87,6 +110,19 @@
         <location filename="views/mainView.py" line="40"/>
         <source>Employees</source>
         <translation>Mitarbeiter</translation>
+    </message>
+</context>
+<context>
+    <name>OptionsEditorDialog</name>
+    <message>
+        <location filename="views/editorDialogs.py" line="45"/>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <location filename="views/editorDialogs.py" line="46"/>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
     </message>
 </context>
 <context>

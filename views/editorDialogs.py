@@ -1,7 +1,7 @@
 import qdarktheme
 from PySide6.QtCore import QLibraryInfo, QTranslator, QLocale
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialog, QMainWindow, QApplication
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialog, QMainWindow, QApplication, QDialogButtonBox
 
 from logic.config import properties
 from logic.database import persist_employee
@@ -42,6 +42,8 @@ class OptionsEditorDialog(QDialog):
 
         self.buttonBox.accepted.connect(self.apply_changes)
         self.buttonBox.rejected.connect(self.cancel)
+        self.buttonBox.button(QDialogButtonBox.Ok).setText(self.tr("OK"))
+        self.buttonBox.button(QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
 
     def apply_changes(self):
         self.update_locale()
@@ -100,11 +102,15 @@ class AddEmployeeDialog(QDialog):
 
         self.layout = QHBoxLayout(self)
         self.layout.addWidget(self.widget)
+        self.buttonBox: QDialogButtonBox = self.widget.buttonBox  # noqa
+
         self.configure_buttons()
 
     def configure_buttons(self):
-        self.widget.buttonBox.accepted.connect(self.commit)  # noqa
-        self.widget.buttonBox.rejected.connect(self.close)  # noqa
+        self.buttonBox.accepted.connect(self.commit)  # noqa
+        self.buttonBox.rejected.connect(self.close)  # noqa
+        self.buttonBox.button(QDialogButtonBox.Ok).setText(self.tr("OK"))
+        self.buttonBox.button(QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
 
     def commit(self):
         first_name: str = self.widget.firstNameEdit.text()  # noqa
@@ -148,6 +154,8 @@ class EmployeeEditorWidget(QWidget):
         self.typeCombobox.addItems(EmployeeType.types)
 
         self.buttonBox: QDialogButtonBox = self.widget.buttonBox  # noqa
+        self.buttonBox.button(QDialogButtonBox.Ok).setText(self.tr("OK"))
+        self.buttonBox.button(QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
 
     def fill_text_fields(self, employee: Employee):
         self.employee_id = employee.id
