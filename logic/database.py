@@ -5,8 +5,8 @@ from PySide6.QtSql import QSqlQueryModel, QSqlDatabase
 from sqlalchemy import create_engine as ce
 from sqlalchemy.orm import sessionmaker as sm
 
-from logic.model import create_tables, Employee
-from logic.queries import build_employee_query
+from logic.model import create_tables, Employee, EmployeeType
+from logic.queries import build_employee_query, build_employee_type_query
 
 db = ce("sqlite:///shift.db")
 
@@ -27,16 +27,41 @@ def init_database():
         sys.exit(1)
 
 
+class EmployeeTypeModel(QSqlQueryModel):
+    def __init__(self, search: str = ""):
+        super().__init__()
+        query = build_employee_type_query(search)
+        self.setQuery(query)
+        self.setHeaderData(0, Qt.Horizontal, "ID")
+        self.setHeaderData(1, Qt.Horizontal, self.tr("Designation"))
+        self.setHeaderData(2, Qt.Horizontal, self.tr("Rotation Period"))
+
+
 class EmployeeModel(QSqlQueryModel):
     def __init__(self, search: str = ""):
         super().__init__()
-        employeeQuery = build_employee_query(search)
-        self.setQuery(employeeQuery)
+        query = build_employee_query(search)
+        self.setQuery(query)
         self.setHeaderData(0, Qt.Horizontal, "ID")
         self.setHeaderData(1, Qt.Horizontal, self.tr("First Name"))
         self.setHeaderData(2, Qt.Horizontal, self.tr("Last Name"))
         self.setHeaderData(3, Qt.Horizontal, self.tr("Reference Value"))
         self.setHeaderData(4, Qt.Horizontal, self.tr("Type"))
+
+
+def persist_employee_type(employee_type: EmployeeType):
+    session = sm(bind=db)
+    s = session()
+    s.add(employee_type)
+    s.commit()
+
+
+def find_employee_types() -> list:
+    session = sm(bind=db)
+    s = session()
+    types = s.query(EmployeeType).all()
+    s.close()
+    return types
 
 
 def persist_employee(employee: Employee):
@@ -46,12 +71,27 @@ def persist_employee(employee: Employee):
     s.commit()
 
 
+def find_employee_type_by_id(e_id: int) -> EmployeeType:
+    session = sm(bind=db)
+    s = session()
+    e_type: EmployeeType = s.query(EmployeeType).filter_by(id=e_id).first()
+    s.close()
+    return e_type
+
+
 def find_employee_by_id(e_id: int) -> Employee:
     session = sm(bind=db)
     s = session()
     employee: Employee = s.query(Employee).filter_by(id=e_id).first()
     s.close()
     return employee
+
+
+def delete_employee_type(e_type: EmployeeType):
+    session = sm(bind=db)
+    s = session()
+    s.delete(e_type)
+    s.commit()
 
 
 def update_employee(value_dict: dict):

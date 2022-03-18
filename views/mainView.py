@@ -3,6 +3,7 @@ from PySide6.QtWidgets import QMainWindow, QVBoxLayout
 
 from views.editorDialogs import OptionsEditorDialog
 from views.employeeDialog import EmployeeWidget
+from views.employeeTypeDialog import EmployeeTypeWidget
 from views.helpers import load_ui_file
 
 
@@ -35,6 +36,9 @@ class MainWindow(QMainWindow):
 
     def configure_tabview(self):
         tabview = self.widget.tabview  # noqa -> tabview is loaded from ui file
+
+        employee_type_widget = EmployeeTypeWidget()
+        tabview.addTab(employee_type_widget, self.tr("Employee Types"))
 
         employee_widget = EmployeeWidget()
         tabview.addTab(employee_widget, self.tr("Employees"))

@@ -4,8 +4,8 @@ from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialog, QMainWindow, QApplication, QDialogButtonBox
 
 from logic.config import properties
-from logic.database import persist_employee
-from logic.model import EmployeeType, Employee
+from logic.database import persist_employee, persist_employee_type, find_employee_types
+from logic.model import EmployeeType, Employee, RotationPeriod
 from views.helpers import load_ui_file
 
 
@@ -98,7 +98,9 @@ class AddEmployeeDialog(QDialog):
         ui_file.close()
 
         self.widget.editorTitle.setText(self.tr("Add Employee"))  # noqa
-        self.widget.typeCombobox.addItems(EmployeeType.types)  # noqa
+        e_types = find_employee_types()
+        for e_type in e_types:
+            self.widget.typeCombobox.addItem(e_type.designation, userData=None)  # noqa
 
         self.layout = QHBoxLayout(self)
         self.layout.addWidget(self.widget)
@@ -129,6 +131,87 @@ class AddEmployeeDialog(QDialog):
         self.widget.typeCombobox.setCurrentIndex(0)  # noqa
 
 
+class AddEmployeeTypeDialog(QDialog):
+
+    def __init__(self, parent: QWidget):
+        super().__init__()
+        self.parent = parent
+        self.setModal(True)
+        self.setMinimumWidth(450)
+        self.setWindowTitle(" ")
+        ui_file_name = "ui/employeeTypeEditor.ui"
+        ui_file = load_ui_file(ui_file_name)
+
+        loader = QUiLoader()
+        self.widget = loader.load(ui_file)
+        ui_file.close()
+
+        self.widget.editorTitle.setText(self.tr("Add Employee Type"))  # noqa
+        self.widget.rotationBox.addItems(RotationPeriod.periods)  # noqa
+
+        self.layout = QHBoxLayout(self)
+        self.layout.addWidget(self.widget)
+        self.buttonBox: QDialogButtonBox = self.widget.buttonBox  # noqa
+
+        self.configure_buttons()
+
+    def configure_buttons(self):
+        self.buttonBox.accepted.connect(self.commit)  # noqa
+        self.buttonBox.rejected.connect(self.close)  # noqa
+        self.buttonBox.button(QDialogButtonBox.Ok).setText(self.tr("OK"))
+        self.buttonBox.button(QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
+
+    def commit(self):
+        designation: str = self.widget.designationEdit.text()  # noqa
+        rotation_period: str = self.widget.rotationBox.currentText()  # noqa
+        employee_type = EmployeeType(designation=designation, rotation_period=rotation_period)
+        persist_employee_type(employee_type)
+        self.parent.reload_table_contents()
+        self.close()
+
+    def clear_fields(self):
+        self.widget.designationEdit.setText("")  # noqa
+        self.widget.rotationBox.setCurrentIndex(0)  # noqa
+
+
+class EmployeeTypeEditorWidget(QWidget):
+
+    def __init__(self, employee_type_id=None):
+        super().__init__()
+
+        self.employee_type_id = employee_type_id
+
+        ui_file_name = "ui/employeeTypeEditor.ui"
+        ui_file = load_ui_file(ui_file_name)
+
+        loader = QUiLoader()
+        self.widget = loader.load(ui_file)
+        ui_file.close()
+
+        self.layout = QHBoxLayout(self)
+        self.layout.addWidget(self.widget)
+
+        self.designationEdit = self.widget.designationEdit  # noqa
+        self.rotationBox = self.widget.rotationBox  # noqa
+
+        self.rotationBox.addItems(RotationPeriod.periods)
+
+        self.buttonBox: QDialogButtonBox = self.widget.buttonBox  # noqa
+        self.buttonBox.button(QDialogButtonBox.Ok).setText(self.tr("OK"))
+        self.buttonBox.button(QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
+
+    def fill_text_fields(self, employee_type: EmployeeType):
+        self.employee_type_id = employee_type.id
+        self.designationEdit.setText(employee_type.designation)
+        self.rotationBox.setCurrentIndex(RotationPeriod.periods.index(employee_type.rotation_period))  # noqa
+
+    def get_values(self) -> dict:
+        return {
+            "e_type_id": self.employee_type_id,
+            "rotation_period": self.rotationBox.currentText()
+        }
+
+
 class EmployeeEditorWidget(QWidget):
 
     def __init__(self, employee_id=None):
@@ -151,7 +234,7 @@ class EmployeeEditorWidget(QWidget):
         self.typeCombobox = self.widget.typeCombobox  # noqa
         self.referenceSpinner = self.widget.referenceSpinner  # noqa
 
-        self.typeCombobox.addItems(EmployeeType.types)
+        self.typeCombobox.addItems(find_employee_types())
 
         self.buttonBox: QDialogButtonBox = self.widget.buttonBox  # noqa
         self.buttonBox.button(QDialogButtonBox.Ok).setText(self.tr("OK"))

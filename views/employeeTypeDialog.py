@@ -3,30 +3,30 @@ from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAbstractItemView, QLineEdit
 
 from logic.database import find_employee_by_id, delete_employee, \
-    update_employee, EmployeeModel
+    update_employee, EmployeeTypeModel, find_employee_type_by_id, delete_employee_type
 from logic.model import Employee
-from views.editorDialogs import EmployeeEditorWidget, AddEmployeeDialog
+from views.editorDialogs import EmployeeTypeEditorWidget, AddEmployeeTypeDialog
 from views.helpers import load_ui_file
 
 
-class EmployeeWidget(QWidget):
+class EmployeeTypeWidget(QWidget):
 
     def __init__(self):
-        super(EmployeeWidget, self).__init__()
+        super(EmployeeTypeWidget, self).__init__()
 
-        self.add_employee_dialog = AddEmployeeDialog(self)
+        self.add_employee_dialog = AddEmployeeTypeDialog(self)
 
         loader = QUiLoader()
 
-        table_ui_name = "ui/employeeView.ui"
+        table_ui_name = "ui/employeeTypeView.ui"
         table_file = load_ui_file(table_ui_name)
         self.table_widget = loader.load(table_file)
         table_file.close()
         self.searchLine: QLineEdit = self.table_widget.searchLine  # noqa
 
-        editor_ui_name = "ui/employeeEditor.ui"
+        editor_ui_name = "ui/employeeTypeEditor.ui"
         editor_file = load_ui_file(editor_ui_name)
-        self.editor = EmployeeEditorWidget()
+        self.editor = EmployeeTypeEditorWidget()
         editor_file.close()
 
         self.layout = QHBoxLayout(self)
@@ -41,7 +41,7 @@ class EmployeeWidget(QWidget):
         return self.table_widget.table  # noqa -> loaded from ui file
 
     def setup_table(self):
-        model = EmployeeModel()
+        model = EmployeeTypeModel()
 
         tableview: QTableView = self.get_table()
         tableview.setModel(model)
@@ -53,32 +53,32 @@ class EmployeeWidget(QWidget):
         tableview.setColumnHidden(0, True)
 
         header = tableview.horizontalHeader()
-        for i in range(1, 5):
+        for i in range(1, 3):
             header.setSectionResizeMode(i, QHeaderView.Stretch)
 
     def reload_table_contents(self, search: str = ""):
-        model = EmployeeModel(search)
+        model = EmployeeTypeModel(search)
         tableview: QTableView = self.get_table()
         tableview.setModel(model)
         tableview.selectionModel().selectionChanged.connect(lambda x: self.reload_editor())
 
     def reload_editor(self):
-        employee = self.get_selected_employee()
-        self.editor.fill_text_fields(employee)
+        item = self.get_selected_item()
+        self.editor.fill_text_fields(item)
 
-    def get_selected_employee(self):
+    def get_selected_item(self):
         tableview: QTableView = self.get_table()
         selection_model: QItemSelectionModel = tableview.selectionModel()
         indexes: QModelIndex = selection_model.selectedRows()
         model = tableview.model()
         index = indexes[0]
-        employee_id = model.data(model.index(index.row(), 0))
-        employee = find_employee_by_id(employee_id)
-        return employee
+        item_id = model.data(model.index(index.row(), 0))
+        item = find_employee_type_by_id(item_id)
+        return item
 
     def configure_buttons(self):
         self.table_widget.addButton.clicked.connect(self.add_employee)  # noqa -> button loaded from ui file
-        self.table_widget.deleteButton.clicked.connect(self.delete_employee)  # noqa -> button loaded from ui file
+        self.table_widget.deleteButton.clicked.connect(self.delete_employee_type)  # noqa -> button loaded from ui file
         self.editor.buttonBox.accepted.connect(self.commit_changes)
         self.editor.buttonBox.rejected.connect(self.revert_changes)
 
@@ -86,9 +86,9 @@ class EmployeeWidget(QWidget):
         self.add_employee_dialog.clear_fields()
         self.add_employee_dialog.exec_()
 
-    def delete_employee(self):
-        employee = self.get_selected_employee()
-        delete_employee(employee)
+    def delete_employee_type(self):
+        item = self.get_selected_item()
+        delete_employee_type(item)
         self.reload_table_contents()
 
     def configure_search(self):
