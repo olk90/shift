@@ -2,10 +2,11 @@ from PySide6.QtCore import QModelIndex, QItemSelectionModel
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAbstractItemView, QLineEdit
 
-from logic.database import find_employee_by_id, delete_employee, \
-    update_employee, EmployeeTypeModel, find_employee_type_by_id, delete_employee_type
+from logic.database import find_employee_by_id, update_employee, EmployeeTypeModel, find_employee_type_by_id, \
+    delete_employee_type
 from logic.model import Employee
-from views.editorDialogs import EmployeeTypeEditorWidget, AddEmployeeTypeDialog
+from views.editorDialogs import AddEmployeeTypeDialog
+from views.editorWidgets import EmployeeTypeEditorWidget
 from views.helpers import load_ui_file
 
 

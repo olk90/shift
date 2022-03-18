@@ -5,7 +5,8 @@ from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAb
 from logic.database import find_employee_by_id, delete_employee, \
     update_employee, EmployeeModel
 from logic.model import Employee
-from views.editorDialogs import EmployeeEditorWidget, AddEmployeeDialog
+from views.editorDialogs import AddEmployeeDialog
+from views.editorWidgets import EmployeeEditorWidget
 from views.helpers import load_ui_file
 
 
