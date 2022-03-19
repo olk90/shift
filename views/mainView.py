@@ -2,8 +2,7 @@ from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QMainWindow, QVBoxLayout
 
 from views.editorDialogs import OptionsEditorDialog
-from views.employeeDialog import EmployeeWidget
-from views.employeeTypeDialog import EmployeeTypeWidget
+from views.tableDialogs import EmployeeWidget, EmployeeTypeWidget
 from views.helpers import load_ui_file
 
 

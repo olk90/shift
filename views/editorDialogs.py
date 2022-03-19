@@ -4,7 +4,8 @@ from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialog, QMainWindow, QApplication, QDialogButtonBox
 
 from logic.config import properties
-from logic.database import persist_employee, persist_employee_type, find_employee_types
+from logic.database import persist_employee, persist_employee_type, find_employee_types, EmployeeModel, \
+    EmployeeTypeModel
 from logic.model import EmployeeType, Employee, RotationPeriod
 from views.helpers import load_ui_file
 
@@ -24,7 +25,7 @@ class EditorDialog(QDialog):
         self.widget = loader.load(ui_file)
         ui_file.close()
 
-        self.buttonBox: QDialogButtonBox
+        self.buttonBox: QDialogButtonBox = self.widget.buttonBox  # noqa
 
     def configure_widgets(self):
         self.buttonBox.accepted.connect(self.commit)
@@ -33,8 +34,7 @@ class EditorDialog(QDialog):
         self.buttonBox.button(QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
 
     def commit(self):
-        """Needs specific implementation"""
-        pass
+        """Must be implemented by subclass"""
 
 
 class OptionsEditorDialog(EditorDialog):
@@ -117,7 +117,7 @@ class AddEmployeeDialog(EditorDialog):
         e_type: str = self.widget.typeCombobox.currentText()  # noqa
         employee = Employee(firstname=first_name, lastname=last_name, referenceValue=reference, e_type=e_type)
         persist_employee(employee)
-        self.parent.reload_table_contents()
+        self.parent.reload_table_contents(model=EmployeeModel())
         self.close()
 
     def clear_fields(self):
@@ -146,7 +146,7 @@ class AddEmployeeTypeDialog(EditorDialog):
         rotation_period: str = self.widget.rotationBox.currentText()  # noqa
         employee_type = EmployeeType(designation=designation, rotation_period=rotation_period)
         persist_employee_type(employee_type)
-        self.parent.reload_table_contents()
+        self.parent.reload_table_contents(model=EmployeeTypeModel())
         self.close()
 
     def clear_fields(self):

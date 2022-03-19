@@ -27,20 +27,26 @@ def init_database():
         sys.exit(1)
 
 
-class EmployeeTypeModel(QSqlQueryModel):
+class SearchTableModel(QSqlQueryModel):
     def __init__(self, search: str = ""):
-        super().__init__()
-        query = build_employee_type_query(search)
+        super(SearchTableModel, self).__init__()
+        self.search = search
+
+
+class EmployeeTypeModel(SearchTableModel):
+    def __init__(self, search: str = ""):
+        super(EmployeeTypeModel, self).__init__(search)
+        query = build_employee_type_query(self.search)
         self.setQuery(query)
         self.setHeaderData(0, Qt.Horizontal, "ID")
         self.setHeaderData(1, Qt.Horizontal, self.tr("Designation"))
         self.setHeaderData(2, Qt.Horizontal, self.tr("Rotation Period"))
 
 
-class EmployeeModel(QSqlQueryModel):
+class EmployeeModel(SearchTableModel):
     def __init__(self, search: str = ""):
-        super().__init__()
-        query = build_employee_query(search)
+        super(EmployeeModel, self).__init__(search)
+        query = build_employee_query(self.search)
         self.setQuery(query)
         self.setHeaderData(0, Qt.Horizontal, "ID")
         self.setHeaderData(1, Qt.Horizontal, self.tr("First Name"))
