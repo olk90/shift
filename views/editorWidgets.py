@@ -1,7 +1,8 @@
+from PySide6 import QtCore
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialogButtonBox
 
-from logic.database import find_employee_types
+from logic.database import find_e_type_by_e_id, find_employee_types
 from logic.model import RotationPeriod, EmployeeType, Employee
 from views.helpers import load_ui_file
 
@@ -51,6 +52,7 @@ class EmployeeTypeEditorWidget(EditorWidget):
     def get_values(self) -> dict:
         return {
             "item_id": self.item_id,
+            "designation": self.designationEdit.text(),
             "rotation_period": self.rotationBox.currentText()
         }
 
@@ -68,7 +70,9 @@ class EmployeeEditorWidget(EditorWidget):
         self.typeCombobox = self.widget.typeCombobox  # noqa
         self.referenceSpinner = self.widget.referenceSpinner  # noqa
 
-        self.typeCombobox.addItems(find_employee_types())
+        e_types = find_employee_types()
+        for e_type in e_types:
+            self.typeCombobox.addItem(e_type.designation, userData=None)  # noqa
 
         self.buttonBox: QDialogButtonBox = self.widget.buttonBox  # noqa
         self.buttonBox.button(QDialogButtonBox.Ok).setText(self.tr("OK"))
@@ -79,7 +83,13 @@ class EmployeeEditorWidget(EditorWidget):
         self.firstNameEdit.setText(employee.firstname)
         self.lastNameEdit.setText(employee.lastname)
         self.referenceSpinner.setValue(employee.referenceValue)  # noqa
-        self.typeCombobox.setCurrentIndex(EmployeeType.types.index(employee.e_type))  # noqa
+
+        e_type = find_e_type_by_e_id(self.item_id)
+        # index = self.typeCombobox.findText(e_type.designation, QtCore.Qt.MatchFixedString)
+        AllItems = [self.typeCombobox.itemText(i) for i in range(self.typeCombobox.count())]
+        index = self.typeCombobox.findText(e_type.designation, QtCore.Qt.MatchExactly)
+        if index >= 0:
+            self.typeCombobox.setCurrentIndex(index)  # noqa
 
     def get_values(self) -> dict:
         return {

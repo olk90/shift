@@ -3,7 +3,7 @@ from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAbstractItemView, QLineEdit
 
 from logic.database import delete_employee, \
-    EmployeeModel, SearchTableModel
+    EmployeeModel, SearchTableModel, update_employee_type
 from logic.database import find_employee_by_id, update_employee, EmployeeTypeModel, find_employee_type_by_id, \
     delete_employee_type
 from logic.model import Employee, EmployeeType
@@ -174,7 +174,7 @@ class EmployeeTypeWidget(TableDialog):
 
     def commit_changes(self):
         value_dict: dict = self.editor.get_values()
-        update_employee(value_dict)
+        update_employee_type(value_dict)
         search = self.searchLine.text()
         self.reload_table_contents(model=EmployeeTypeModel(search))
 

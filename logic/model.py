@@ -25,7 +25,6 @@ class EmployeeType(Base):
     id = Column(Integer, primary_key=True)
     designation = Column(String(100), nullable=False)
     rotation_period = Column(String(100), nullable=False)
-    employees = relationship(employeeTableName, back_populates="e_type")
 
 
 class Employee(Base):
@@ -37,7 +36,7 @@ class Employee(Base):
     referenceValue = Column(Integer, nullable=False, default=0)
 
     e_type_id = Column(Integer, ForeignKey("EmployeeType.id"))
-    e_type = relationship(employeeTypeTableName, back_populates="employees")
+    e_type = relationship(employeeTypeTableName, backref="employees")
 
     def get_full_name(self):
         return "{} {}".format(self.firstname, self.lastname)

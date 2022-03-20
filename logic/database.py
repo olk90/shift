@@ -3,7 +3,7 @@ import sys
 from PySide6.QtGui import Qt
 from PySide6.QtSql import QSqlQueryModel, QSqlDatabase
 from sqlalchemy import create_engine as ce
-from sqlalchemy.orm import sessionmaker as sm
+from sqlalchemy.orm import sessionmaker as sm, join
 
 from logic.model import create_tables, Employee, EmployeeType
 from logic.queries import build_employee_query, build_employee_type_query
@@ -93,6 +93,24 @@ def find_employee_by_id(e_id: int) -> Employee:
     return employee
 
 
+def update_employee_type(value_dict: dict):
+    session = sm(bind=db)
+    s = session()
+    e_type: EmployeeType = s.query(EmployeeType).filter_by(id=value_dict["item_id"]).first()
+    e_type.designation = value_dict["designation"]
+    e_type.rotation_period = value_dict["rotation_period"]
+    s.commit()
+
+
+def find_e_type_by_e_id(e_id: int) -> EmployeeType:
+    session = sm(bind=db)
+    s = session()
+    e_type: EmployeeType = s.query(EmployeeType).select_from(join(EmployeeType, Employee)).filter(
+        Employee.id == e_id).first()
+    s.close()
+    return e_type
+
+
 def delete_employee_type(e_type: EmployeeType):
     session = sm(bind=db)
     s = session()
@@ -103,11 +121,12 @@ def delete_employee_type(e_type: EmployeeType):
 def update_employee(value_dict: dict):
     session = sm(bind=db)
     s = session()
-    employee: Employee = s.query(Employee).filter_by(id=value_dict["e_id"]).first()
+    employee: Employee = s.query(Employee).filter_by(id=value_dict["item_id"]).first()
     employee.firstname = value_dict["firstname"]
     employee.lastname = value_dict["lastname"]
     employee.referenceValue = value_dict["reference_value"]
-    employee.e_type = value_dict["e_type"]
+    e_type = s.query(EmployeeType).filter_by(designation=value_dict["e_type"]).one()
+    employee.e_type = e_type
     s.commit()
 
 
