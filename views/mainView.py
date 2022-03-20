@@ -1,8 +1,9 @@
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QMainWindow, QVBoxLayout
 
+from logic.database import EmployeeTypeModel, EmployeeModel
 from views.editorDialogs import OptionsEditorDialog
-from views.tableDialogs import EmployeeWidget, EmployeeTypeWidget
+from views.tableDialogs import EmployeeWidget, EmployeeTypeWidget, TableDialog
 from views.helpers import load_ui_file
 
 
@@ -24,6 +25,7 @@ class MainWindow(QMainWindow):
         self.widget = loader.load(ui_file, form)
         ui_file.close()
 
+        self.tabview = self.widget.tabview  # noqa -> tabview is loaded from ui file
         self.optionsButton = self.widget.optionsButton  # noqa
 
         self.configure_buttons()
@@ -34,13 +36,20 @@ class MainWindow(QMainWindow):
         form.resize(1600, 900)
 
     def configure_tabview(self):
-        tabview = self.widget.tabview  # noqa -> tabview is loaded from ui file
-
         employee_type_widget = EmployeeTypeWidget()
-        tabview.addTab(employee_type_widget, self.tr("Employee Types"))
+        self.tabview.addTab(employee_type_widget, self.tr("Employee Types"))
 
         employee_widget = EmployeeWidget()
-        tabview.addTab(employee_widget, self.tr("Employees"))
+        self.tabview.addTab(employee_widget, self.tr("Employees"))
+        self.tabview.currentChanged.connect(self.reload_current_widget)
+
+    def reload_current_widget(self):
+        current: TableDialog = self.tabview.currentWidget()
+        search = current.searchLine.text()
+        if isinstance(current, EmployeeTypeWidget):
+            current.reload_table_contents(EmployeeTypeModel(search))
+        elif isinstance(current, EmployeeWidget):
+            current.reload_table_contents(EmployeeModel(search))
 
     def configure_buttons(self):
         self.optionsButton.clicked.connect(self.open_options)

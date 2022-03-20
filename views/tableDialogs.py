@@ -74,10 +74,7 @@ class TableDialog(QWidget):
         return model.data(model.index(index.row(), 0))
 
     def configure_search(self):
-        self.searchLine.textChanged.connect(lambda x: self.text_changed(self.searchLine.text()))
-
-    def text_changed(self, text):
-        self.reload_table_contents(text)
+        """Must be implemented by subclass"""
 
     def get_editor_widget(self) -> EditorWidget:
         """Must be implemented by subclass"""
@@ -107,6 +104,9 @@ class EmployeeWidget(TableDialog):
 
     def get_editor_widget(self) -> EditorWidget:
         return EmployeeEditorWidget()
+
+    def configure_search(self):
+        self.searchLine.textChanged.connect(lambda x: self.reload_table_contents(EmployeeModel(self.searchLine.text())))
 
     def reload_editor(self):
         employee = self.get_selected_item()
@@ -150,6 +150,9 @@ class EmployeeTypeWidget(TableDialog):
 
     def get_editor_widget(self) -> EditorWidget:
         return EmployeeTypeEditorWidget()
+
+    def configure_search(self):
+        self.searchLine.textChanged.connect(lambda x: self.reload_table_contents(EmployeeTypeModel(self.searchLine.text())))
 
     def get_selected_item(self):
         item_id = super(EmployeeTypeWidget, self).get_selected_item()

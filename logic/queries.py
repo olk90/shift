@@ -7,6 +7,7 @@ def build_employee_type_query(search: str) -> str:
         from EmployeeType t 
         where 
             t.designation like '%{search}%'
+            or t.rotation_period like '%{search}%'
         order by t.designation
         """.format(search=search)
     return employeeTypeQuery
