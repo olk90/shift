@@ -3,13 +3,14 @@ from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAbstractItemView, QLineEdit
 
 from logic.database import delete_employee, \
-    EmployeeModel, SearchTableModel, update_employee_type
+    EmployeeModel, SearchTableModel, update_employee_type, OffPeriodModel, find_off_period_by_id, delete_off_period, \
+    update_off_period
 from logic.database import find_employee_by_id, update_employee, EmployeeTypeModel, find_employee_type_by_id, \
     delete_employee_type
-from logic.model import Employee, EmployeeType
-from views.editorDialogs import AddEmployeeDialog
+from logic.model import Employee, EmployeeType, OffPeriod
+from views.editorDialogs import AddEmployeeDialog, AddOffPeriodDialog
 from views.editorDialogs import AddEmployeeTypeDialog
-from views.editorWidgets import EmployeeEditorWidget, EditorWidget, EmployeeTypeEditorWidget
+from views.editorWidgets import EmployeeEditorWidget, EditorWidget, EmployeeTypeEditorWidget, OffPeriodEditorWidget
 from views.helpers import load_ui_file
 
 
@@ -96,7 +97,7 @@ class EmployeeWidget(TableDialog):
 
     def __init__(self):
         super(EmployeeWidget, self).__init__(table_ui_name="ui/employeeView.ui")
-        self.add_employee_dialog = AddEmployeeDialog(self)
+        self.add_dialog = AddEmployeeDialog(self)
         self.setup_table(EmployeeModel(), range(1, 5))
 
     def get_table(self):
@@ -118,8 +119,8 @@ class EmployeeWidget(TableDialog):
         return employee
 
     def add_item(self):
-        self.add_employee_dialog.clear_fields()
-        self.add_employee_dialog.exec_()
+        self.add_dialog.clear_fields()
+        self.add_dialog.exec_()
 
     def delete_item(self):
         employee = self.get_selected_item()
@@ -142,7 +143,7 @@ class EmployeeTypeWidget(TableDialog):
 
     def __init__(self):
         super(EmployeeTypeWidget, self).__init__(table_ui_name="ui/employeeTypeView.ui")
-        self.add_employee_dialog = AddEmployeeTypeDialog(self)
+        self.add_dialog = AddEmployeeTypeDialog(self)
         self.setup_table(EmployeeTypeModel(), range(1, 3))
 
     def get_table(self):
@@ -152,7 +153,8 @@ class EmployeeTypeWidget(TableDialog):
         return EmployeeTypeEditorWidget()
 
     def configure_search(self):
-        self.searchLine.textChanged.connect(lambda x: self.reload_table_contents(EmployeeTypeModel(self.searchLine.text())))
+        self.searchLine.textChanged.connect(
+            lambda x: self.reload_table_contents(EmployeeTypeModel(self.searchLine.text())))
 
     def get_selected_item(self):
         item_id = super(EmployeeTypeWidget, self).get_selected_item()
@@ -166,8 +168,8 @@ class EmployeeTypeWidget(TableDialog):
         self.editor.buttonBox.rejected.connect(self.revert_changes)
 
     def add_item(self):
-        self.add_employee_dialog.clear_fields()
-        self.add_employee_dialog.exec_()
+        self.add_dialog.clear_fields()
+        self.add_dialog.exec_()
 
     def delete_item(self):
         item = self.get_selected_item()
@@ -184,3 +186,52 @@ class EmployeeTypeWidget(TableDialog):
     def revert_changes(self):
         e_type: EmployeeType = find_employee_type_by_id(self.editor.item_id)
         self.editor.fill_fields(e_type)
+
+
+class OffPeriodWidget(TableDialog):
+
+    def __init__(self):
+        super(OffPeriodWidget, self).__init__(table_ui_name="ui/offPeriodView.ui")
+        self.add_dialog = AddOffPeriodDialog(self)
+        self.setup_table(OffPeriodModel(), range(1, 5))
+
+    def get_table(self):
+        return self.table_widget.table  # noqa -> loaded from ui file
+
+    def get_editor_widget(self) -> EditorWidget:
+        return OffPeriodEditorWidget()
+
+    def configure_search(self):
+        self.searchLine.textChanged.connect(
+            lambda x: self.reload_table_contents(OffPeriodModel(self.searchLine.text())))
+
+    def get_selected_item(self):
+        item_id = super(OffPeriodWidget, self).get_selected_item()
+        item = find_off_period_by_id(item_id)
+        return item
+
+    def configure_buttons(self):
+        self.table_widget.addButton.clicked.connect(self.add_item)  # noqa -> button loaded from ui file
+        self.table_widget.deleteButton.clicked.connect(self.delete_item)  # noqa -> button loaded from ui file
+        self.editor.buttonBox.accepted.connect(self.commit_changes)
+        self.editor.buttonBox.rejected.connect(self.revert_changes)
+
+    def add_item(self):
+        self.add_dialog.clear_fields()
+        self.add_dialog.exec_()
+
+    def delete_item(self):
+        item = self.get_selected_item()
+        delete_off_period(item)
+        search = self.searchLine.text()
+        self.reload_table_contents(model=OffPeriodModel(search))
+
+    def commit_changes(self):
+        value_dict: dict = self.editor.get_values()
+        update_off_period(value_dict)
+        search = self.searchLine.text()
+        self.reload_table_contents(model=OffPeriodModel(search))
+
+    def revert_changes(self):
+        period: OffPeriod = find_off_period_by_id(self.editor.item_id)
+        self.editor.fill_fields(period)

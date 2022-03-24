@@ -1,12 +1,15 @@
+from datetime import datetime
+
 import qdarktheme
-from PySide6.QtCore import QLibraryInfo, QTranslator, QLocale
+from PySide6.QtCore import QLibraryInfo, QTranslator, QLocale, Qt
+from PySide6.QtSql import QSqlTableModel
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialog, QMainWindow, QApplication, QDialogButtonBox
 
 from logic.config import properties
 from logic.database import persist_employee, persist_employee_type, find_employee_types, EmployeeModel, \
-    EmployeeTypeModel
-from logic.model import EmployeeType, Employee, RotationPeriod
+    EmployeeTypeModel, persist_off_period
+from logic.model import EmployeeType, Employee, RotationPeriod, OffPeriod, employeeTableName
 from views.helpers import load_ui_file
 
 
@@ -152,3 +155,41 @@ class AddEmployeeTypeDialog(EditorDialog):
     def clear_fields(self):
         self.widget.designationEdit.setText("")  # noqa
         self.widget.rotationBox.setCurrentIndex(0)  # noqa
+
+
+class AddOffPeriodDialog(EditorDialog):
+
+    def __init__(self, parent: QWidget):
+        super().__init__(parent=parent, ui_file_name="ui/offPeriodAddDialog.ui")
+
+        self.employee_box: QComboBox = self.widget.employeeBox  # noqa
+        model = QSqlTableModel(self)
+        model.setTable(employeeTableName)
+        column = model.fieldIndex("lastname")
+        model.setSort(column, Qt.AscendingOrder)
+        model.select()
+        self.employee_box.setModel(model)
+        self.employee_box.setEditable(True)
+        self.employee_box.setModelColumn(column)
+
+        self.layout = QHBoxLayout(self)
+        self.layout.addWidget(self.widget)
+        self.buttonBox: QDialogButtonBox = self.widget.buttonBox  # noqa
+
+        self.configure_widgets()
+
+    def commit(self):
+        model: QSqlTableModel = self.employee_box.model()
+        index: int = self.employee_box.currentIndex()
+        e_id = model.index(index, model.fieldIndex("id")).data()
+        start: QDate = self.widget.startEdit.selectedDate()  # noqa
+        start_date = datetime(start.year(), start.month(), start.day())
+        end: QDate = self.widget.endEdit.selectedDate()  # noqa
+        end_date = datetime(end.year(), end.month(), end.day())
+        off_period = OffPeriod(e_id=e_id, start=start_date, end=end_date)
+        persist_off_period(off_period)
+        self.parent.reload_table_contents(model=EmployeeTypeModel())
+        self.close()
+
+    def clear_fields(self):
+        self.widget.employeeBox.setCurrentIndex(0)  # noqa

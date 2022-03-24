@@ -1,9 +1,10 @@
 from PySide6 import QtCore
+from PySide6.QtCore import QDate
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialogButtonBox
 
-from logic.database import find_e_type_by_e_id, find_employee_types
-from logic.model import RotationPeriod, EmployeeType, Employee
+from logic.database import find_e_type_by_e_id, find_employee_types, find_employee_by_id
+from logic.model import RotationPeriod, EmployeeType, Employee, OffPeriod
 from views.helpers import load_ui_file
 
 
@@ -19,6 +20,7 @@ class EditorWidget(QWidget):
         ui_file.close()
 
         self.buttonBox: QDialogButtonBox = self.widget.buttonBox  # noqa
+        self.configure_buttons()
 
     def configure_buttons(self):
         self.buttonBox.button(QDialogButtonBox.Ok).setText(self.tr("OK"))
@@ -74,10 +76,6 @@ class EmployeeEditorWidget(EditorWidget):
         for e_type in e_types:
             self.typeCombobox.addItem(e_type.designation, userData=None)  # noqa
 
-        self.buttonBox: QDialogButtonBox = self.widget.buttonBox  # noqa
-        self.buttonBox.button(QDialogButtonBox.Ok).setText(self.tr("OK"))
-        self.buttonBox.button(QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
-
     def fill_fields(self, employee: Employee):
         self.item_id = employee.id
         self.firstNameEdit.setText(employee.firstname)
@@ -85,8 +83,6 @@ class EmployeeEditorWidget(EditorWidget):
         self.referenceSpinner.setValue(employee.referenceValue)  # noqa
 
         e_type = find_e_type_by_e_id(self.item_id)
-        # index = self.typeCombobox.findText(e_type.designation, QtCore.Qt.MatchFixedString)
-        AllItems = [self.typeCombobox.itemText(i) for i in range(self.typeCombobox.count())]
         index = self.typeCombobox.findText(e_type.designation, QtCore.Qt.MatchExactly)
         if index >= 0:
             self.typeCombobox.setCurrentIndex(index)  # noqa
@@ -98,4 +94,37 @@ class EmployeeEditorWidget(EditorWidget):
             "lastname": self.lastNameEdit.text(),
             "reference_value": self.referenceSpinner.value(),
             "e_type": self.typeCombobox.currentText()
+        }
+
+
+class OffPeriodEditorWidget(EditorWidget):
+
+    def __init__(self, item_id=None):
+        super().__init__(ui_file_name="ui/offPeriodEditor.ui", item_id=item_id)
+
+        self.layout = QHBoxLayout(self)
+        self.layout.addWidget(self.widget)
+
+        self.name_label = self.widget.name_label  # noqa
+        self.startEdit = self.widget.startEdit  # noqa
+        self.endEdit = self.widget.endEdit  # noqa
+
+    def fill_fields(self, period: OffPeriod):
+        self.item_id = period.id
+        employee: Employee = find_employee_by_id(period.e_id)
+        self.name_label.setText(employee.get_full_name())
+
+        start = period.start
+        q_start = QDate(start.year, start.month, start.day)
+        self.startEdit.setSelectedDate(q_start)
+
+        end = period.end
+        q_end = QDate(end.year, end.month, end.day)
+        self.endEdit.setSelectedDate(q_end)
+
+    def get_values(self) -> dict:
+        return {
+            "item_id": self.item_id,
+            "start": self.startEdit.selectedDate(),
+            "end": self.endEdit.selectedDate()
         }

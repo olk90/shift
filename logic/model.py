@@ -1,10 +1,11 @@
-from sqlalchemy import (Column, Integer, String, ForeignKey)
+from sqlalchemy import (Column, Integer, String, ForeignKey, Date)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 employeeTypeTableName: str = "EmployeeType"
 employeeTableName: str = "Employee"
+offPeriodTableName: str = "OffPeriod"
 
 
 class ShiftType:
@@ -40,6 +41,16 @@ class Employee(Base):
 
     def get_full_name(self):
         return "{} {}".format(self.firstname, self.lastname)
+
+
+class OffPeriod(Base):
+    __tablename__ = offPeriodTableName
+
+    id = Column(Integer, primary_key=True)
+    start = Column(Date, nullable=False)
+    end = Column(Date, nullable=False)
+    e_id = Column(Integer, ForeignKey("Employee.id"))
+    employee = relationship(employeeTableName, backref="off_periods")
 
 
 def create_tables(engine):

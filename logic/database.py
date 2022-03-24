@@ -1,12 +1,14 @@
 import sys
+from datetime import datetime
 
+from PySide6.QtCore import QDate
 from PySide6.QtGui import Qt
 from PySide6.QtSql import QSqlQueryModel, QSqlDatabase
 from sqlalchemy import create_engine as ce
 from sqlalchemy.orm import sessionmaker as sm, join
 
-from logic.model import create_tables, Employee, EmployeeType
-from logic.queries import build_employee_query, build_employee_type_query
+from logic.model import create_tables, Employee, EmployeeType, OffPeriod
+from logic.queries import build_employee_query, build_employee_type_query, build_off_period_query
 
 db = ce("sqlite:///shift.db")
 
@@ -53,6 +55,18 @@ class EmployeeModel(SearchTableModel):
         self.setHeaderData(2, Qt.Horizontal, self.tr("Last Name"))
         self.setHeaderData(3, Qt.Horizontal, self.tr("Reference Value"))
         self.setHeaderData(4, Qt.Horizontal, self.tr("Type"))
+
+
+class OffPeriodModel(SearchTableModel):
+    def __init__(self, search: str = ""):
+        super(OffPeriodModel, self).__init__(search)
+        query = build_off_period_query(self.search)
+        self.setQuery(query)
+        self.setHeaderData(0, Qt.Horizontal, "ID")
+        self.setHeaderData(1, Qt.Horizontal, self.tr("Start"))
+        self.setHeaderData(2, Qt.Horizontal, self.tr("End"))
+        self.setHeaderData(3, Qt.Horizontal, self.tr("First Name"))
+        self.setHeaderData(4, Qt.Horizontal, self.tr("Last Name"))
 
 
 def persist_employee_type(employee_type: EmployeeType):
@@ -134,4 +148,37 @@ def delete_employee(employee: Employee):
     session = sm(bind=db)
     s = session()
     s.delete(employee)
+    s.commit()
+
+
+def find_off_period_by_id(p_id: int) -> OffPeriod:
+    session = sm(bind=db)
+    s = session()
+    period: OffPeriod = s.query(OffPeriod).filter_by(id=p_id).first()
+    s.close()
+    return period
+
+
+def update_off_period(value_dict: dict):
+    session = sm(bind=db)
+    s = session()
+    period: OffPeriod = s.query(OffPeriod).filter_by(id=value_dict["item_id"]).first()
+    q_start: QDate = value_dict["start"]
+    q_end: QDate = value_dict["end"]
+    period.start = datetime(q_start.year(), q_start.month(), q_start.day())
+    period.end = datetime(q_end.year(), q_end.month(), q_end.day())
+    s.commit()
+
+
+def persist_off_period(period: OffPeriod):
+    session = sm(bind=db)
+    s = session()
+    s.add(period)
+    s.commit()
+
+
+def delete_off_period(period: OffPeriod):
+    session = sm(bind=db)
+    s = session()
+    s.delete(period)
     s.commit()

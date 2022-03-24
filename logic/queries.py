@@ -1,5 +1,5 @@
 def build_employee_type_query(search: str) -> str:
-    employeeTypeQuery = """
+    query = """
         select
             t.id,
             t.designation,
@@ -10,11 +10,11 @@ def build_employee_type_query(search: str) -> str:
             or t.rotation_period like '%{search}%'
         order by t.designation
         """.format(search=search)
-    return employeeTypeQuery
+    return query
 
 
 def build_employee_query(search: str) -> str:
-    employeeQuery = """
+    query = """
     select
         e.id,
         e.firstname,
@@ -30,4 +30,35 @@ def build_employee_query(search: str) -> str:
         or t.designation like '%{search}%'
     order by e.lastname, e.firstname
     """.format(search=search)
-    return employeeQuery
+    return query
+
+
+def build_employee_combo_query() -> str:
+    query = """
+        select
+            e.id,
+            e.firstname,
+            e.lastname,
+        from Employee e
+        order by e.lastname, e.firstname
+        """
+    return query
+
+
+def build_off_period_query(search: str) -> str:
+    query = """
+    select
+        p.id,
+        p.start,
+        p.end,
+        e.firstname,
+        e.lastname
+    from OffPeriod p
+    inner join Employee e 
+    on p.e_id = e.id
+    where 
+        e.firstname like '%{search}%'
+        or e.lastname like '%{search}%'
+    order by e.lastname, e.firstname
+    """.format(search=search)
+    return query

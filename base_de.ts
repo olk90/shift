@@ -4,35 +4,57 @@
 <context>
     <name>AddEmployeeDialog</name>
     <message>
-        <location filename="views/editorDialogs.py" line="100"/>
+        <location filename="views/editorDialogs.py" line="105"/>
         <source>Add Employee</source>
         <translation>Mitarbeiter hinzufügen</translation>
     </message>
     <message>
-        <location filename="views/editorDialogs.py" line="114"/>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation type="vanished">OK</translation>
     </message>
     <message>
-        <location filename="views/editorDialogs.py" line="115"/>
         <source>Cancel</source>
-        <translation>Abbrechen</translation>
+        <translation type="vanished">Abbrechen</translation>
     </message>
 </context>
 <context>
     <name>AddEmployeeTypeDialog</name>
     <message>
-        <location filename="views/editorDialogs.py" line="149"/>
+        <location filename="views/editorDialogs.py" line="138"/>
         <source>Add Employee Type</source>
         <translation>Mitarbeitertyp hinzufügen</translation>
     </message>
     <message>
-        <location filename="views/editorDialogs.py" line="161"/>
+        <source>OK</source>
+        <translation type="vanished">OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="vanished">Abbrechen</translation>
+    </message>
+</context>
+<context>
+    <name>EditorDialog</name>
+    <message>
+        <location filename="views/editorDialogs.py" line="36"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="views/editorDialogs.py" line="162"/>
+        <location filename="views/editorDialogs.py" line="37"/>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
+    </message>
+</context>
+<context>
+    <name>EditorWidget</name>
+    <message>
+        <location filename="views/editorWidgets.py" line="26"/>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <location filename="views/editorWidgets.py" line="27"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
@@ -40,35 +62,33 @@
 <context>
     <name>EmployeeEditorWidget</name>
     <message>
-        <location filename="views/editorDialogs.py" line="240"/>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation type="vanished">OK</translation>
     </message>
     <message>
-        <location filename="views/editorDialogs.py" line="241"/>
         <source>Cancel</source>
-        <translation>Abbrechen</translation>
+        <translation type="vanished">Abbrechen</translation>
     </message>
 </context>
 <context>
     <name>EmployeeModel</name>
     <message>
-        <location filename="logic/database.py" line="46"/>
+        <location filename="logic/database.py" line="54"/>
         <source>First Name</source>
         <translation>Vorname</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="47"/>
+        <location filename="logic/database.py" line="55"/>
         <source>Last Name</source>
         <translation>Nachname</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="48"/>
+        <location filename="logic/database.py" line="56"/>
         <source>Reference Value</source>
         <translation>Referenzwert</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="49"/>
+        <location filename="logic/database.py" line="57"/>
         <source>Type</source>
         <translation>Typ</translation>
     </message>
@@ -76,25 +96,23 @@
 <context>
     <name>EmployeeTypeEditorWidget</name>
     <message>
-        <location filename="views/editorDialogs.py" line="200"/>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation type="vanished">OK</translation>
     </message>
     <message>
-        <location filename="views/editorDialogs.py" line="201"/>
         <source>Cancel</source>
-        <translation>Abbrechen</translation>
+        <translation type="vanished">Abbrechen</translation>
     </message>
 </context>
 <context>
     <name>EmployeeTypeModel</name>
     <message>
-        <location filename="logic/database.py" line="36"/>
+        <location filename="logic/database.py" line="44"/>
         <source>Designation</source>
         <translation>Bezeichnung</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="37"/>
+        <location filename="logic/database.py" line="45"/>
         <source>Rotation Period</source>
         <translation>Rotationsintervall</translation>
     </message>
@@ -104,6 +122,8 @@
     <message>
         <location filename="ui/employeeEditor.ui" line="14"/>
         <location filename="ui/employeeTypeEditor.ui" line="14"/>
+        <location filename="ui/offPeriodAddDialog.ui" line="14"/>
+        <location filename="ui/offPeriodEditor.ui" line="14"/>
         <location filename="ui/optionsEditor.ui" line="14"/>
         <source>Form</source>
         <translation>Formular</translation>
@@ -163,31 +183,85 @@
         <source>Rotation Period</source>
         <translation>Rotationsintervall</translation>
     </message>
+    <message>
+        <location filename="ui/offPeriodAddDialog.ui" line="32"/>
+        <source>Add Off Period</source>
+        <translation>Auszeit hinzufügen</translation>
+    </message>
+    <message>
+        <location filename="ui/offPeriodAddDialog.ui" line="41"/>
+        <location filename="ui/offPeriodEditor.ui" line="41"/>
+        <source>Employee</source>
+        <translation>Mitarbeiter</translation>
+    </message>
+    <message>
+        <location filename="ui/offPeriodAddDialog.ui" line="48"/>
+        <location filename="ui/offPeriodEditor.ui" line="55"/>
+        <source>Start</source>
+        <translation>Anfang</translation>
+    </message>
+    <message>
+        <location filename="ui/offPeriodAddDialog.ui" line="55"/>
+        <location filename="ui/offPeriodEditor.ui" line="62"/>
+        <source>End</source>
+        <translation>Ende</translation>
+    </message>
+    <message>
+        <location filename="ui/offPeriodEditor.ui" line="32"/>
+        <source>Edit Off Period</source>
+        <translation>Auszeit bearbeiten</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="views/mainView.py" line="41"/>
+        <location filename="views/mainView.py" line="40"/>
         <source>Employee Types</source>
         <translation>Mitarbeitertypen</translation>
     </message>
     <message>
-        <location filename="views/mainView.py" line="44"/>
+        <location filename="views/mainView.py" line="43"/>
         <source>Employees</source>
         <translation>Mitarbeiter</translation>
+    </message>
+    <message>
+        <location filename="views/mainView.py" line="46"/>
+        <source>Days Off</source>
+        <translation>Freie Tage</translation>
+    </message>
+</context>
+<context>
+    <name>OffPeriodModel</name>
+    <message>
+        <location filename="logic/database.py" line="66"/>
+        <source>Start</source>
+        <translation>Anfang</translation>
+    </message>
+    <message>
+        <location filename="logic/database.py" line="67"/>
+        <source>End</source>
+        <translation>Ende</translation>
+    </message>
+    <message>
+        <location filename="logic/database.py" line="68"/>
+        <source>First Name</source>
+        <translation>Vorname</translation>
+    </message>
+    <message>
+        <location filename="logic/database.py" line="69"/>
+        <source>Last Name</source>
+        <translation>Nachname</translation>
     </message>
 </context>
 <context>
     <name>OptionsEditorDialog</name>
     <message>
-        <location filename="views/editorDialogs.py" line="45"/>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation type="vanished">OK</translation>
     </message>
     <message>
-        <location filename="views/editorDialogs.py" line="46"/>
         <source>Cancel</source>
-        <translation>Abbrechen</translation>
+        <translation type="vanished">Abbrechen</translation>
     </message>
 </context>
 <context>
@@ -270,6 +344,29 @@
         <location filename="ui/main.ui" line="74"/>
         <source>Options</source>
         <translation>Optionen</translation>
+    </message>
+</context>
+<context>
+    <name>offPeriodView</name>
+    <message>
+        <location filename="ui/offPeriodView.ui" line="20"/>
+        <source>Form</source>
+        <translation>Formular</translation>
+    </message>
+    <message>
+        <location filename="ui/offPeriodView.ui" line="28"/>
+        <source>Search ...</source>
+        <translation>Suche ...</translation>
+    </message>
+    <message>
+        <location filename="ui/offPeriodView.ui" line="43"/>
+        <source>Add</source>
+        <translation>Hinzufügen</translation>
+    </message>
+    <message>
+        <location filename="ui/offPeriodView.ui" line="56"/>
+        <source>Delete</source>
+        <translation>Löschen</translation>
     </message>
 </context>
 </TS>

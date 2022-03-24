@@ -1,9 +1,9 @@
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QMainWindow, QVBoxLayout
 
-from logic.database import EmployeeTypeModel, EmployeeModel
+from logic.database import EmployeeTypeModel, EmployeeModel, OffPeriodModel
 from views.editorDialogs import OptionsEditorDialog
-from views.tableDialogs import EmployeeWidget, EmployeeTypeWidget, TableDialog
+from views.tableDialogs import EmployeeWidget, EmployeeTypeWidget, TableDialog, OffPeriodWidget
 from views.helpers import load_ui_file
 
 
@@ -41,6 +41,10 @@ class MainWindow(QMainWindow):
 
         employee_widget = EmployeeWidget()
         self.tabview.addTab(employee_widget, self.tr("Employees"))
+
+        off_period_widget = OffPeriodWidget()
+        self.tabview.addTab(off_period_widget, self.tr("Days Off"))
+
         self.tabview.currentChanged.connect(self.reload_current_widget)
 
     def reload_current_widget(self):
@@ -50,6 +54,8 @@ class MainWindow(QMainWindow):
             current.reload_table_contents(EmployeeTypeModel(search))
         elif isinstance(current, EmployeeWidget):
             current.reload_table_contents(EmployeeModel(search))
+        elif isinstance(current, OffPeriodWidget):
+            current.reload_table_contents(OffPeriodModel(search))
 
     def configure_buttons(self):
         self.optionsButton.clicked.connect(self.open_options)
