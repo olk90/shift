@@ -1,15 +1,16 @@
 from datetime import datetime
 
 import qdarktheme
-from PySide6.QtCore import QLibraryInfo, QTranslator, QLocale, Qt
+from PySide6.QtCore import QDate
+from PySide6.QtCore import QLibraryInfo, QTranslator, QLocale
 from PySide6.QtSql import QSqlTableModel
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialog, QMainWindow, QApplication, QDialogButtonBox
 
 from logic.config import properties
-from logic.database import persist_employee, persist_employee_type, find_employee_types, EmployeeModel, \
-    EmployeeTypeModel, persist_off_period
-from logic.model import EmployeeType, Employee, RotationPeriod, OffPeriod, employeeTableName
+from logic.database import persist_employee, persist_employee_type, EmployeeModel, \
+    EmployeeTypeModel, persist_off_period, configure_combobox_model, OffPeriodModel
+from logic.model import EmployeeType, Employee, RotationPeriod, OffPeriod, employeeTableName, employeeTypeTableName
 from views.helpers import load_ui_file
 
 
@@ -103,9 +104,8 @@ class AddEmployeeDialog(EditorDialog):
         super().__init__(parent=parent, ui_file_name="ui/employeeEditor.ui")
 
         self.widget.editorTitle.setText(self.tr("Add Employee"))  # noqa
-        e_types = find_employee_types()
-        for e_type in e_types:
-            self.widget.typeCombobox.addItem(e_type.designation, userData=None)  # noqa
+        self.type_box = self.widget.typeCombobox  # noqa
+        configure_combobox_model(self.type_box, employeeTypeTableName, "designation")
 
         self.layout = QHBoxLayout(self)
         self.layout.addWidget(self.widget)
@@ -117,13 +117,16 @@ class AddEmployeeDialog(EditorDialog):
         first_name: str = self.widget.firstNameEdit.text()  # noqa
         last_name: str = self.widget.lastNameEdit.text()  # noqa
         reference: str = self.widget.referenceSpinner.text()  # noqa
-        e_type: str = self.widget.typeCombobox.currentText()  # noqa
-        employee = Employee(firstname=first_name, lastname=last_name, referenceValue=reference, e_type=e_type)
+        model: QSqlTableModel = self.type_box.model()
+        index: int = self.type_box.currentIndex()
+        et_id = model.index(index, model.fieldIndex("id")).data()
+        employee = Employee(firstname=first_name, lastname=last_name, referenceValue=reference, e_type_id=et_id)
         persist_employee(employee)
         self.parent.reload_table_contents(model=EmployeeModel())
         self.close()
 
     def clear_fields(self):
+        self.type_box.model().select()
         self.widget.firstNameEdit.setText("")  # noqa
         self.widget.lastNameEdit.setText("")  # noqa
         self.widget.referenceSpinner.setValue(0)  # noqa
@@ -163,14 +166,7 @@ class AddOffPeriodDialog(EditorDialog):
         super().__init__(parent=parent, ui_file_name="ui/offPeriodAddDialog.ui")
 
         self.employee_box: QComboBox = self.widget.employeeBox  # noqa
-        model = QSqlTableModel(self)
-        model.setTable(employeeTableName)
-        column = model.fieldIndex("lastname")
-        model.setSort(column, Qt.AscendingOrder)
-        model.select()
-        self.employee_box.setModel(model)
-        self.employee_box.setEditable(True)
-        self.employee_box.setModelColumn(column)
+        configure_combobox_model(self.employee_box, employeeTableName, "lastname")
 
         self.layout = QHBoxLayout(self)
         self.layout.addWidget(self.widget)
@@ -188,8 +184,11 @@ class AddOffPeriodDialog(EditorDialog):
         end_date = datetime(end.year(), end.month(), end.day())
         off_period = OffPeriod(e_id=e_id, start=start_date, end=end_date)
         persist_off_period(off_period)
-        self.parent.reload_table_contents(model=EmployeeTypeModel())
+        self.parent.reload_table_contents(model=OffPeriodModel())
         self.close()
 
     def clear_fields(self):
-        self.widget.employeeBox.setCurrentIndex(0)  # noqa
+        self.employee_box.model().select()
+        self.employee_box.setCurrentIndex(0)  # noqa
+        self.widget.startEdit.setSelectedDate(QDate.currentDate())  # noqa
+        self.widget.endEdit.setSelectedDate(QDate.currentDate())  # noqa

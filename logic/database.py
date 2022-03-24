@@ -3,7 +3,8 @@ from datetime import datetime
 
 from PySide6.QtCore import QDate
 from PySide6.QtGui import Qt
-from PySide6.QtSql import QSqlQueryModel, QSqlDatabase
+from PySide6.QtSql import QSqlQueryModel, QSqlDatabase, QSqlTableModel
+from PySide6.QtWidgets import QComboBox
 from sqlalchemy import create_engine as ce
 from sqlalchemy.orm import sessionmaker as sm, join
 
@@ -67,6 +68,17 @@ class OffPeriodModel(SearchTableModel):
         self.setHeaderData(2, Qt.Horizontal, self.tr("End"))
         self.setHeaderData(3, Qt.Horizontal, self.tr("First Name"))
         self.setHeaderData(4, Qt.Horizontal, self.tr("Last Name"))
+
+
+def configure_combobox_model(box: QComboBox, table_name: str, column: str):
+    model = QSqlTableModel(box)
+    model.setTable(table_name)
+    column = model.fieldIndex(column)
+    model.setSort(column, Qt.AscendingOrder)
+    model.select()
+    box.setModel(model)
+    box.setEditable(True)
+    box.setModelColumn(column)
 
 
 def persist_employee_type(employee_type: EmployeeType):

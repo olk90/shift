@@ -3,8 +3,8 @@ from PySide6.QtCore import QDate
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialogButtonBox
 
-from logic.database import find_e_type_by_e_id, find_employee_types, find_employee_by_id
-from logic.model import RotationPeriod, EmployeeType, Employee, OffPeriod
+from logic.database import find_e_type_by_e_id, find_employee_types, find_employee_by_id, configure_combobox_model
+from logic.model import RotationPeriod, EmployeeType, Employee, OffPeriod, employeeTypeTableName
 from views.helpers import load_ui_file
 
 
@@ -72,9 +72,7 @@ class EmployeeEditorWidget(EditorWidget):
         self.typeCombobox = self.widget.typeCombobox  # noqa
         self.referenceSpinner = self.widget.referenceSpinner  # noqa
 
-        e_types = find_employee_types()
-        for e_type in e_types:
-            self.typeCombobox.addItem(e_type.designation, userData=None)  # noqa
+        configure_combobox_model(self.typeCombobox, employeeTypeTableName, "designation")
 
     def fill_fields(self, employee: Employee):
         self.item_id = employee.id
@@ -82,10 +80,7 @@ class EmployeeEditorWidget(EditorWidget):
         self.lastNameEdit.setText(employee.lastname)
         self.referenceSpinner.setValue(employee.referenceValue)  # noqa
 
-        e_type = find_e_type_by_e_id(self.item_id)
-        index = self.typeCombobox.findText(e_type.designation, QtCore.Qt.MatchExactly)
-        if index >= 0:
-            self.typeCombobox.setCurrentIndex(index)  # noqa
+        self.typeCombobox.model().select()
 
     def get_values(self) -> dict:
         return {
