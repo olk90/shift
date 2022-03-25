@@ -11,7 +11,7 @@ from logic.model import Employee, EmployeeType, OffPeriod
 from views.editorDialogs import AddEmployeeDialog, AddOffPeriodDialog
 from views.editorDialogs import AddEmployeeTypeDialog
 from views.editorWidgets import EmployeeEditorWidget, EditorWidget, EmployeeTypeEditorWidget, OffPeriodEditorWidget
-from views.helpers import load_ui_file
+from views.helpers import load_ui_file, EmployeeItemDelegate, CenteredItemDelegate
 
 
 class TableDialog(QWidget):
@@ -34,7 +34,7 @@ class TableDialog(QWidget):
         self.configure_buttons()
         self.configure_search()
 
-    def get_table(self):
+    def get_table(self) -> QTableView:
         return self.table_widget.table  # noqa -> loaded from ui file
 
     def setup_table(self, model: SearchTableModel, header_range: range):
@@ -98,10 +98,11 @@ class EmployeeWidget(TableDialog):
     def __init__(self):
         super(EmployeeWidget, self).__init__(table_ui_name="ui/employeeView.ui")
         self.add_dialog = AddEmployeeDialog(self)
-        self.setup_table(EmployeeModel(), range(1, 5))
+        self.setup_table(EmployeeModel(), range(1, 6))
 
-    def get_table(self):
-        return self.table_widget.table  # noqa -> loaded from ui file
+        tableview: QTableView = self.get_table()
+        delegate: EmployeeItemDelegate = EmployeeItemDelegate()
+        tableview.setItemDelegate(delegate)
 
     def get_editor_widget(self) -> EditorWidget:
         return EmployeeEditorWidget()
@@ -146,8 +147,9 @@ class EmployeeTypeWidget(TableDialog):
         self.add_dialog = AddEmployeeTypeDialog(self)
         self.setup_table(EmployeeTypeModel(), range(1, 3))
 
-    def get_table(self):
-        return self.table_widget.table  # noqa -> loaded from ui file
+        tableview: QTableView = self.get_table()
+        delegate: CenteredItemDelegate = CenteredItemDelegate()
+        tableview.setItemDelegate(delegate)
 
     def get_editor_widget(self) -> EditorWidget:
         return EmployeeTypeEditorWidget()
@@ -195,8 +197,9 @@ class OffPeriodWidget(TableDialog):
         self.add_dialog = AddOffPeriodDialog(self)
         self.setup_table(OffPeriodModel(), range(1, 5))
 
-    def get_table(self):
-        return self.table_widget.table  # noqa -> loaded from ui file
+        tableview: QTableView = self.get_table()
+        delegate: CenteredItemDelegate = CenteredItemDelegate()
+        tableview.setItemDelegate(delegate)
 
     def get_editor_widget(self) -> EditorWidget:
         return OffPeriodEditorWidget()

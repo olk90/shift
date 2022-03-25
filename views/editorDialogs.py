@@ -117,10 +117,13 @@ class AddEmployeeDialog(EditorDialog):
         first_name: str = self.widget.firstNameEdit.text()  # noqa
         last_name: str = self.widget.lastNameEdit.text()  # noqa
         reference: str = self.widget.referenceSpinner.text()  # noqa
+        night_shifts: bool = self.widget.nightShiftsEdit.isChecked()  # noqa
+
         model: QSqlTableModel = self.type_box.model()
         index: int = self.type_box.currentIndex()
         et_id = model.index(index, model.fieldIndex("id")).data()
-        employee = Employee(firstname=first_name, lastname=last_name, referenceValue=reference, e_type_id=et_id)
+        employee = Employee(firstname=first_name, lastname=last_name, referenceValue=reference,
+                            night_shifts=night_shifts, e_type_id=et_id)
         persist_employee(employee)
         self.parent.reload_table_contents(model=EmployeeModel())
         self.close()

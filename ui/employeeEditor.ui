@@ -75,6 +75,20 @@
        <item row="3" column="1">
         <widget class="QSpinBox" name="referenceSpinner"/>
        </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="nightShiftsLabel">
+         <property name="text">
+          <string>Night Shifts</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QCheckBox" name="nightShiftsEdit">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
      <item>

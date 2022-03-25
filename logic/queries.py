@@ -20,6 +20,7 @@ def build_employee_query(search: str) -> str:
         e.firstname,
         e.lastname,
         e.referenceValue,
+        e.night_shifts,
         t.designation
     from Employee e
     inner join EmployeeType t 

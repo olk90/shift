@@ -1,4 +1,4 @@
-from sqlalchemy import (Column, Integer, String, ForeignKey, Date)
+from sqlalchemy import (Column, Integer, String, ForeignKey, Date, Boolean)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -35,6 +35,7 @@ class Employee(Base):
     firstname = Column(String(100), nullable=False)
     lastname = Column(String(100), nullable=False)
     referenceValue = Column(Integer, nullable=False, default=0)
+    night_shifts = Column(Boolean, nullable=False, default=True)
 
     e_type_id = Column(Integer, ForeignKey("EmployeeType.id"))
     e_type = relationship(employeeTypeTableName, backref="employees")

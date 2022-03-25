@@ -4,7 +4,7 @@
 <context>
     <name>AddEmployeeDialog</name>
     <message>
-        <location filename="views/editorDialogs.py" line="105"/>
+        <location filename="views/editorDialogs.py" line="106"/>
         <source>Add Employee</source>
         <translation>Mitarbeiter hinzufügen</translation>
     </message>
@@ -20,7 +20,7 @@
 <context>
     <name>AddEmployeeTypeDialog</name>
     <message>
-        <location filename="views/editorDialogs.py" line="138"/>
+        <location filename="views/editorDialogs.py" line="144"/>
         <source>Add Employee Type</source>
         <translation>Mitarbeitertyp hinzufügen</translation>
     </message>
@@ -36,12 +36,12 @@
 <context>
     <name>EditorDialog</name>
     <message>
-        <location filename="views/editorDialogs.py" line="36"/>
+        <location filename="views/editorDialogs.py" line="37"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="views/editorDialogs.py" line="37"/>
+        <location filename="views/editorDialogs.py" line="38"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
@@ -73,22 +73,27 @@
 <context>
     <name>EmployeeModel</name>
     <message>
-        <location filename="logic/database.py" line="54"/>
+        <location filename="logic/database.py" line="56"/>
         <source>First Name</source>
         <translation>Vorname</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="55"/>
+        <location filename="logic/database.py" line="57"/>
         <source>Last Name</source>
         <translation>Nachname</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="56"/>
+        <location filename="logic/database.py" line="58"/>
         <source>Reference Value</source>
         <translation>Referenzwert</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="57"/>
+        <location filename="logic/database.py" line="59"/>
+        <source>Night Shifts</source>
+        <translation>Nachtschichten</translation>
+    </message>
+    <message>
+        <location filename="logic/database.py" line="60"/>
         <source>Type</source>
         <translation>Typ</translation>
     </message>
@@ -107,12 +112,12 @@
 <context>
     <name>EmployeeTypeModel</name>
     <message>
-        <location filename="logic/database.py" line="44"/>
+        <location filename="logic/database.py" line="46"/>
         <source>Designation</source>
         <translation>Bezeichnung</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="45"/>
+        <location filename="logic/database.py" line="47"/>
         <source>Rotation Period</source>
         <translation>Rotationsintervall</translation>
     </message>
@@ -152,6 +157,11 @@
         <location filename="ui/employeeEditor.ui" line="71"/>
         <source>Reference Value</source>
         <translation>Referenzwert</translation>
+    </message>
+    <message>
+        <location filename="ui/employeeEditor.ui" line="81"/>
+        <source>Night Shifts</source>
+        <translation>Nachtschichten</translation>
     </message>
     <message>
         <location filename="ui/optionsEditor.ui" line="29"/>
@@ -233,22 +243,22 @@
 <context>
     <name>OffPeriodModel</name>
     <message>
-        <location filename="logic/database.py" line="66"/>
+        <location filename="logic/database.py" line="80"/>
         <source>Start</source>
         <translation>Anfang</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="67"/>
+        <location filename="logic/database.py" line="81"/>
         <source>End</source>
         <translation>Ende</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="68"/>
+        <location filename="logic/database.py" line="82"/>
         <source>First Name</source>
         <translation>Vorname</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="69"/>
+        <location filename="logic/database.py" line="83"/>
         <source>Last Name</source>
         <translation>Nachname</translation>
     </message>

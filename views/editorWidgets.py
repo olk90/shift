@@ -71,6 +71,7 @@ class EmployeeEditorWidget(EditorWidget):
         self.lastNameEdit = self.widget.lastNameEdit  # noqa
         self.typeCombobox = self.widget.typeCombobox  # noqa
         self.referenceSpinner = self.widget.referenceSpinner  # noqa
+        self.nightShiftsEdit = self.widget.nightShiftsEdit  # noqa
 
         configure_combobox_model(self.typeCombobox, employeeTypeTableName, "designation")
 
@@ -78,7 +79,8 @@ class EmployeeEditorWidget(EditorWidget):
         self.item_id = employee.id
         self.firstNameEdit.setText(employee.firstname)
         self.lastNameEdit.setText(employee.lastname)
-        self.referenceSpinner.setValue(employee.referenceValue)  # noqa
+        self.referenceSpinner.setValue(employee.referenceValue)
+        self.nightShiftsEdit.setChecked(employee.night_shifts)
 
         self.typeCombobox.model().select()
 
@@ -88,6 +90,7 @@ class EmployeeEditorWidget(EditorWidget):
             "firstname": self.firstNameEdit.text(),
             "lastname": self.lastNameEdit.text(),
             "reference_value": self.referenceSpinner.value(),
+            "night_shifts": self.nightShiftsEdit.isChecked(),
             "e_type": self.typeCombobox.currentText()
         }
 
