@@ -61,9 +61,9 @@ class Schedule(Base):
     id = Column(Integer, primary_key=True)
     date = Column(Date, nullable=False)
     day_id = Column(Integer, ForeignKey("Employee.id"))
-    day_shift = relationship(employeeTableName, backref="day_shifts")
+    day_shift = relationship(employeeTableName, backref="days", foreign_keys=[day_id])
     night_id = Column(Integer, ForeignKey("Employee.id"))
-    night_shift = relationship(employeeTableName, backref="night_shifts")
+    night_shift = relationship(employeeTableName, backref="nights", foreign_keys=[night_id])
     comment = Column(String(280))
 
 
