@@ -1,10 +1,10 @@
-from PySide6 import QtCore
 from PySide6.QtCore import QDate
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialogButtonBox
 
-from logic.database import find_e_type_by_e_id, find_employee_types, find_employee_by_id, configure_combobox_model
-from logic.model import RotationPeriod, EmployeeType, Employee, OffPeriod, employeeTypeTableName
+from logic.database import find_employee_by_id, configure_query_model
+from logic.model import RotationPeriod, EmployeeType, Employee, OffPeriod
+from logic.queries import build_employee_type_designation_query
 from views.helpers import load_ui_file
 
 
@@ -70,7 +70,8 @@ class EmployeeEditorWidget(EditorWidget):
         self.referenceSpinner = self.widget.referenceSpinner  # noqa
         self.nightShiftsEdit = self.widget.nightShiftsEdit  # noqa
 
-        configure_combobox_model(self.typeCombobox, employeeTypeTableName, "designation")
+        query: str = build_employee_type_designation_query()
+        configure_query_model(self.typeCombobox, query)
 
     def fill_fields(self, employee: Employee):
         self.item_id = employee.id
@@ -79,7 +80,8 @@ class EmployeeEditorWidget(EditorWidget):
         self.referenceSpinner.setValue(employee.referenceValue)
         self.nightShiftsEdit.setChecked(employee.night_shifts)
 
-        self.typeCombobox.model().select()
+        query: str = build_employee_type_designation_query()
+        configure_query_model(self.typeCombobox, query)
 
     def get_values(self) -> dict:
         return {

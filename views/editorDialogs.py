@@ -9,8 +9,9 @@ from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialog, QMainWindow, QAppli
 
 from logic.config import properties
 from logic.database import persist_employee, persist_employee_type, EmployeeModel, \
-    EmployeeTypeModel, persist_off_period, configure_combobox_model, OffPeriodModel
-from logic.model import EmployeeType, Employee, RotationPeriod, OffPeriod, employeeTableName, employeeTypeTableName
+    EmployeeTypeModel, persist_off_period, OffPeriodModel, configure_query_model
+from logic.model import EmployeeType, Employee, RotationPeriod, OffPeriod
+from logic.queries import build_employee_fullname_query, build_employee_type_designation_query
 from views.helpers import load_ui_file
 
 
@@ -105,7 +106,8 @@ class AddEmployeeDialog(EditorDialog):
 
         self.widget.editorTitle.setText(self.tr("Add Employee"))  # noqa
         self.type_box = self.widget.typeCombobox  # noqa
-        configure_combobox_model(self.type_box, employeeTypeTableName, "designation")
+        query: str = build_employee_type_designation_query()
+        configure_query_model(self.type_box, query)
 
         self.layout = QHBoxLayout(self)
         self.layout.addWidget(self.widget)
@@ -129,7 +131,8 @@ class AddEmployeeDialog(EditorDialog):
         self.close()
 
     def clear_fields(self):
-        self.type_box.model().select()
+        query: str = build_employee_type_designation_query()
+        self.type_box.model().setQuery(query)
         self.widget.firstNameEdit.setText("")  # noqa
         self.widget.lastNameEdit.setText("")  # noqa
         self.widget.referenceSpinner.setValue(0)  # noqa
@@ -169,7 +172,8 @@ class AddOffPeriodDialog(EditorDialog):
         super().__init__(parent=parent, ui_file_name="ui/offPeriodAddDialog.ui")
 
         self.employee_box: QComboBox = self.widget.employeeBox  # noqa
-        configure_combobox_model(self.employee_box, employeeTableName, "lastname")
+        query: str = build_employee_fullname_query()
+        configure_query_model(self.employee_box, query)
 
         self.layout = QHBoxLayout(self)
         self.layout.addWidget(self.widget)
@@ -180,7 +184,7 @@ class AddOffPeriodDialog(EditorDialog):
     def commit(self):
         model: QSqlTableModel = self.employee_box.model()
         index: int = self.employee_box.currentIndex()
-        e_id = model.index(index, model.fieldIndex("id")).data()
+        e_id = model.index(index, 1).data()
         start: QDate = self.widget.startEdit.selectedDate()  # noqa
         start_date = datetime(start.year(), start.month(), start.day())
         end: QDate = self.widget.endEdit.selectedDate()  # noqa
@@ -191,7 +195,8 @@ class AddOffPeriodDialog(EditorDialog):
         self.close()
 
     def clear_fields(self):
-        self.employee_box.model().select()
+        query: str = build_employee_fullname_query()
+        self.employee_box.model().setQuery(query)
         self.employee_box.setCurrentIndex(0)  # noqa
         self.widget.startEdit.setSelectedDate(QDate.currentDate())  # noqa
         self.widget.endEdit.setSelectedDate(QDate.currentDate())  # noqa

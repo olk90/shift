@@ -196,7 +196,7 @@ class OffPeriodWidget(TableDialog):
     def __init__(self):
         super(OffPeriodWidget, self).__init__(table_ui_name="ui/offPeriodView.ui")
         self.add_dialog = AddOffPeriodDialog(self)
-        self.setup_table(OffPeriodModel(), range(1, 5))
+        self.setup_table(OffPeriodModel(), range(1, 4))
 
         tableview: QTableView = self.get_table()
         delegate: CenteredItemDelegate = CenteredItemDelegate()

@@ -67,8 +67,7 @@ class OffPeriodModel(SearchTableModel):
         self.setHeaderData(0, Qt.Horizontal, "ID")
         self.setHeaderData(1, Qt.Horizontal, self.tr("Start"))
         self.setHeaderData(2, Qt.Horizontal, self.tr("End"))
-        self.setHeaderData(3, Qt.Horizontal, self.tr("First Name"))
-        self.setHeaderData(4, Qt.Horizontal, self.tr("Last Name"))
+        self.setHeaderData(3, Qt.Horizontal, self.tr("Employee"))
 
 
 class ScheduleModel(SearchTableModel):
@@ -83,15 +82,12 @@ class ScheduleModel(SearchTableModel):
         self.setHeaderData(4, Qt.Horizontal, self.tr("Comment"))
 
 
-def configure_combobox_model(box: QComboBox, table_name: str, column: str):
-    model = QSqlTableModel(box)
-    model.setTable(table_name)
-    column = model.fieldIndex(column)
-    model.setSort(column, Qt.AscendingOrder)
-    model.select()
+def configure_query_model(box: QComboBox, query: str):
+    model = QSqlQueryModel(box)
+    model.setQuery(query)
+    model.setHeaderData(0, Qt.Horizontal, "Name")
     box.setModel(model)
     box.setEditable(True)
-    box.setModelColumn(column)
 
 
 def persist_employee_type(employee_type: EmployeeType):

@@ -34,15 +34,25 @@ def build_employee_query(search: str) -> str:
     return query
 
 
-def build_employee_combo_query() -> str:
+def build_employee_fullname_query() -> str:
     query = """
         select
-            e.id,
-            e.firstname,
-            e.lastname,
+            e.firstname || ' ' || e.lastname as name,
+            e.id 
         from Employee e
         order by e.lastname, e.firstname
         """
+    return query
+
+
+def build_employee_type_designation_query() -> str:
+    query = """
+        select
+            e.designation,
+            e.id
+        from EmployeeType e
+        order by e.designation
+    """
     return query
 
 
@@ -52,8 +62,7 @@ def build_off_period_query(search: str) -> str:
         p.id,
         p.start,
         p.end,
-        e.firstname,
-        e.lastname
+        e.firstname || ' ' || e.lastname as e_fullname
     from OffPeriod p
     inner join Employee e 
     on p.e_id = e.id
