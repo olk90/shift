@@ -19,6 +19,9 @@ class EditorWidget(QWidget):
         self.widget = loader.load(ui_file)
         ui_file.close()
 
+        self.layout = QHBoxLayout(self)
+        self.layout.addWidget(self.widget)
+
         self.buttonBox: QDialogButtonBox = self.widget.buttonBox  # noqa
         self.configure_buttons()
 
@@ -37,9 +40,6 @@ class EmployeeTypeEditorWidget(EditorWidget):
 
     def __init__(self, item_id=None):
         super().__init__(ui_file_name="ui/employeeTypeEditor.ui", item_id=item_id)
-
-        self.layout = QHBoxLayout(self)
-        self.layout.addWidget(self.widget)
 
         self.designationEdit = self.widget.designationEdit  # noqa
         self.rotationBox = self.widget.rotationBox  # noqa
@@ -63,9 +63,6 @@ class EmployeeEditorWidget(EditorWidget):
 
     def __init__(self, item_id=None):
         super().__init__(ui_file_name="ui/employeeEditor.ui", item_id=item_id)
-
-        self.layout = QHBoxLayout(self)
-        self.layout.addWidget(self.widget)
 
         self.firstNameEdit = self.widget.firstNameEdit  # noqa
         self.lastNameEdit = self.widget.lastNameEdit  # noqa
@@ -100,9 +97,6 @@ class OffPeriodEditorWidget(EditorWidget):
     def __init__(self, item_id=None):
         super().__init__(ui_file_name="ui/offPeriodEditor.ui", item_id=item_id)
 
-        self.layout = QHBoxLayout(self)
-        self.layout.addWidget(self.widget)
-
         self.name_label = self.widget.name_label  # noqa
         self.startEdit = self.widget.startEdit  # noqa
         self.endEdit = self.widget.endEdit  # noqa
@@ -126,3 +120,9 @@ class OffPeriodEditorWidget(EditorWidget):
             "start": self.startEdit.selectedDate(),
             "end": self.endEdit.selectedDate()
         }
+
+
+class ScheduleEditorWidget(EditorWidget):
+
+    def __init__(self, item_id=None):
+        super().__init__(ui_file_name="ui/scheduleEditor.ui", item_id=item_id)

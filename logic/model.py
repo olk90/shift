@@ -6,6 +6,7 @@ Base = declarative_base()
 employeeTypeTableName: str = "EmployeeType"
 employeeTableName: str = "Employee"
 offPeriodTableName: str = "OffPeriod"
+scheduleTableName: str = "Schedule"
 
 
 class ShiftType:
@@ -52,6 +53,18 @@ class OffPeriod(Base):
     end = Column(Date, nullable=False)
     e_id = Column(Integer, ForeignKey("Employee.id"))
     employee = relationship(employeeTableName, backref="off_periods")
+
+
+class Schedule(Base):
+    __tablename__ = scheduleTableName
+
+    id = Column(Integer, primary_key=True)
+    date = Column(Date, nullable=False)
+    day_id = Column(Integer, ForeignKey("Employee.id"))
+    day_shift = relationship(employeeTableName, backref="day_shifts")
+    night_id = Column(Integer, ForeignKey("Employee.id"))
+    night_shift = relationship(employeeTableName, backref="night_shifts")
+    comment = Column(String(280))
 
 
 def create_tables(engine):

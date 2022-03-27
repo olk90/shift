@@ -63,3 +63,26 @@ def build_off_period_query(search: str) -> str:
     order by e.lastname, e.firstname
     """.format(search=search)
     return query
+
+
+def build_schedule_query(search: str) -> str:
+    query = """
+    select 
+        s.id,
+        s.date,
+        d.firstname || ' ' || d.lastname as d_fullname,
+        n.firstname || ' ' || n.lastname as n_fullname,
+        s.comment
+    from Schedule s
+    inner join Employee d
+    on d.id = s.day_id
+    inner join Employee n 
+    on n.id = s.night_id
+    where 
+        d.firstname like '%{search}%'
+        or d.lastname like '%{search}%'
+        or n.firstname like '%{search}%'
+        or n.lastname like '%{search}%'
+        or s.comment like '%{search}%'
+    """.format(search=search)
+    return query

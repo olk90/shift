@@ -2,24 +2,25 @@ import datetime
 
 from PySide6.QtCore import QModelIndex, QItemSelectionModel
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAbstractItemView, QLineEdit, QPushButton, \
-    QSpinBox
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAbstractItemView, QLineEdit, \
+    QPushButton, QSpinBox
 
 from logic.database import delete_employee, \
     EmployeeModel, SearchTableModel, update_employee_type, OffPeriodModel, find_off_period_by_id, delete_off_period, \
-    update_off_period
+    update_off_period, ScheduleModel
 from logic.database import find_employee_by_id, update_employee, EmployeeTypeModel, find_employee_type_by_id, \
     delete_employee_type
 from logic.model import Employee, EmployeeType, OffPeriod
 from views.editorDialogs import AddEmployeeDialog, AddOffPeriodDialog
 from views.editorDialogs import AddEmployeeTypeDialog
-from views.editorWidgets import EmployeeEditorWidget, EditorWidget, EmployeeTypeEditorWidget, OffPeriodEditorWidget
+from views.editorWidgets import EmployeeEditorWidget, EditorWidget, EmployeeTypeEditorWidget, OffPeriodEditorWidget, \
+    ScheduleEditorWidget
 from views.helpers import load_ui_file, EmployeeItemDelegate, CenteredItemDelegate
 
 
 class TableDialog(QWidget):
 
-    def __init__(self, table_ui_name: str):
+    def __init__(self, table_ui_name: str, configure_widgets: bool = True):
         super(TableDialog, self).__init__()
         loader = QUiLoader()
 
@@ -34,7 +35,10 @@ class TableDialog(QWidget):
         self.layout.addWidget(self.table_widget, stretch=2)
         self.layout.addWidget(self.editor, stretch=1)
 
-        self.configure_buttons()
+        if configure_widgets:
+            # widgets might be configured in a subclass afterwards
+            self.configure_widgets()
+
         self.configure_search()
 
     def get_table(self) -> QTableView:
@@ -63,7 +67,7 @@ class TableDialog(QWidget):
         item = self.get_selected_item()
         self.editor.fill_fields(item)
 
-    def configure_buttons(self):
+    def configure_widgets(self):
         self.table_widget.addButton.clicked.connect(self.add_item)  # noqa -> button loaded from ui file
         self.table_widget.deleteButton.clicked.connect(self.delete_item)  # noqa -> button loaded from ui file
         self.editor.buttonBox.accepted.connect(self.commit_changes)
@@ -166,12 +170,6 @@ class EmployeeTypeWidget(TableDialog):
         item = find_employee_type_by_id(item_id)
         return item
 
-    def configure_buttons(self):
-        self.table_widget.addButton.clicked.connect(self.add_item)  # noqa -> button loaded from ui file
-        self.table_widget.deleteButton.clicked.connect(self.delete_item)  # noqa -> button loaded from ui file
-        self.editor.buttonBox.accepted.connect(self.commit_changes)
-        self.editor.buttonBox.rejected.connect(self.revert_changes)
-
     def add_item(self):
         self.add_dialog.clear_fields()
         self.add_dialog.exec_()
@@ -216,12 +214,6 @@ class OffPeriodWidget(TableDialog):
         item = find_off_period_by_id(item_id)
         return item
 
-    def configure_buttons(self):
-        self.table_widget.addButton.clicked.connect(self.add_item)  # noqa -> button loaded from ui file
-        self.table_widget.deleteButton.clicked.connect(self.delete_item)  # noqa -> button loaded from ui file
-        self.editor.buttonBox.accepted.connect(self.commit_changes)
-        self.editor.buttonBox.rejected.connect(self.revert_changes)
-
     def add_item(self):
         self.add_dialog.clear_fields()
         self.add_dialog.exec_()
@@ -243,15 +235,11 @@ class OffPeriodWidget(TableDialog):
         self.editor.fill_fields(period)
 
 
-class PlanningWidget(QWidget):
+class PlanningWidget(TableDialog):
 
     def __init__(self):
-        super(PlanningWidget, self).__init__()
-        loader = QUiLoader()
-
-        table_file = load_ui_file("ui/planningView.ui")
-        self.table_widget = loader.load(table_file)
-        table_file.close()
+        super(PlanningWidget, self).__init__(table_ui_name="ui/planningView.ui", configure_widgets=False)
+        self.setup_table(ScheduleModel(), range(1, 5))
 
         self.month_box: QComboBox = self.table_widget.monthBox  # noqa
         self.year_box: QSpinBox = self.table_widget.yearBox  # noqa
@@ -260,8 +248,8 @@ class PlanningWidget(QWidget):
 
         self.configure_widgets()
 
-        self.layout = QHBoxLayout(self)
-        self.layout.addWidget(self.table_widget)
+    def get_editor_widget(self) -> EditorWidget:
+        return ScheduleEditorWidget()
 
     def configure_widgets(self):
         self.configure_month_box()

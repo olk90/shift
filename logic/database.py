@@ -1,8 +1,7 @@
 import sys
 from datetime import datetime
-from typing import Any
 
-from PySide6.QtCore import QDate, QModelIndex
+from PySide6.QtCore import QDate
 from PySide6.QtGui import Qt
 from PySide6.QtSql import QSqlQueryModel, QSqlDatabase, QSqlTableModel
 from PySide6.QtWidgets import QComboBox
@@ -10,7 +9,7 @@ from sqlalchemy import create_engine as ce
 from sqlalchemy.orm import sessionmaker as sm, join
 
 from logic.model import create_tables, Employee, EmployeeType, OffPeriod
-from logic.queries import build_employee_query, build_employee_type_query, build_off_period_query
+from logic.queries import build_employee_query, build_employee_type_query, build_off_period_query, build_schedule_query
 
 db = ce("sqlite:///shift.db")
 
@@ -59,17 +58,6 @@ class EmployeeModel(SearchTableModel):
         self.setHeaderData(4, Qt.Horizontal, self.tr("Night Shifts"))
         self.setHeaderData(5, Qt.Horizontal, self.tr("Type"))
 
-    # def data(self, index: QModelIndex, role: int=0):  # noqa
-    #     data = super(EmployeeModel, self).data(index, role)
-    #     if role == Qt.ItemDataRole.CheckStateRole and index.column() == 4:
-    #         model = index.model()
-    #         data = model.index(index.row(), index.column()).data()
-    #         if data:
-    #             data = Qt.Checked
-    #         else:
-    #             data = Qt.Unchecked
-    #     return data
-
 
 class OffPeriodModel(SearchTableModel):
     def __init__(self, search: str = ""):
@@ -81,6 +69,18 @@ class OffPeriodModel(SearchTableModel):
         self.setHeaderData(2, Qt.Horizontal, self.tr("End"))
         self.setHeaderData(3, Qt.Horizontal, self.tr("First Name"))
         self.setHeaderData(4, Qt.Horizontal, self.tr("Last Name"))
+
+
+class ScheduleModel(SearchTableModel):
+    def __init__(self, search: str = ""):
+        super(ScheduleModel, self).__init__(search)
+        query = build_schedule_query(self.search)
+        self.setQuery(query)
+        self.setHeaderData(0, Qt.Horizontal, "ID")
+        self.setHeaderData(1, Qt.Horizontal, self.tr("Date"))
+        self.setHeaderData(2, Qt.Horizontal, self.tr("Day Shift"))
+        self.setHeaderData(3, Qt.Horizontal, self.tr("Night Shift"))
+        self.setHeaderData(4, Qt.Horizontal, self.tr("Comment"))
 
 
 def configure_combobox_model(box: QComboBox, table_name: str, column: str):
