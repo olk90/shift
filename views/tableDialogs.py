@@ -1,6 +1,9 @@
+import datetime
+
 from PySide6.QtCore import QModelIndex, QItemSelectionModel
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAbstractItemView, QLineEdit
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAbstractItemView, QLineEdit, QPushButton, \
+    QSpinBox
 
 from logic.database import delete_employee, \
     EmployeeModel, SearchTableModel, update_employee_type, OffPeriodModel, find_off_period_by_id, delete_off_period, \
@@ -238,3 +241,55 @@ class OffPeriodWidget(TableDialog):
     def revert_changes(self):
         period: OffPeriod = find_off_period_by_id(self.editor.item_id)
         self.editor.fill_fields(period)
+
+
+class PlanningWidget(QWidget):
+
+    def __init__(self):
+        super(PlanningWidget, self).__init__()
+        loader = QUiLoader()
+
+        table_file = load_ui_file("ui/planningView.ui")
+        self.table_widget = loader.load(table_file)
+        table_file.close()
+
+        self.month_box: QComboBox = self.table_widget.monthBox  # noqa
+        self.year_box: QSpinBox = self.table_widget.yearBox  # noqa
+        self.planning_button: QPushButton = self.table_widget.planningButton  # noqa
+        self.table: QTableView = self.table_widget.table  # noqa
+
+        self.configure_widgets()
+
+        self.layout = QHBoxLayout(self)
+        self.layout.addWidget(self.table_widget)
+
+    def configure_widgets(self):
+        self.configure_month_box()
+        self.configure_year_box()
+
+    def configure_month_box(self):
+        months: list = [
+            self.tr("January"),
+            self.tr("February"),
+            self.tr("March"),
+            self.tr("April"),
+            self.tr("May"),
+            self.tr("June"),
+            self.tr("July"),
+            self.tr("August"),
+            self.tr("September"),
+            self.tr("October"),
+            self.tr("November"),
+            self.tr("December")
+        ]
+        self.month_box.addItems(months)
+        date = datetime.date.today()
+        month: int = date.month - 1  # indices start at 0!
+        self.month_box.setCurrentIndex(month)
+
+    def configure_year_box(self):
+        date = datetime.date.today()
+        year: int = date.year
+        self.year_box.setMinimum(year)
+        self.year_box.setValue(year)
+        self.year_box.setMaximum(9999)

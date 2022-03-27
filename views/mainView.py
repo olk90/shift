@@ -1,9 +1,9 @@
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QMainWindow, QVBoxLayout
+from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 
 from logic.database import EmployeeTypeModel, EmployeeModel, OffPeriodModel
 from views.editorDialogs import OptionsEditorDialog
-from views.tableDialogs import EmployeeWidget, EmployeeTypeWidget, TableDialog, OffPeriodWidget
+from views.tableDialogs import EmployeeWidget, EmployeeTypeWidget, TableDialog, OffPeriodWidget, PlanningWidget
 from views.helpers import load_ui_file
 
 
@@ -45,17 +45,21 @@ class MainWindow(QMainWindow):
         off_period_widget = OffPeriodWidget()
         self.tabview.addTab(off_period_widget, self.tr("Days Off"))
 
+        planning_widget = PlanningWidget()
+        self.tabview.addTab(planning_widget, self.tr("Planning"))
+
         self.tabview.currentChanged.connect(self.reload_current_widget)
 
     def reload_current_widget(self):
-        current: TableDialog = self.tabview.currentWidget()
-        search = current.searchLine.text()
-        if isinstance(current, EmployeeTypeWidget):
-            current.reload_table_contents(EmployeeTypeModel(search))
-        elif isinstance(current, EmployeeWidget):
-            current.reload_table_contents(EmployeeModel(search))
-        elif isinstance(current, OffPeriodWidget):
-            current.reload_table_contents(OffPeriodModel(search))
+        current: QWidget = self.tabview.currentWidget()
+        if isinstance(current, TableDialog):
+            search = current.searchLine.text()
+            if isinstance(current, EmployeeTypeWidget):
+                current.reload_table_contents(EmployeeTypeModel(search))
+            elif isinstance(current, EmployeeWidget):
+                current.reload_table_contents(EmployeeModel(search))
+            elif isinstance(current, OffPeriodWidget):
+                current.reload_table_contents(OffPeriodModel(search))
 
     def configure_buttons(self):
         self.optionsButton.clicked.connect(self.open_options)

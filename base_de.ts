@@ -239,6 +239,11 @@
         <source>Days Off</source>
         <translation>Freie Tage</translation>
     </message>
+    <message>
+        <location filename="views/mainView.py" line="49"/>
+        <source>Planning</source>
+        <translation>Planung</translation>
+    </message>
 </context>
 <context>
     <name>OffPeriodModel</name>
@@ -272,6 +277,69 @@
     <message>
         <source>Cancel</source>
         <translation type="vanished">Abbrechen</translation>
+    </message>
+</context>
+<context>
+    <name>PlanningWidget</name>
+    <message>
+        <location filename="views/tableDialogs.py" line="272"/>
+        <source>January</source>
+        <translation>Januar</translation>
+    </message>
+    <message>
+        <location filename="views/tableDialogs.py" line="273"/>
+        <source>February</source>
+        <translation>Februar</translation>
+    </message>
+    <message>
+        <location filename="views/tableDialogs.py" line="274"/>
+        <source>March</source>
+        <translation>März</translation>
+    </message>
+    <message>
+        <location filename="views/tableDialogs.py" line="275"/>
+        <source>April</source>
+        <translation>April</translation>
+    </message>
+    <message>
+        <location filename="views/tableDialogs.py" line="276"/>
+        <source>May</source>
+        <translation>Mai</translation>
+    </message>
+    <message>
+        <location filename="views/tableDialogs.py" line="277"/>
+        <source>June</source>
+        <translation>Juni</translation>
+    </message>
+    <message>
+        <location filename="views/tableDialogs.py" line="278"/>
+        <source>July</source>
+        <translation>Juli</translation>
+    </message>
+    <message>
+        <location filename="views/tableDialogs.py" line="279"/>
+        <source>August</source>
+        <translation>August</translation>
+    </message>
+    <message>
+        <location filename="views/tableDialogs.py" line="280"/>
+        <source>September</source>
+        <translation>September</translation>
+    </message>
+    <message>
+        <location filename="views/tableDialogs.py" line="281"/>
+        <source>October</source>
+        <translation>Oktober</translation>
+    </message>
+    <message>
+        <location filename="views/tableDialogs.py" line="282"/>
+        <source>November</source>
+        <translation>November</translation>
+    </message>
+    <message>
+        <location filename="views/tableDialogs.py" line="285"/>
+        <source>December</source>
+        <translation>Dezember</translation>
     </message>
 </context>
 <context>
@@ -377,6 +445,19 @@
         <location filename="ui/offPeriodView.ui" line="56"/>
         <source>Delete</source>
         <translation>Löschen</translation>
+    </message>
+</context>
+<context>
+    <name>planningView</name>
+    <message>
+        <location filename="ui/planningView.ui" line="20"/>
+        <source>Form</source>
+        <translation>Formular</translation>
+    </message>
+    <message>
+        <location filename="ui/planningView.ui" line="42"/>
+        <source>Create Schedule</source>
+        <translation>Erstelle Schichtplan</translation>
     </message>
 </context>
 </TS>
