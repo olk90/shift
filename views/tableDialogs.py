@@ -11,11 +11,12 @@ from logic.database import delete_employee, \
 from logic.database import find_employee_by_id, update_employee, EmployeeTypeModel, find_employee_type_by_id, \
     delete_employee_type
 from logic.model import Employee, EmployeeType, OffPeriod
+from logic.planning import create_schedule
 from views.editorDialogs import AddEmployeeDialog, AddOffPeriodDialog
 from views.editorDialogs import AddEmployeeTypeDialog
 from views.editorWidgets import EmployeeEditorWidget, EditorWidget, EmployeeTypeEditorWidget, OffPeriodEditorWidget, \
     ScheduleEditorWidget
-from views.helpers import load_ui_file, EmployeeItemDelegate, CenteredItemDelegate
+from views.helpers import load_ui_file, EmployeeItemDelegate, CenteredItemDelegate, ScheduleItemDelegate
 
 
 class TableDialog(QWidget):
@@ -239,7 +240,6 @@ class PlanningWidget(TableDialog):
 
     def __init__(self):
         super(PlanningWidget, self).__init__(table_ui_name="ui/planningView.ui", configure_widgets=False)
-        self.setup_table(ScheduleModel(), range(1, 5))
 
         self.month_box: QComboBox = self.table_widget.monthBox  # noqa
         self.year_box: QSpinBox = self.table_widget.yearBox  # noqa
@@ -248,12 +248,22 @@ class PlanningWidget(TableDialog):
 
         self.configure_widgets()
 
+        year = self.year_box.value()
+        month = self.month_box.currentIndex() + 1
+        self.setup_table(ScheduleModel(year, month), range(1, 5))
+
+        tableview: QTableView = self.get_table()
+        delegate: ScheduleItemDelegate = ScheduleItemDelegate()
+        tableview.setItemDelegate(delegate)
+        tableview.verticalHeader().setVisible(False)
+
     def get_editor_widget(self) -> EditorWidget:
         return ScheduleEditorWidget()
 
     def configure_widgets(self):
         self.configure_month_box()
         self.configure_year_box()
+        self.planning_button.clicked.connect(self.configure_planning_button)
 
     def configure_month_box(self):
         months: list = [
@@ -274,6 +284,7 @@ class PlanningWidget(TableDialog):
         date = datetime.date.today()
         month: int = date.month - 1  # indices start at 0!
         self.month_box.setCurrentIndex(month)
+        self.month_box.currentIndexChanged.connect(self.trigger_reload)
 
     def configure_year_box(self):
         date = datetime.date.today()
@@ -281,3 +292,15 @@ class PlanningWidget(TableDialog):
         self.year_box.setMinimum(year)
         self.year_box.setValue(year)
         self.year_box.setMaximum(9999)
+        self.year_box.valueChanged.connect(self.trigger_reload)
+
+    def trigger_reload(self):
+        month: int = self.month_box.currentIndex() + 1
+        year: int = self.year_box.value()
+        self.reload_table_contents(ScheduleModel(year, month))
+
+    def configure_planning_button(self):
+        month: int = self.month_box.currentIndex() + 1
+        year: int = self.year_box.value()
+        create_schedule(month, year)
+        self.reload_table_contents(ScheduleModel(year, month))

@@ -1,7 +1,7 @@
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 
-from logic.database import EmployeeTypeModel, EmployeeModel, OffPeriodModel
+from logic.database import EmployeeTypeModel, EmployeeModel, OffPeriodModel, ScheduleModel
 from views.editorDialogs import OptionsEditorDialog
 from views.tableDialogs import EmployeeWidget, EmployeeTypeWidget, TableDialog, OffPeriodWidget, PlanningWidget
 from views.helpers import load_ui_file
@@ -60,6 +60,10 @@ class MainWindow(QMainWindow):
                 current.reload_table_contents(EmployeeModel(search))
             elif isinstance(current, OffPeriodWidget):
                 current.reload_table_contents(OffPeriodModel(search))
+            elif isinstance(current, PlanningWidget):
+                year = current.year_box.value()
+                month = current.month_box.currentIndex() + 1
+                current.reload_table_contents(ScheduleModel(year, month, search))
 
     def configure_buttons(self):
         self.optionsButton.clicked.connect(self.open_options)

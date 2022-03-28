@@ -74,7 +74,7 @@ def build_off_period_query(search: str) -> str:
     return query
 
 
-def build_schedule_query(search: str) -> str:
+def build_schedule_query(year: int, month: int, search: str) -> str:
     query = """
     select 
         s.id,
@@ -83,15 +83,16 @@ def build_schedule_query(search: str) -> str:
         n.firstname || ' ' || n.lastname as n_fullname,
         s.comment
     from Schedule s
-    inner join Employee d
+    left join Employee d
     on d.id = s.day_id
-    inner join Employee n 
+    left join Employee n 
     on n.id = s.night_id
     where 
-        d.firstname like '%{search}%'
+        strftime('%m', s.date) = '{month}' and strftime('%Y', s.date) = '{year}'
+        or d.firstname like '%{search}%'
         or d.lastname like '%{search}%'
         or n.firstname like '%{search}%'
         or n.lastname like '%{search}%'
         or s.comment like '%{search}%'
-    """.format(search=search)
+    """.format(year=year, month=str(month).zfill(2), search=search)
     return query

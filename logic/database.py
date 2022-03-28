@@ -8,7 +8,7 @@ from PySide6.QtWidgets import QComboBox
 from sqlalchemy import create_engine as ce
 from sqlalchemy.orm import sessionmaker as sm, join
 
-from logic.model import create_tables, Employee, EmployeeType, OffPeriod
+from logic.model import create_tables, Employee, EmployeeType, OffPeriod, Schedule
 from logic.queries import build_employee_query, build_employee_type_query, build_off_period_query, build_schedule_query
 
 db = ce("sqlite:///shift.db")
@@ -71,9 +71,9 @@ class OffPeriodModel(SearchTableModel):
 
 
 class ScheduleModel(SearchTableModel):
-    def __init__(self, search: str = ""):
+    def __init__(self, year: int, month: int, search: str = ""):
         super(ScheduleModel, self).__init__(search)
-        query = build_schedule_query(self.search)
+        query = build_schedule_query(year, month, self.search)
         self.setQuery(query)
         self.setHeaderData(0, Qt.Horizontal, "ID")
         self.setHeaderData(1, Qt.Horizontal, self.tr("Date"))
@@ -203,4 +203,11 @@ def delete_off_period(period: OffPeriod):
     session = sm(bind=db)
     s = session()
     s.delete(period)
+    s.commit()
+
+
+def persist_schedule(schedule: Schedule):
+    session = sm(bind=db)
+    s = session()
+    s.add(schedule)
     s.commit()
