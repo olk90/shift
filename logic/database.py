@@ -3,9 +3,9 @@ from datetime import datetime
 
 from PySide6.QtCore import QDate
 from PySide6.QtGui import Qt
-from PySide6.QtSql import QSqlQueryModel, QSqlDatabase, QSqlTableModel
+from PySide6.QtSql import QSqlQueryModel, QSqlDatabase
 from PySide6.QtWidgets import QComboBox
-from sqlalchemy import create_engine as ce
+from sqlalchemy import create_engine as ce, desc
 from sqlalchemy.orm import sessionmaker as sm, join
 
 from logic.model import create_tables, Employee, EmployeeType, OffPeriod, Schedule
@@ -213,3 +213,21 @@ def persist_schedule(schedule: Schedule):
     s = session()
     s.add(schedule)
     s.commit()
+
+
+def get_day_shift_candidates() -> list:
+    session = sm(bind=db)
+    s = session()
+    employees: list = s.query(Employee).order_by(desc(Employee.penalty), desc(Employee.referenceValue)).all()
+    s.close()
+    return employees
+
+
+def get_night_shift_candidates() -> list:
+    session = sm(bind=db)
+    s = session()
+    employees: list = s.query(Employee)\
+        .filter_by(night_shifts=True) \
+        .order_by(desc(Employee.penalty), desc(Employee.referenceValue)).all()
+    s.close()
+    return employees
