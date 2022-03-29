@@ -21,6 +21,7 @@ def build_employee_query(search: str) -> str:
         e.lastname,
         e.referenceValue,
         e.night_shifts,
+        e.penalty,
         t.designation
     from Employee e
     inner join EmployeeType t 
@@ -29,7 +30,7 @@ def build_employee_query(search: str) -> str:
         e.firstname like '%{search}%'
         or e.lastname like '%{search}%'
         or t.designation like '%{search}%'
-    order by e.lastname, e.firstname
+    order by e.penalty desc, e.lastname, e.firstname
     """.format(search=search)
     return query
 

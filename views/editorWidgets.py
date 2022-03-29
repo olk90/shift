@@ -69,6 +69,7 @@ class EmployeeEditorWidget(EditorWidget):
         self.typeCombobox = self.widget.typeCombobox  # noqa
         self.referenceSpinner = self.widget.referenceSpinner  # noqa
         self.nightShiftsEdit = self.widget.nightShiftsEdit  # noqa
+        self.penaltySpinner = self.widget.penaltySpinner  # noqa
 
         query: str = build_employee_type_designation_query()
         configure_query_model(self.typeCombobox, query)
@@ -79,6 +80,7 @@ class EmployeeEditorWidget(EditorWidget):
         self.lastNameEdit.setText(employee.lastname)
         self.referenceSpinner.setValue(employee.referenceValue)
         self.nightShiftsEdit.setChecked(employee.night_shifts)
+        self.penaltySpinner.setValue(employee.penalty)
 
         query: str = build_employee_type_designation_query()
         configure_query_model(self.typeCombobox, query)
@@ -89,6 +91,7 @@ class EmployeeEditorWidget(EditorWidget):
             "firstname": self.firstNameEdit.text(),
             "lastname": self.lastNameEdit.text(),
             "reference_value": self.referenceSpinner.value(),
+            "penalty": self.penaltySpinner.value(),
             "night_shifts": self.nightShiftsEdit.isChecked(),
             "e_type": self.typeCombobox.currentText()
         }

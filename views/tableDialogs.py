@@ -106,7 +106,7 @@ class EmployeeWidget(TableDialog):
     def __init__(self):
         super(EmployeeWidget, self).__init__(table_ui_name="ui/employeeView.ui")
         self.add_dialog = AddEmployeeDialog(self)
-        self.setup_table(EmployeeModel(), range(1, 6))
+        self.setup_table(EmployeeModel(), range(1, 7))
 
         tableview: QTableView = self.get_table()
         delegate: EmployeeItemDelegate = EmployeeItemDelegate()

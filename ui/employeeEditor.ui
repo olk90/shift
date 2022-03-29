@@ -85,9 +85,19 @@
        <item row="4" column="1">
         <widget class="QCheckBox" name="nightShiftsEdit">
          <property name="text">
-          <string/>
+          <string> </string>
          </property>
         </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="penaltyLabel">
+         <property name="text">
+          <string>Penalty</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QSpinBox" name="penaltySpinner"/>
        </item>
       </layout>
      </item>

@@ -3,7 +3,7 @@ from datetime import datetime
 import qdarktheme
 from PySide6.QtCore import QDate
 from PySide6.QtCore import QLibraryInfo, QTranslator, QLocale
-from PySide6.QtSql import QSqlTableModel
+from PySide6.QtSql import QSqlTableModel, QSqlQueryModel
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialog, QMainWindow, QApplication, QDialogButtonBox
 
@@ -118,14 +118,15 @@ class AddEmployeeDialog(EditorDialog):
     def commit(self):
         first_name: str = self.widget.firstNameEdit.text()  # noqa
         last_name: str = self.widget.lastNameEdit.text()  # noqa
-        reference: str = self.widget.referenceSpinner.text()  # noqa
+        reference: int = self.widget.referenceSpinner.value()  # noqa
+        penalty: int = self.widget.penaltySpinner.value()  # noqa
         night_shifts: bool = self.widget.nightShiftsEdit.isChecked()  # noqa
 
-        model: QSqlTableModel = self.type_box.model()
+        model: QSqlQueryModel = self.type_box.model()
         index: int = self.type_box.currentIndex()
-        et_id = model.index(index, model.fieldIndex("id")).data()
+        et_id = model.index(index, 1).data()
         employee = Employee(firstname=first_name, lastname=last_name, referenceValue=reference,
-                            night_shifts=night_shifts, e_type_id=et_id)
+                            night_shifts=night_shifts, e_type_id=et_id, penalty=penalty)
         persist_employee(employee)
         self.parent.reload_table_contents(model=EmployeeModel())
         self.close()
@@ -136,6 +137,7 @@ class AddEmployeeDialog(EditorDialog):
         self.widget.firstNameEdit.setText("")  # noqa
         self.widget.lastNameEdit.setText("")  # noqa
         self.widget.referenceSpinner.setValue(0)  # noqa
+        self.widget.penaltySpinner.setValue(0)  # noqa
         self.widget.typeCombobox.setCurrentIndex(0)  # noqa
 
 

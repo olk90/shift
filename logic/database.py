@@ -56,7 +56,8 @@ class EmployeeModel(SearchTableModel):
         self.setHeaderData(2, Qt.Horizontal, self.tr("Last Name"))
         self.setHeaderData(3, Qt.Horizontal, self.tr("Reference Value"))
         self.setHeaderData(4, Qt.Horizontal, self.tr("Night Shifts"))
-        self.setHeaderData(5, Qt.Horizontal, self.tr("Type"))
+        self.setHeaderData(5, Qt.Horizontal, self.tr("Penalty"))
+        self.setHeaderData(6, Qt.Horizontal, self.tr("Type"))
 
 
 class OffPeriodModel(SearchTableModel):
@@ -160,6 +161,7 @@ def update_employee(value_dict: dict):
     employee.firstname = value_dict["firstname"]
     employee.lastname = value_dict["lastname"]
     employee.referenceValue = value_dict["reference_value"]
+    employee.penalty = value_dict["penalty"]
     employee.night_shifts = value_dict["night_shifts"]
     e_type = s.query(EmployeeType).filter_by(designation=value_dict["e_type"]).one()
     employee.e_type = e_type
