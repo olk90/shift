@@ -39,8 +39,7 @@ class TableDialog(QWidget):
         if configure_widgets:
             # widgets might be configured in a subclass afterwards
             self.configure_widgets()
-
-        self.configure_search()
+            self.configure_search()
 
     def get_table(self) -> QTableView:
         return self.table_widget.table  # noqa -> loaded from ui file
@@ -247,6 +246,7 @@ class PlanningWidget(TableDialog):
         self.table: QTableView = self.table_widget.table  # noqa
 
         self.configure_widgets()
+        self.configure_search()
 
         year = self.year_box.value()
         month = self.month_box.currentIndex() + 1
@@ -264,6 +264,16 @@ class PlanningWidget(TableDialog):
         self.configure_month_box()
         self.configure_year_box()
         self.planning_button.clicked.connect(self.configure_planning_button)
+
+    def configure_search(self):
+        self.searchLine.textChanged.connect(
+            lambda x: self.reload_table_contents(self.update_search_model()))
+
+    def update_search_model(self) -> ScheduleModel:
+        year: int = self.year_box.value()
+        month: int = self.month_box.currentIndex() + 1
+        search: str = self.searchLine.text()
+        return ScheduleModel(year, month, search)
 
     def configure_month_box(self):
         months: list = [

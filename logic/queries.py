@@ -90,10 +90,10 @@ def build_schedule_query(year: int, month: int, search: str) -> str:
     on n.id = s.night_id
     where 
         strftime('%m', s.date) = '{month}' and strftime('%Y', s.date) = '{year}'
-        or d.firstname like '%{search}%'
+        and (d.firstname like '%{search}%'
         or d.lastname like '%{search}%'
         or n.firstname like '%{search}%'
         or n.lastname like '%{search}%'
-        or s.comment like '%{search}%'
+        or s.comment like '%{search}%')
     """.format(year=year, month=str(month).zfill(2), search=search)
     return query
