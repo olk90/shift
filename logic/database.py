@@ -5,7 +5,7 @@ from PySide6.QtCore import QDate
 from PySide6.QtGui import Qt
 from PySide6.QtSql import QSqlQueryModel, QSqlDatabase
 from PySide6.QtWidgets import QComboBox
-from sqlalchemy import create_engine as ce, desc
+from sqlalchemy import create_engine as ce, desc, asc
 from sqlalchemy.orm import sessionmaker as sm, join
 
 from logic.model import create_tables, Employee, EmployeeType, OffPeriod, Schedule
@@ -168,6 +168,15 @@ def update_employee(value_dict: dict):
     s.commit()
 
 
+def reset_scores():
+    session = sm(bind=db)
+    s = session()
+    employees: list = s.query(Employee).all()
+    for e in employees:
+        e.score = 0
+    s.commit()
+
+
 def delete_employee(employee: Employee):
     session = sm(bind=db)
     s = session()
@@ -208,17 +217,18 @@ def delete_off_period(period: OffPeriod):
     s.commit()
 
 
-def persist_schedule(schedule: Schedule):
+def get_schedule_by_date(date: datetime.date) -> Schedule:
     session = sm(bind=db)
     s = session()
-    s.add(schedule)
-    s.commit()
+    schedule: Schedule = s.query(Schedule).filter_by(date=date).first()
+    s.close()
+    return schedule
 
 
 def get_day_shift_candidates() -> list:
     session = sm(bind=db)
     s = session()
-    employees: list = s.query(Employee).order_by(desc(Employee.penalty), desc(Employee.referenceValue)).all()
+    employees: list = s.query(Employee).order_by(asc(Employee.score), desc(Employee.referenceValue)).all()
     s.close()
     return employees
 
@@ -226,8 +236,8 @@ def get_day_shift_candidates() -> list:
 def get_night_shift_candidates() -> list:
     session = sm(bind=db)
     s = session()
-    employees: list = s.query(Employee)\
+    employees: list = s.query(Employee) \
         .filter_by(night_shifts=True) \
-        .order_by(desc(Employee.penalty), desc(Employee.referenceValue)).all()
+        .order_by(asc(Employee.score), desc(Employee.referenceValue)).all()
     s.close()
     return employees
