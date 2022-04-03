@@ -228,7 +228,7 @@ def get_schedule_by_date(date: datetime.date) -> Schedule:
 def get_day_shift_candidates() -> list:
     session = sm(bind=db)
     s = session()
-    employees: list = s.query(Employee).order_by(asc(Employee.score), desc(Employee.referenceValue)).all()
+    employees: list = s.scalars(s.query(Employee.id).order_by(asc(Employee.score), desc(Employee.referenceValue))).all()
     s.close()
     return employees
 
@@ -236,8 +236,8 @@ def get_day_shift_candidates() -> list:
 def get_night_shift_candidates() -> list:
     session = sm(bind=db)
     s = session()
-    employees: list = s.query(Employee) \
-        .filter_by(night_shifts=True) \
-        .order_by(asc(Employee.score), desc(Employee.referenceValue)).all()
+    employees: list = s.scalars(s.query(Employee.id)
+                                .filter_by(night_shifts=True)
+                                .order_by(asc(Employee.score), desc(Employee.referenceValue))).all()
     s.close()
     return employees

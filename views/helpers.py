@@ -61,7 +61,7 @@ class ScheduleItemDelegate(CenteredItemDelegate):
         model = index.model()
         date_str: str = model.index(index.row(), 1).data()
         date = datetime.strptime(date_str, '%Y-%m-%d')
-        if date.weekday() > 4:
+        if date.weekday() > 3:
             theme: int = properties.theme_index
             color: QColor = QColor("#3f4042") if theme == 0 else QColor("#dadce0")
             brush: QBrush = QBrush(color)

@@ -22,24 +22,32 @@ def create_schedule(month: int, year: int):
         n_candidates: list = get_night_shift_candidates()
         date = datetime.date(year, month, day)
         day_before = date - datetime.timedelta(days=1)
-        d_candidate: Employee = d_candidates[0]
-        n_candidate: Employee = n_candidates[0]
-        if d_candidate.id == n_candidate.id:
-            n_candidate = n_candidates[1]
+        d_replacement_index = 1
+        n_replacement_index = 1
+        d_candidate_id: int = d_candidates[0]
+        n_candidate_id: int = n_candidates[0]
+        if d_candidate_id == n_candidate_id:
+            n_candidate_id = n_candidates[n_replacement_index]
+            n_replacement_index += 1
 
-        schedule_before: Schedule = get_schedule_by_date(day_before)
-        if schedule_before:
-            night_id = schedule_before.night_id
-            if d_candidate.id == night_id:
-                d_candidate: Employee = d_candidates[1]
+        last_Schedule: Schedule = get_schedule_by_date(day_before)
+        if last_Schedule:
+            day_id: int = last_Schedule.day_id
+            night_id: int = last_Schedule.night_id
+            if d_candidate_id in [day_id, night_id]:
+                d_candidate_id = d_candidates[d_replacement_index]
+                d_replacement_index += 1
+            if n_candidate_id == night_id:
+                n_candidate_id = n_candidates[n_replacement_index]
+                n_replacement_index += 1
 
         session = sm(bind=db)
         s = session()
-        d_candidate = s.query(Employee).filter_by(id=d_candidate.id).first()
-        n_candidate = s.query(Employee).filter_by(id=n_candidate.id).first()
-        if date.weekday() > 4:
-            d_candidate.score += 2
-            n_candidate.score += 2
+        d_candidate: Employee = s.query(Employee).filter_by(id=d_candidate_id).first()
+        n_candidate: Employee = s.query(Employee).filter_by(id=n_candidate_id).first()
+        if date.weekday() > 3:
+            d_candidate.score += 10
+            n_candidate.score += 10
         else:
             d_candidate.score += 1
             n_candidate.score += 1
