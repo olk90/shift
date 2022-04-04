@@ -6,6 +6,7 @@ from sqlalchemy.orm import sessionmaker as sm
 
 from logic.database import get_day_shift_candidates, get_night_shift_candidates, get_schedule_by_date, reset_scores
 from logic.model import Schedule, Employee
+from logic.queries import schedule_id_query
 
 db = ce("sqlite:///shift.db")
 
@@ -63,3 +64,14 @@ def get_next_candidate_index(index: int, candidate_list: list) -> int:
     if length == index:
         index = 0
     return index
+
+
+def toggle_schedule_state(year: int, month: int, activate: bool):
+    session = sm(bind=db)
+    s = session()
+    query = schedule_id_query(year, month)
+    s_ids = s.execute(query)
+    for sid in s_ids:
+        schedule: Schedule = s.query(Schedule).filter_by(id=sid[0]).first()
+        schedule.activated = activate
+    s.commit()

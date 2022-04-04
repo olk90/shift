@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialogButtonBox
 
 from logic.database import find_employee_by_id, configure_query_model
 from logic.model import RotationPeriod, EmployeeType, Employee, OffPeriod
-from logic.queries import build_employee_type_designation_query
+from logic.queries import employee_type_designation_query
 from views.helpers import load_ui_file
 
 
@@ -71,7 +71,7 @@ class EmployeeEditorWidget(EditorWidget):
         self.nightShiftsEdit = self.widget.nightShiftsEdit  # noqa
         self.penaltySpinner = self.widget.penaltySpinner  # noqa
 
-        query: str = build_employee_type_designation_query()
+        query: str = employee_type_designation_query()
         configure_query_model(self.typeCombobox, query)
 
     def fill_fields(self, employee: Employee):
@@ -82,7 +82,7 @@ class EmployeeEditorWidget(EditorWidget):
         self.nightShiftsEdit.setChecked(employee.night_shifts)
         self.penaltySpinner.setValue(employee.penalty)
 
-        query: str = build_employee_type_designation_query()
+        query: str = employee_type_designation_query()
         configure_query_model(self.typeCombobox, query)
 
     def get_values(self) -> dict:

@@ -11,7 +11,7 @@ from logic.database import delete_employee, \
 from logic.database import find_employee_by_id, update_employee, EmployeeTypeModel, find_employee_type_by_id, \
     delete_employee_type
 from logic.model import Employee, EmployeeType, OffPeriod
-from logic.planning import create_schedule
+from logic.planning import create_schedule, toggle_schedule_state
 from views.editorDialogs import AddEmployeeDialog, AddOffPeriodDialog
 from views.editorDialogs import AddEmployeeTypeDialog
 from views.editorWidgets import EmployeeEditorWidget, EditorWidget, EmployeeTypeEditorWidget, OffPeriodEditorWidget, \
@@ -243,6 +243,7 @@ class PlanningWidget(TableDialog):
         self.month_box: QComboBox = self.table_widget.monthBox  # noqa
         self.year_box: QSpinBox = self.table_widget.yearBox  # noqa
         self.planning_button: QPushButton = self.table_widget.planningButton  # noqa
+        self.activate_button: QPushButton = self.table_widget.activateButton  # noqa
         self.table: QTableView = self.table_widget.table  # noqa
 
         self.configure_widgets()
@@ -264,6 +265,7 @@ class PlanningWidget(TableDialog):
         self.configure_month_box()
         self.configure_year_box()
         self.planning_button.clicked.connect(self.configure_planning_button)
+        self.activate_button.clicked.connect(self.configure_activate_button)
 
     def configure_search(self):
         self.searchLine.textChanged.connect(
@@ -314,3 +316,9 @@ class PlanningWidget(TableDialog):
         year: int = self.year_box.value()
         create_schedule(month, year)
         self.reload_table_contents(ScheduleModel(year, month))
+
+    def configure_activate_button(self):
+        month: int = self.month_box.currentIndex() + 1
+        year: int = self.year_box.value()
+        activated: bool = self.activate_button.isChecked()
+        toggle_schedule_state(year, month, activated)

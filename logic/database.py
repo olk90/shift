@@ -9,7 +9,7 @@ from sqlalchemy import create_engine as ce, desc, asc
 from sqlalchemy.orm import sessionmaker as sm, join
 
 from logic.model import create_tables, Employee, EmployeeType, OffPeriod, Schedule
-from logic.queries import build_employee_query, build_employee_type_query, build_off_period_query, build_schedule_query
+from logic.queries import employee_query, employee_type_query, off_period_query, schedule_query
 
 db = ce("sqlite:///shift.db")
 
@@ -39,7 +39,7 @@ class SearchTableModel(QSqlQueryModel):
 class EmployeeTypeModel(SearchTableModel):
     def __init__(self, search: str = ""):
         super(EmployeeTypeModel, self).__init__(search)
-        query = build_employee_type_query(self.search)
+        query = employee_type_query(self.search)
         self.setQuery(query)
         self.setHeaderData(0, Qt.Horizontal, "ID")
         self.setHeaderData(1, Qt.Horizontal, self.tr("Designation"))
@@ -49,7 +49,7 @@ class EmployeeTypeModel(SearchTableModel):
 class EmployeeModel(SearchTableModel):
     def __init__(self, search: str = ""):
         super(EmployeeModel, self).__init__(search)
-        query = build_employee_query(self.search)
+        query = employee_query(self.search)
         self.setQuery(query)
         self.setHeaderData(0, Qt.Horizontal, "ID")
         self.setHeaderData(1, Qt.Horizontal, self.tr("First Name"))
@@ -63,7 +63,7 @@ class EmployeeModel(SearchTableModel):
 class OffPeriodModel(SearchTableModel):
     def __init__(self, search: str = ""):
         super(OffPeriodModel, self).__init__(search)
-        query = build_off_period_query(self.search)
+        query = off_period_query(self.search)
         self.setQuery(query)
         self.setHeaderData(0, Qt.Horizontal, "ID")
         self.setHeaderData(1, Qt.Horizontal, self.tr("Start"))
@@ -74,7 +74,7 @@ class OffPeriodModel(SearchTableModel):
 class ScheduleModel(SearchTableModel):
     def __init__(self, year: int, month: int, search: str = ""):
         super(ScheduleModel, self).__init__(search)
-        query = build_schedule_query(year, month, self.search)
+        query = schedule_query(year, month, self.search)
         self.setQuery(query)
         self.setHeaderData(0, Qt.Horizontal, "ID")
         self.setHeaderData(1, Qt.Horizontal, self.tr("Date"))

@@ -11,7 +11,7 @@ from logic.config import properties
 from logic.database import persist_employee, persist_employee_type, EmployeeModel, \
     EmployeeTypeModel, persist_off_period, OffPeriodModel, configure_query_model
 from logic.model import EmployeeType, Employee, RotationPeriod, OffPeriod
-from logic.queries import build_employee_fullname_query, build_employee_type_designation_query
+from logic.queries import employee_fullname_query, employee_type_designation_query
 from views.helpers import load_ui_file
 
 
@@ -106,7 +106,7 @@ class AddEmployeeDialog(EditorDialog):
 
         self.widget.editorTitle.setText(self.tr("Add Employee"))  # noqa
         self.type_box = self.widget.typeCombobox  # noqa
-        query: str = build_employee_type_designation_query()
+        query: str = employee_type_designation_query()
         configure_query_model(self.type_box, query)
 
         self.layout = QHBoxLayout(self)
@@ -132,7 +132,7 @@ class AddEmployeeDialog(EditorDialog):
         self.close()
 
     def clear_fields(self):
-        query: str = build_employee_type_designation_query()
+        query: str = employee_type_designation_query()
         self.type_box.model().setQuery(query)
         self.widget.firstNameEdit.setText("")  # noqa
         self.widget.lastNameEdit.setText("")  # noqa
@@ -174,7 +174,7 @@ class AddOffPeriodDialog(EditorDialog):
         super().__init__(parent=parent, ui_file_name="ui/offPeriodAddDialog.ui")
 
         self.employee_box: QComboBox = self.widget.employeeBox  # noqa
-        query: str = build_employee_fullname_query()
+        query: str = employee_fullname_query()
         configure_query_model(self.employee_box, query)
 
         self.layout = QHBoxLayout(self)
@@ -197,7 +197,7 @@ class AddOffPeriodDialog(EditorDialog):
         self.close()
 
     def clear_fields(self):
-        query: str = build_employee_fullname_query()
+        query: str = employee_fullname_query()
         self.employee_box.model().setQuery(query)
         self.employee_box.setCurrentIndex(0)  # noqa
         self.widget.startEdit.setSelectedDate(QDate.currentDate())  # noqa

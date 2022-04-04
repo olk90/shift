@@ -1,4 +1,4 @@
-def build_employee_type_query(search: str) -> str:
+def employee_type_query(search: str) -> str:
     query = """
         select
             t.id,
@@ -13,7 +13,7 @@ def build_employee_type_query(search: str) -> str:
     return query
 
 
-def build_employee_query(search: str) -> str:
+def employee_query(search: str) -> str:
     query = """
     select
         e.id,
@@ -35,7 +35,7 @@ def build_employee_query(search: str) -> str:
     return query
 
 
-def build_employee_fullname_query() -> str:
+def employee_fullname_query() -> str:
     query = """
         select
             e.firstname || ' ' || e.lastname as name,
@@ -46,7 +46,7 @@ def build_employee_fullname_query() -> str:
     return query
 
 
-def build_employee_type_designation_query() -> str:
+def employee_type_designation_query() -> str:
     query = """
         select
             e.designation,
@@ -57,7 +57,7 @@ def build_employee_type_designation_query() -> str:
     return query
 
 
-def build_off_period_query(search: str) -> str:
+def off_period_query(search: str) -> str:
     query = """
     select
         p.id,
@@ -75,7 +75,7 @@ def build_off_period_query(search: str) -> str:
     return query
 
 
-def build_schedule_query(year: int, month: int, search: str) -> str:
+def schedule_query(year: int, month: int, search: str) -> str:
     query = """
     select 
         s.id,
@@ -96,4 +96,15 @@ def build_schedule_query(year: int, month: int, search: str) -> str:
         or n.lastname like '%{search}%'
         or s.comment like '%{search}%')
     """.format(year=year, month=str(month).zfill(2), search=search)
+    return query
+
+
+def schedule_id_query(year: int, month: int) -> str:
+    query = """
+    select 
+        s.id
+    from Schedule s
+    where 
+        strftime('%m', s.date) = '{month}' and strftime('%Y', s.date) = '{year}'
+    """.format(year=year, month=str(month).zfill(2))
     return query

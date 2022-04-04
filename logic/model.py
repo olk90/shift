@@ -66,6 +66,7 @@ class Schedule(Base):
     day_shift = relationship(employeeTableName, backref="days", foreign_keys=[day_id])
     night_id = Column(Integer, ForeignKey("Employee.id"))
     night_shift = relationship(employeeTableName, backref="nights", foreign_keys=[night_id])
+    activated = Column(Boolean, nullable=False, default=False)
     comment = Column(String(280))
 
 
