@@ -8,8 +8,7 @@ from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialog, QMainWindow, QApplication, QDialogButtonBox
 
 from logic.config import properties
-from logic.database import persist_employee, persist_employee_type, EmployeeModel, \
-    EmployeeTypeModel, persist_off_period, OffPeriodModel, configure_query_model
+from logic.database import EmployeeModel, EmployeeTypeModel, OffPeriodModel, configure_query_model, persist_item
 from logic.model import EmployeeType, Employee, RotationPeriod, OffPeriod
 from logic.queries import employee_fullname_query, employee_type_designation_query
 from views.helpers import load_ui_file
@@ -127,7 +126,7 @@ class AddEmployeeDialog(EditorDialog):
         et_id = model.index(index, 1).data()
         employee = Employee(firstname=first_name, lastname=last_name, referenceValue=reference,
                             night_shifts=night_shifts, e_type_id=et_id, global_score=global_score)
-        persist_employee(employee)
+        persist_item(employee)
         self.parent.reload_table_contents(model=EmployeeModel())
         self.close()
 
@@ -159,7 +158,7 @@ class AddEmployeeTypeDialog(EditorDialog):
         designation: str = self.widget.designationEdit.text()  # noqa
         rotation_period: str = self.widget.rotationBox.currentText()  # noqa
         employee_type = EmployeeType(designation=designation, rotation_period=rotation_period)
-        persist_employee_type(employee_type)
+        persist_item(employee_type)
         self.parent.reload_table_contents(model=EmployeeTypeModel())
         self.close()
 
@@ -192,7 +191,7 @@ class AddOffPeriodDialog(EditorDialog):
         end: QDate = self.widget.endEdit.selectedDate()  # noqa
         end_date = datetime(end.year(), end.month(), end.day())
         off_period = OffPeriod(e_id=e_id, start=start_date, end=end_date)
-        persist_off_period(off_period)
+        persist_item(off_period)
         self.parent.reload_table_contents(model=OffPeriodModel())
         self.close()
 

@@ -5,11 +5,9 @@ from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAbstractItemView, QLineEdit, \
     QPushButton, QSpinBox
 
-from logic.database import delete_employee, \
-    EmployeeModel, SearchTableModel, update_employee_type, OffPeriodModel, find_off_period_by_id, delete_off_period, \
-    update_off_period, ScheduleModel, find_schedule_by_id
-from logic.database import find_employee_by_id, update_employee, EmployeeTypeModel, find_employee_type_by_id, \
-    delete_employee_type
+from logic.database import EmployeeModel, SearchTableModel, update_employee_type, OffPeriodModel, \
+    find_off_period_by_id, update_off_period, ScheduleModel, find_schedule_by_id, delete_item
+from logic.database import find_employee_by_id, update_employee, EmployeeTypeModel, find_employee_type_by_id
 from logic.model import Employee, EmployeeType, OffPeriod
 from logic.planning import create_schedule, toggle_schedule_state
 from views.editorDialogs import AddEmployeeDialog, AddOffPeriodDialog
@@ -127,8 +125,8 @@ class EmployeeWidget(TableDialog):
         self.add_dialog.exec_()
 
     def delete_item(self):
-        employee = self.get_selected_item()
-        delete_employee(employee)
+        employee: Employee = self.get_selected_item()
+        delete_item(employee)
         search = self.searchLine.text()
         self.reload_table_contents(model=EmployeeModel(search))
 
@@ -172,7 +170,7 @@ class EmployeeTypeWidget(TableDialog):
 
     def delete_item(self):
         item = self.get_selected_item()
-        delete_employee_type(item)
+        delete_item(item)
         search = self.searchLine.text()
         self.reload_table_contents(model=EmployeeTypeModel(search))
 
@@ -215,8 +213,8 @@ class OffPeriodWidget(TableDialog):
         self.add_dialog.exec_()
 
     def delete_item(self):
-        item = self.get_selected_item()
-        delete_off_period(item)
+        item: OffPeriod = self.get_selected_item()
+        delete_item(item)
         search = self.searchLine.text()
         self.reload_table_contents(model=OffPeriodModel(search))
 

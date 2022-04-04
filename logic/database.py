@@ -8,7 +8,7 @@ from PySide6.QtWidgets import QComboBox
 from sqlalchemy import create_engine as ce, desc, asc
 from sqlalchemy.orm import sessionmaker as sm, join
 
-from logic.model import create_tables, Employee, EmployeeType, OffPeriod, Schedule
+from logic.model import create_tables, Employee, EmployeeType, OffPeriod, Schedule, Base
 from logic.queries import employee_query, employee_type_query, off_period_query, schedule_query
 
 db = ce("sqlite:///shift.db")
@@ -91,13 +91,6 @@ def configure_query_model(box: QComboBox, query: str):
     box.setEditable(True)
 
 
-def persist_employee_type(employee_type: EmployeeType):
-    session = sm(bind=db)
-    s = session()
-    s.add(employee_type)
-    s.commit()
-
-
 def find_employee_types() -> list:
     session = sm(bind=db)
     s = session()
@@ -106,10 +99,17 @@ def find_employee_types() -> list:
     return types
 
 
-def persist_employee(employee: Employee):
+def persist_item(item: Base):
     session = sm(bind=db)
     s = session()
-    s.add(employee)
+    s.add(item)
+    s.commit()
+
+
+def delete_item(item: Base):
+    session = sm(bind=db)
+    s = session()
+    s.delete(item)
     s.commit()
 
 
@@ -147,13 +147,6 @@ def find_e_type_by_e_id(e_id: int) -> EmployeeType:
     return e_type
 
 
-def delete_employee_type(e_type: EmployeeType):
-    session = sm(bind=db)
-    s = session()
-    s.delete(e_type)
-    s.commit()
-
-
 def update_employee(value_dict: dict):
     session = sm(bind=db)
     s = session()
@@ -177,13 +170,6 @@ def reset_scores():
     s.commit()
 
 
-def delete_employee(employee: Employee):
-    session = sm(bind=db)
-    s = session()
-    s.delete(employee)
-    s.commit()
-
-
 def find_off_period_by_id(p_id: int) -> OffPeriod:
     session = sm(bind=db)
     s = session()
@@ -200,20 +186,6 @@ def update_off_period(value_dict: dict):
     q_end: QDate = value_dict["end"]
     period.start = datetime(q_start.year(), q_start.month(), q_start.day())
     period.end = datetime(q_end.year(), q_end.month(), q_end.day())
-    s.commit()
-
-
-def persist_off_period(period: OffPeriod):
-    session = sm(bind=db)
-    s = session()
-    s.add(period)
-    s.commit()
-
-
-def delete_off_period(period: OffPeriod):
-    session = sm(bind=db)
-    s = session()
-    s.delete(period)
     s.commit()
 
 
