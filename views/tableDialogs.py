@@ -7,7 +7,7 @@ from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAb
 
 from logic.database import delete_employee, \
     EmployeeModel, SearchTableModel, update_employee_type, OffPeriodModel, find_off_period_by_id, delete_off_period, \
-    update_off_period, ScheduleModel
+    update_off_period, ScheduleModel, find_schedule_by_id
 from logic.database import find_employee_by_id, update_employee, EmployeeTypeModel, find_employee_type_by_id, \
     delete_employee_type
 from logic.model import Employee, EmployeeType, OffPeriod
@@ -116,10 +116,6 @@ class EmployeeWidget(TableDialog):
 
     def configure_search(self):
         self.searchLine.textChanged.connect(lambda x: self.reload_table_contents(EmployeeModel(self.searchLine.text())))
-
-    def reload_editor(self):
-        employee = self.get_selected_item()
-        self.editor.fill_fields(employee)
 
     def get_selected_item(self):
         item_id = super().get_selected_item()
@@ -244,7 +240,6 @@ class PlanningWidget(TableDialog):
         self.year_box: QSpinBox = self.table_widget.yearBox  # noqa
         self.planning_button: QPushButton = self.table_widget.planningButton  # noqa
         self.activate_button: QPushButton = self.table_widget.activateButton  # noqa
-        self.table: QTableView = self.table_widget.table  # noqa
 
         self.configure_widgets()
         self.configure_search()
@@ -270,6 +265,11 @@ class PlanningWidget(TableDialog):
     def configure_search(self):
         self.searchLine.textChanged.connect(
             lambda x: self.reload_table_contents(self.update_search_model()))
+
+    def get_selected_item(self):
+        item_id = super(PlanningWidget, self).get_selected_item()
+        item = find_schedule_by_id(item_id)
+        return item
 
     def update_search_model(self) -> ScheduleModel:
         year: int = self.year_box.value()

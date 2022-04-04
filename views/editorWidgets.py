@@ -2,8 +2,8 @@ from PySide6.QtCore import QDate
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialogButtonBox
 
-from logic.database import find_employee_by_id, configure_query_model
-from logic.model import RotationPeriod, EmployeeType, Employee, OffPeriod
+from logic.database import find_employee_by_id, configure_query_model, find_employee_type_by_id
+from logic.model import RotationPeriod, EmployeeType, Employee, OffPeriod, Schedule
 from logic.queries import employee_type_designation_query, day_shift_replacement_query, night_shift_replacement_query
 from views.helpers import load_ui_file
 
@@ -84,6 +84,9 @@ class EmployeeEditorWidget(EditorWidget):
 
         query: str = employee_type_designation_query()
         configure_query_model(self.typeCombobox, query)
+        et_id: int = employee.e_type_id
+        et: EmployeeType = find_employee_type_by_id(et_id)
+        self.typeCombobox.setCurrentText(et.designation)
 
     def get_values(self) -> dict:
         return {
@@ -132,6 +135,11 @@ class ScheduleEditorWidget(EditorWidget):
     def __init__(self, item_id=None):
         super().__init__(ui_file_name="ui/scheduleEditor.ui", item_id=item_id)
 
+        self.d_id: int = 0
+        self.n_id: int = 0
+
+        self.date_display: QLabel = self.widget.dateDisplay  # noqa
+
         self.day_box: QComboBox = self.widget.dayBox  # noqa
         day_query: str = day_shift_replacement_query()
         configure_query_model(self.day_box, day_query)
@@ -139,3 +147,23 @@ class ScheduleEditorWidget(EditorWidget):
         self.night_box: QComboBox = self.widget.nightBox  # noqa
         night_query: str = night_shift_replacement_query()
         configure_query_model(self.night_box, night_query)
+
+    def fill_fields(self, schedule: Schedule):
+        self.item_id = schedule.id
+        self.date_display.setText(str(schedule.date))
+
+        self.d_id: int = schedule.day_id
+        day_shift: Employee = find_employee_by_id(self.d_id)
+        self.day_box.setCurrentText(day_shift.get_full_name())
+
+        self.n_id: int = schedule.night_id
+        night_shift: Employee = find_employee_by_id(self.n_id)
+        self.night_box.setCurrentText(night_shift.get_full_name())
+
+    def get_values(self) -> dict:
+        return {
+            "item_id": self.item_id,
+            "date": self.date_display.text(),
+            "d_id": self.d_id,
+            "n_id": self.n_id
+        }

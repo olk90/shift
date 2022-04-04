@@ -56,7 +56,7 @@ class EmployeeModel(SearchTableModel):
         self.setHeaderData(2, Qt.Horizontal, self.tr("Last Name"))
         self.setHeaderData(3, Qt.Horizontal, self.tr("Reference Value"))
         self.setHeaderData(4, Qt.Horizontal, self.tr("Night Shifts"))
-        self.setHeaderData(5, Qt.Horizontal, self.tr("Penalty"))
+        self.setHeaderData(5, Qt.Horizontal, self.tr("Score"))
         self.setHeaderData(6, Qt.Horizontal, self.tr("Type"))
 
 
@@ -217,7 +217,15 @@ def delete_off_period(period: OffPeriod):
     s.commit()
 
 
-def get_schedule_by_date(date: datetime.date) -> Schedule:
+def find_schedule_by_id(s_id: int) -> Schedule:
+    session = sm(bind=db)
+    s = session()
+    schedule: Schedule = s.query(Schedule).filter_by(id=s_id).first()
+    s.close()
+    return schedule
+
+
+def find_schedule_by_date(date: datetime.date) -> Schedule:
     session = sm(bind=db)
     s = session()
     schedule: Schedule = s.query(Schedule).filter_by(date=date).first()
@@ -225,7 +233,7 @@ def get_schedule_by_date(date: datetime.date) -> Schedule:
     return schedule
 
 
-def get_day_shift_candidates() -> list:
+def find_day_shift_candidates() -> list:
     session = sm(bind=db)
     s = session()
     employees: list = s.scalars(s.query(Employee.id).order_by(asc(Employee.score), desc(Employee.referenceValue))).all()
@@ -233,7 +241,7 @@ def get_day_shift_candidates() -> list:
     return employees
 
 
-def get_night_shift_candidates() -> list:
+def find_night_shift_candidates() -> list:
     session = sm(bind=db)
     s = session()
     employees: list = s.scalars(s.query(Employee.id)

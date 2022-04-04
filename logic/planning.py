@@ -4,7 +4,7 @@ import datetime
 from sqlalchemy import create_engine as ce
 from sqlalchemy.orm import sessionmaker as sm
 
-from logic.database import get_day_shift_candidates, get_night_shift_candidates, get_schedule_by_date, reset_scores
+from logic.database import find_day_shift_candidates, find_night_shift_candidates, find_schedule_by_date, reset_scores
 from logic.model import Schedule, Employee
 from logic.queries import schedule_id_query
 
@@ -19,8 +19,8 @@ def create_schedule(month: int, year: int):
     day_range = range(start_day, end_day + 1)
 
     for day in day_range:
-        d_candidates: list = get_day_shift_candidates()
-        n_candidates: list = get_night_shift_candidates()
+        d_candidates: list = find_day_shift_candidates()
+        n_candidates: list = find_night_shift_candidates()
         date = datetime.date(year, month, day)
         day_before = date - datetime.timedelta(days=1)
         d_replacement_index = 1
@@ -31,7 +31,7 @@ def create_schedule(month: int, year: int):
             n_candidate_id = n_candidates[n_replacement_index]
             n_replacement_index += 1
 
-        last_Schedule: Schedule = get_schedule_by_date(day_before)
+        last_Schedule: Schedule = find_schedule_by_date(day_before)
         if last_Schedule:
             day_id: int = last_Schedule.day_id
             night_id: int = last_Schedule.night_id
