@@ -21,7 +21,7 @@ def employee_query(search: str) -> str:
         e.lastname,
         e.referenceValue,
         e.night_shifts,
-        e.penalty,
+        e.global_score,
         t.designation
     from Employee e
     inner join EmployeeType t 
@@ -30,7 +30,7 @@ def employee_query(search: str) -> str:
         e.firstname like '%{search}%'
         or e.lastname like '%{search}%'
         or t.designation like '%{search}%'
-    order by e.penalty desc, e.lastname, e.firstname
+    order by e.global_score desc, e.lastname, e.firstname
     """.format(search=search)
     return query
 
@@ -107,4 +107,27 @@ def schedule_id_query(year: int, month: int) -> str:
     where 
         strftime('%m', s.date) = '{month}' and strftime('%Y', s.date) = '{year}'
     """.format(year=year, month=str(month).zfill(2))
+    return query
+
+
+def day_shift_replacement_query() -> str:
+    query = """
+        select
+            e.firstname || ' ' || e.lastname as name,
+            e.id 
+        from Employee e
+        order by e.global_score
+        """
+    return query
+
+
+def night_shift_replacement_query() -> str:
+    query = """
+        select
+            e.firstname || ' ' || e.lastname as name,
+            e.id 
+        from Employee e
+        where e.night_shifts = 1
+        order by e.global_score
+        """
     return query

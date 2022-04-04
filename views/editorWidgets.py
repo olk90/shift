@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialogButtonBox
 
 from logic.database import find_employee_by_id, configure_query_model
 from logic.model import RotationPeriod, EmployeeType, Employee, OffPeriod
-from logic.queries import employee_type_designation_query
+from logic.queries import employee_type_designation_query, day_shift_replacement_query, night_shift_replacement_query
 from views.helpers import load_ui_file
 
 
@@ -69,7 +69,7 @@ class EmployeeEditorWidget(EditorWidget):
         self.typeCombobox = self.widget.typeCombobox  # noqa
         self.referenceSpinner = self.widget.referenceSpinner  # noqa
         self.nightShiftsEdit = self.widget.nightShiftsEdit  # noqa
-        self.penaltySpinner = self.widget.penaltySpinner  # noqa
+        self.scoreSpinner = self.widget.scoreSpinner  # noqa
 
         query: str = employee_type_designation_query()
         configure_query_model(self.typeCombobox, query)
@@ -80,7 +80,7 @@ class EmployeeEditorWidget(EditorWidget):
         self.lastNameEdit.setText(employee.lastname)
         self.referenceSpinner.setValue(employee.referenceValue)
         self.nightShiftsEdit.setChecked(employee.night_shifts)
-        self.penaltySpinner.setValue(employee.penalty)
+        self.scoreSpinner.setValue(employee.global_score)
 
         query: str = employee_type_designation_query()
         configure_query_model(self.typeCombobox, query)
@@ -91,7 +91,7 @@ class EmployeeEditorWidget(EditorWidget):
             "firstname": self.firstNameEdit.text(),
             "lastname": self.lastNameEdit.text(),
             "reference_value": self.referenceSpinner.value(),
-            "penalty": self.penaltySpinner.value(),
+            "global_score": self.scoreSpinner.value(),
             "night_shifts": self.nightShiftsEdit.isChecked(),
             "e_type": self.typeCombobox.currentText()
         }
@@ -131,3 +131,11 @@ class ScheduleEditorWidget(EditorWidget):
 
     def __init__(self, item_id=None):
         super().__init__(ui_file_name="ui/scheduleEditor.ui", item_id=item_id)
+
+        self.day_box: QComboBox = self.widget.dayBox  # noqa
+        day_query: str = day_shift_replacement_query()
+        configure_query_model(self.day_box, day_query)
+
+        self.night_box: QComboBox = self.widget.nightBox  # noqa
+        night_query: str = night_shift_replacement_query()
+        configure_query_model(self.night_box, night_query)

@@ -161,7 +161,7 @@ def update_employee(value_dict: dict):
     employee.firstname = value_dict["firstname"]
     employee.lastname = value_dict["lastname"]
     employee.referenceValue = value_dict["reference_value"]
-    employee.penalty = value_dict["penalty"]
+    employee.global_score = value_dict["global_score"]
     employee.night_shifts = value_dict["night_shifts"]
     e_type = s.query(EmployeeType).filter_by(designation=value_dict["e_type"]).one()
     employee.e_type = e_type

@@ -119,14 +119,14 @@ class AddEmployeeDialog(EditorDialog):
         first_name: str = self.widget.firstNameEdit.text()  # noqa
         last_name: str = self.widget.lastNameEdit.text()  # noqa
         reference: int = self.widget.referenceSpinner.value()  # noqa
-        penalty: int = self.widget.penaltySpinner.value()  # noqa
+        global_score: int = self.widget.scoreSpinner.value()  # noqa
         night_shifts: bool = self.widget.nightShiftsEdit.isChecked()  # noqa
 
         model: QSqlQueryModel = self.type_box.model()
         index: int = self.type_box.currentIndex()
         et_id = model.index(index, 1).data()
         employee = Employee(firstname=first_name, lastname=last_name, referenceValue=reference,
-                            night_shifts=night_shifts, e_type_id=et_id, penalty=penalty)
+                            night_shifts=night_shifts, e_type_id=et_id, global_score=global_score)
         persist_employee(employee)
         self.parent.reload_table_contents(model=EmployeeModel())
         self.close()
@@ -137,7 +137,7 @@ class AddEmployeeDialog(EditorDialog):
         self.widget.firstNameEdit.setText("")  # noqa
         self.widget.lastNameEdit.setText("")  # noqa
         self.widget.referenceSpinner.setValue(0)  # noqa
-        self.widget.penaltySpinner.setValue(0)  # noqa
+        self.widget.scoreSpinner.setValue(0)  # noqa
         self.widget.typeCombobox.setCurrentIndex(0)  # noqa
 
 
