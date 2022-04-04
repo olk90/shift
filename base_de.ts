@@ -4,7 +4,7 @@
 <context>
     <name>AddEmployeeDialog</name>
     <message>
-        <location filename="views/editorDialogs.py" line="107"/>
+        <location filename="views/editorDialogs.py" line="106"/>
         <source>Add Employee</source>
         <translation>Mitarbeiter hinzufügen</translation>
     </message>
@@ -20,7 +20,7 @@
 <context>
     <name>AddEmployeeTypeDialog</name>
     <message>
-        <location filename="views/editorDialogs.py" line="149"/>
+        <location filename="views/editorDialogs.py" line="148"/>
         <source>Add Employee Type</source>
         <translation>Mitarbeitertyp hinzufügen</translation>
     </message>
@@ -34,14 +34,43 @@
     </message>
 </context>
 <context>
+    <name>ConfirmDeletionDialog</name>
+    <message>
+        <location filename="views/confirmationDialogs.py" line="28"/>
+        <source>Delete selected item?</source>
+        <translation>Ausgewählten Eintrag löschen?</translation>
+    </message>
+</context>
+<context>
+    <name>ConfirmScheduleUpdateDialog</name>
+    <message>
+        <location filename="views/confirmationDialogs.py" line="21"/>
+        <source>Write changes to database?</source>
+        <translation>Änderungen in die Datenbank schreiben?</translation>
+    </message>
+</context>
+<context>
+    <name>ConfirmationDialog</name>
+    <message>
+        <location filename="views/confirmationDialogs.py" line="11"/>
+        <source>Yes</source>
+        <translation>Ja</translation>
+    </message>
+    <message>
+        <location filename="views/confirmationDialogs.py" line="12"/>
+        <source>No</source>
+        <translation>Nein</translation>
+    </message>
+</context>
+<context>
     <name>EditorDialog</name>
     <message>
-        <location filename="views/editorDialogs.py" line="38"/>
+        <location filename="views/editorDialogs.py" line="37"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="views/editorDialogs.py" line="39"/>
+        <location filename="views/editorDialogs.py" line="38"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
@@ -322,62 +351,62 @@
 <context>
     <name>PlanningWidget</name>
     <message>
-        <location filename="views/tableDialogs.py" line="282"/>
+        <location filename="views/tableDialogs.py" line="283"/>
         <source>January</source>
         <translation>Januar</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="283"/>
+        <location filename="views/tableDialogs.py" line="284"/>
         <source>February</source>
         <translation>Februar</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="284"/>
+        <location filename="views/tableDialogs.py" line="285"/>
         <source>March</source>
         <translation>März</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="285"/>
+        <location filename="views/tableDialogs.py" line="286"/>
         <source>April</source>
         <translation>April</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="286"/>
+        <location filename="views/tableDialogs.py" line="287"/>
         <source>May</source>
         <translation>Mai</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="287"/>
+        <location filename="views/tableDialogs.py" line="288"/>
         <source>June</source>
         <translation>Juni</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="288"/>
+        <location filename="views/tableDialogs.py" line="289"/>
         <source>July</source>
         <translation>Juli</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="289"/>
+        <location filename="views/tableDialogs.py" line="290"/>
         <source>August</source>
         <translation>August</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="290"/>
+        <location filename="views/tableDialogs.py" line="291"/>
         <source>September</source>
         <translation>September</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="291"/>
+        <location filename="views/tableDialogs.py" line="292"/>
         <source>October</source>
         <translation>Oktober</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="292"/>
+        <location filename="views/tableDialogs.py" line="293"/>
         <source>November</source>
         <translation>November</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="295"/>
+        <location filename="views/tableDialogs.py" line="296"/>
         <source>December</source>
         <translation>Dezember</translation>
     </message>

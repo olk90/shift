@@ -3,13 +3,14 @@ import datetime
 from PySide6.QtCore import QModelIndex, QItemSelectionModel
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAbstractItemView, QLineEdit, \
-    QPushButton, QSpinBox
+    QPushButton, QSpinBox, QMessageBox, QDialogButtonBox
 
 from logic.database import EmployeeModel, SearchTableModel, update_employee_type, OffPeriodModel, \
     find_off_period_by_id, update_off_period, ScheduleModel, find_schedule_by_id, delete_item
 from logic.database import find_employee_by_id, update_employee, EmployeeTypeModel, find_employee_type_by_id
-from logic.model import Employee, EmployeeType, OffPeriod
+from logic.model import Employee, EmployeeType, OffPeriod, Schedule
 from logic.planning import create_schedule, toggle_schedule_state
+from views.confirmationDialogs import ConfirmScheduleUpdateDialog
 from views.editorDialogs import AddEmployeeDialog, AddOffPeriodDialog
 from views.editorDialogs import AddEmployeeTypeDialog
 from views.editorWidgets import EmployeeEditorWidget, EditorWidget, EmployeeTypeEditorWidget, OffPeriodEditorWidget, \
@@ -259,6 +260,8 @@ class PlanningWidget(TableDialog):
         self.configure_year_box()
         self.planning_button.clicked.connect(self.configure_planning_button)
         self.activate_button.clicked.connect(self.configure_activate_button)
+        self.editor.buttonBox.accepted.connect(self.commit_changes)
+        self.editor.buttonBox.rejected.connect(self.revert_changes)
 
     def configure_search(self):
         self.searchLine.textChanged.connect(
@@ -320,3 +323,15 @@ class PlanningWidget(TableDialog):
         year: int = self.year_box.value()
         activated: bool = self.activate_button.isChecked()
         toggle_schedule_state(year, month, activated)
+
+    def commit_changes(self):
+        dialog = ConfirmScheduleUpdateDialog(self)
+        button = dialog.exec_()
+        if button == QMessageBox.AcceptRole:
+            pass
+        elif button == QMessageBox.RejectRole:
+            pass
+
+    def revert_changes(self):
+        schedule: Schedule = find_schedule_by_id(self.editor.item_id)
+        self.editor.fill_fields(schedule)
