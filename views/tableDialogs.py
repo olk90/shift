@@ -3,10 +3,11 @@ import datetime
 from PySide6.QtCore import QModelIndex, QItemSelectionModel
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAbstractItemView, QLineEdit, \
-    QPushButton, QSpinBox, QMessageBox, QDialogButtonBox
+    QPushButton, QSpinBox, QMessageBox
 
 from logic.database import EmployeeModel, SearchTableModel, update_employee_type, OffPeriodModel, \
-    find_off_period_by_id, update_off_period, ScheduleModel, find_schedule_by_id, delete_item, is_shift_plan_active
+    find_off_period_by_id, update_off_period, ScheduleModel, find_schedule_by_id, delete_item, is_shift_plan_active, \
+    update_schedule
 from logic.database import find_employee_by_id, update_employee, EmployeeTypeModel, find_employee_type_by_id
 from logic.model import Employee, EmployeeType, OffPeriod, Schedule
 from logic.planning import create_schedule, toggle_schedule_state
@@ -329,10 +330,13 @@ class PlanningWidget(TableDialog):
     def commit_changes(self):
         dialog = ConfirmScheduleUpdateDialog(self)
         button = dialog.exec_()
+        month: int = self.month_box.currentIndex() + 1
+        year: int = self.year_box.value()
+        search: str = self.searchLine.text()
         if button == QMessageBox.AcceptRole:
-            pass
-        elif button == QMessageBox.RejectRole:
-            pass
+            value_dict: dict = self.editor.get_values()
+            update_schedule(value_dict)
+        self.reload_table_contents(ScheduleModel(year, month, search))
 
     def revert_changes(self):
         schedule: Schedule = find_schedule_by_id(self.editor.item_id)

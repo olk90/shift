@@ -1,10 +1,14 @@
+from sqlalchemy import create_engine as ce
+from sqlalchemy.orm import sessionmaker as sm
+
 from PySide6.QtCore import QDate
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialogButtonBox
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialogButtonBox, QTextEdit, QComboBox
 
 from logic.database import find_employee_by_id, configure_query_model, find_employee_type_by_id
 from logic.model import RotationPeriod, EmployeeType, Employee, OffPeriod, Schedule
-from logic.queries import employee_type_designation_query, day_shift_replacement_query, night_shift_replacement_query
+from logic.queries import employee_type_designation_query, day_shift_replacement_query, night_shift_replacement_query, \
+    employee_id_by_fullname_query
 from views.helpers import load_ui_file
 
 
@@ -141,12 +145,29 @@ class ScheduleEditorWidget(EditorWidget):
         self.date_display: QLabel = self.widget.dateDisplay  # noqa
 
         self.day_box: QComboBox = self.widget.dayBox  # noqa
+        self.day_box.currentTextChanged.connect(lambda x: self.update_selection_id(self.day_box))
         day_query: str = day_shift_replacement_query()
         configure_query_model(self.day_box, day_query)
 
         self.night_box: QComboBox = self.widget.nightBox  # noqa
+        self.night_box.currentTextChanged.connect(lambda x: self.update_selection_id(self.night_box))
         night_query: str = night_shift_replacement_query()
         configure_query_model(self.night_box, night_query)
+
+        self.comment_edit: QTextEdit = self.widget.commentEdit  # noqa
+
+    def update_selection_id(self, box: QComboBox):
+        db = ce("sqlite:///shift.db")
+        session = sm(bind=db)
+        s = session()
+        fullname: str = box.currentText()
+        query = employee_id_by_fullname_query(fullname)
+        result = s.execute(query)
+        for e_id in result:
+            if box == self.day_box:
+                self.d_id = e_id[0]
+            elif box == self.night_box:
+                self.n_id = e_id[0]
 
     def fill_fields(self, schedule: Schedule):
         self.item_id = schedule.id
@@ -160,10 +181,14 @@ class ScheduleEditorWidget(EditorWidget):
         night_shift: Employee = find_employee_by_id(self.n_id)
         self.night_box.setCurrentText(night_shift.get_full_name())
 
+        self.comment_edit.setText(schedule.comment)
+
     def get_values(self) -> dict:
+        text: str = self.comment_edit.toPlainText()
         return {
             "item_id": self.item_id,
             "date": self.date_display.text(),
             "d_id": self.d_id,
-            "n_id": self.n_id
+            "n_id": self.n_id,
+            "comment": text
         }

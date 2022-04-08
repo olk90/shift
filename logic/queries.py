@@ -131,3 +131,11 @@ def night_shift_replacement_query() -> str:
         order by e.global_score
         """
     return query
+
+
+def employee_id_by_fullname_query(full_name: str) -> str:
+    query = """
+        select e.id from Employee e
+        where e.firstname || ' ' || e.lastname = '{fullname}'
+    """.format(fullname=full_name)
+    return query

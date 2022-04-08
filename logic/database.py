@@ -189,6 +189,35 @@ def update_off_period(value_dict: dict):
     s.commit()
 
 
+def update_schedule(value_dict: dict):
+    session = sm(bind=db)
+    s = session()
+    schedule: Schedule = s.query(Schedule).filter_by(id=value_dict["item_id"]).first()
+    if schedule.activated:
+        score_offset: int = 2 if schedule.date.weekday() > 3 else 1
+
+        current_day_id: int = schedule.day_id
+        new_day_id: int = value_dict["d_id"]
+        if current_day_id != new_day_id:
+            current_day: Employee = s.query(Employee).filter_by(id=current_day_id).first()
+            new_day: Employee = s.query(Employee).filter_by(id=new_day_id).first()
+            current_day.global_score -= score_offset
+            new_day.global_score += score_offset
+
+        current_night_id: int = schedule.night_id
+        new_night_id: int = value_dict["n_id"]
+        if current_night_id != new_night_id:
+            current_night: Employee = s.query(Employee).filter_by(id=current_night_id).first()
+            new_night: Employee = s.query(Employee).filter_by(id=new_night_id).first()
+            current_night.global_score -= score_offset
+            new_night.global_score += score_offset
+
+    schedule.day_id = value_dict["d_id"]
+    schedule.night_id = value_dict["n_id"]
+    schedule.comment = value_dict["comment"]
+    s.commit()
+
+
 def find_schedule_by_id(s_id: int) -> Schedule:
     session = sm(bind=db)
     s = session()
