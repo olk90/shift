@@ -6,7 +6,7 @@ from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAb
     QPushButton, QSpinBox, QMessageBox, QDialogButtonBox
 
 from logic.database import EmployeeModel, SearchTableModel, update_employee_type, OffPeriodModel, \
-    find_off_period_by_id, update_off_period, ScheduleModel, find_schedule_by_id, delete_item
+    find_off_period_by_id, update_off_period, ScheduleModel, find_schedule_by_id, delete_item, is_shift_plan_active
 from logic.database import find_employee_by_id, update_employee, EmployeeTypeModel, find_employee_type_by_id
 from logic.model import Employee, EmployeeType, OffPeriod, Schedule
 from logic.planning import create_schedule, toggle_schedule_state
@@ -310,6 +310,8 @@ class PlanningWidget(TableDialog):
     def trigger_reload(self):
         month: int = self.month_box.currentIndex() + 1
         year: int = self.year_box.value()
+        check_button: bool = is_shift_plan_active(year, month)
+        self.activate_button.setChecked(check_button)
         self.reload_table_contents(ScheduleModel(year, month))
 
     def configure_planning_button(self):

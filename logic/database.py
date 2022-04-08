@@ -1,5 +1,5 @@
 import sys
-from datetime import datetime
+from datetime import datetime, date
 
 from PySide6.QtCore import QDate
 from PySide6.QtGui import Qt
@@ -197,12 +197,21 @@ def find_schedule_by_id(s_id: int) -> Schedule:
     return schedule
 
 
-def find_schedule_by_date(date: datetime.date) -> Schedule:
+def find_schedule_by_date(d: datetime.date) -> Schedule:
     session = sm(bind=db)
     s = session()
-    schedule: Schedule = s.query(Schedule).filter_by(date=date).first()
+    schedule: Schedule = s.query(Schedule).filter_by(date=d).first()
     s.close()
     return schedule
+
+
+def is_shift_plan_active(year: int, month: int) -> bool:
+    session = sm(bind=db)
+    s = session()
+    start_day = date(year, month, 1)
+    schedule: Schedule = s.query(Schedule).filter_by(date=start_day).first()
+    s.close()
+    return schedule is not None and schedule.activated
 
 
 def find_day_shift_candidates() -> list:
