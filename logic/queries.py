@@ -30,7 +30,7 @@ def employee_query(search: str) -> str:
         e.firstname like '%{search}%'
         or e.lastname like '%{search}%'
         or t.designation like '%{search}%'
-    order by e.global_score desc, e.lastname, e.firstname
+    order by e.global_score asc, e.lastname, e.firstname
     """.format(search=search)
     return query
 
@@ -113,10 +113,10 @@ def schedule_id_query(year: int, month: int) -> str:
 def day_shift_replacement_query() -> str:
     query = """
         select
-            e.firstname || ' ' || e.lastname as name,
+            e.firstname || ' ' || e.lastname || ' (' || e.global_score || ')' as name,
             e.id 
         from Employee e
-        order by e.global_score
+        order by e.global_score asc 
         """
     return query
 
@@ -124,18 +124,18 @@ def day_shift_replacement_query() -> str:
 def night_shift_replacement_query() -> str:
     query = """
         select
-            e.firstname || ' ' || e.lastname as name,
+            e.firstname || ' ' || e.lastname || ' (' || e.global_score || ')' as name,
             e.id 
         from Employee e
         where e.night_shifts = 1
-        order by e.global_score
+        order by e.global_score asc 
         """
     return query
 
 
-def employee_id_by_fullname_query(full_name: str) -> str:
+def employee_id_by_name_and_score_query(nas: str) -> str:
     query = """
         select e.id from Employee e
-        where e.firstname || ' ' || e.lastname = '{fullname}'
-    """.format(fullname=full_name)
+        where e.firstname || ' ' || e.lastname || ' (' || e.global_score || ')' = '{nas}'
+    """.format(nas=nas)
     return query

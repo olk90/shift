@@ -45,8 +45,11 @@ class Employee(Base):
     e_type_id = Column(Integer, ForeignKey("EmployeeType.id"))
     e_type = relationship(employeeTypeTableName, backref="employees")
 
-    def get_full_name(self):
+    def get_full_name(self) -> str:
         return "{} {}".format(self.firstname, self.lastname)
+
+    def get_full_name_and_score(self) -> str:
+        return "{} {} ({})".format(self.firstname, self.lastname, self.global_score)
 
     def has_off_period(self, day: date) -> bool:
         periods = self.off_periods  # noqa -> backref from OffPeriod

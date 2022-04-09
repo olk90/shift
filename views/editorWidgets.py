@@ -8,7 +8,7 @@ from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialogButtonBox, QTextEdit,
 from logic.database import find_employee_by_id, configure_query_model, find_employee_type_by_id
 from logic.model import RotationPeriod, EmployeeType, Employee, OffPeriod, Schedule
 from logic.queries import employee_type_designation_query, day_shift_replacement_query, night_shift_replacement_query, \
-    employee_id_by_fullname_query
+    employee_id_by_name_and_score_query
 from views.helpers import load_ui_file
 
 
@@ -160,8 +160,8 @@ class ScheduleEditorWidget(EditorWidget):
         db = ce("sqlite:///shift.db")
         session = sm(bind=db)
         s = session()
-        fullname: str = box.currentText()
-        query = employee_id_by_fullname_query(fullname)
+        name_and_score: str = box.currentText()
+        query = employee_id_by_name_and_score_query(name_and_score)
         result = s.execute(query)
         for e_id in result:
             if box == self.day_box:
@@ -170,16 +170,22 @@ class ScheduleEditorWidget(EditorWidget):
                 self.n_id = e_id[0]
 
     def fill_fields(self, schedule: Schedule):
+
+        day_query: str = day_shift_replacement_query()
+        configure_query_model(self.day_box, day_query)
+        night_query: str = night_shift_replacement_query()
+        configure_query_model(self.night_box, night_query)
+
         self.item_id = schedule.id
-        self.date_display.setText(str(schedule.date))
+        self.date_display.setText(str(schedule.date.strftime("%a, %d %b %Y")))
 
         self.d_id: int = schedule.day_id
         day_shift: Employee = find_employee_by_id(self.d_id)
-        self.day_box.setCurrentText(day_shift.get_full_name())
+        self.day_box.setCurrentText(day_shift.get_full_name_and_score())
 
         self.n_id: int = schedule.night_id
         night_shift: Employee = find_employee_by_id(self.n_id)
-        self.night_box.setCurrentText(night_shift.get_full_name())
+        self.night_box.setCurrentText(night_shift.get_full_name_and_score())
 
         self.comment_edit.setText(schedule.comment)
 
