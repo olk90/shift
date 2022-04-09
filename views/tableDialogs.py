@@ -11,7 +11,7 @@ from logic.database import EmployeeModel, SearchTableModel, update_employee_type
 from logic.database import find_employee_by_id, update_employee, EmployeeTypeModel, find_employee_type_by_id
 from logic.model import Employee, EmployeeType, OffPeriod, Schedule
 from logic.planning import create_schedule, toggle_schedule_state
-from views.confirmationDialogs import ConfirmScheduleUpdateDialog
+from views.confirmationDialogs import ConfirmScheduleUpdateDialog, ConfirmDeletionDialog
 from views.editorDialogs import AddEmployeeDialog, AddOffPeriodDialog
 from views.editorDialogs import AddEmployeeTypeDialog
 from views.editorWidgets import EmployeeEditorWidget, EditorWidget, EmployeeTypeEditorWidget, OffPeriodEditorWidget, \
@@ -128,10 +128,13 @@ class EmployeeWidget(TableDialog):
         self.add_dialog.exec_()
 
     def delete_item(self):
-        employee: Employee = self.get_selected_item()
-        delete_item(employee)
-        search = self.searchLine.text()
-        self.reload_table_contents(model=EmployeeModel(search))
+        dialog = ConfirmDeletionDialog(self)
+        button = dialog.exec_()
+        if button == QMessageBox.AcceptRole:
+            employee: Employee = self.get_selected_item()
+            delete_item(employee)
+            search = self.searchLine.text()
+            self.reload_table_contents(model=EmployeeModel(search))
 
     def commit_changes(self):
         value_dict: dict = self.editor.get_values()
@@ -172,10 +175,13 @@ class EmployeeTypeWidget(TableDialog):
         self.add_dialog.exec_()
 
     def delete_item(self):
-        item = self.get_selected_item()
-        delete_item(item)
-        search = self.searchLine.text()
-        self.reload_table_contents(model=EmployeeTypeModel(search))
+        dialog = ConfirmDeletionDialog(self)
+        button = dialog.exec_()
+        if button == QMessageBox.AcceptRole:
+            item = self.get_selected_item()
+            delete_item(item)
+            search = self.searchLine.text()
+            self.reload_table_contents(model=EmployeeTypeModel(search))
 
     def commit_changes(self):
         value_dict: dict = self.editor.get_values()
@@ -216,10 +222,13 @@ class OffPeriodWidget(TableDialog):
         self.add_dialog.exec_()
 
     def delete_item(self):
-        item: OffPeriod = self.get_selected_item()
-        delete_item(item)
-        search = self.searchLine.text()
-        self.reload_table_contents(model=OffPeriodModel(search))
+        dialog = ConfirmDeletionDialog(self)
+        button = dialog.exec_()
+        if button == QMessageBox.AcceptRole:
+            item: OffPeriod = self.get_selected_item()
+            delete_item(item)
+            search = self.searchLine.text()
+            self.reload_table_contents(model=OffPeriodModel(search))
 
     def commit_changes(self):
         value_dict: dict = self.editor.get_values()
