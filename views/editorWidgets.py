@@ -32,6 +32,11 @@ class EditorWidget(QWidget):
     def configure_buttons(self):
         self.buttonBox.button(QDialogButtonBox.Ok).setText(self.tr("OK"))
         self.buttonBox.button(QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
+        self.toggle_buttons(False)
+
+    def toggle_buttons(self, activate: bool):
+        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(activate)
+        self.buttonBox.button(QDialogButtonBox.Cancel).setEnabled(activate)
 
     def get_values(self) -> dict:
         """Must be implemented by subclass"""

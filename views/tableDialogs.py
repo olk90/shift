@@ -66,6 +66,7 @@ class TableDialog(QWidget):
     def reload_editor(self):
         item = self.get_selected_item()
         self.editor.fill_fields(item)
+        self.editor.toggle_buttons(True)
 
     def configure_widgets(self):
         self.table_widget.addButton.clicked.connect(self.add_item)  # noqa -> button loaded from ui file
