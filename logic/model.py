@@ -1,3 +1,5 @@
+from datetime import date
+
 from sqlalchemy import (Column, Integer, String, ForeignKey, Date, Boolean)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -45,6 +47,13 @@ class Employee(Base):
 
     def get_full_name(self):
         return "{} {}".format(self.firstname, self.lastname)
+
+    def has_off_period(self, day: date) -> bool:
+        periods = self.off_periods  # noqa -> backref from OffPeriod
+        for p in periods:
+            if p.start <= day <= p.end:
+                return True
+        return False
 
 
 class OffPeriod(Base):

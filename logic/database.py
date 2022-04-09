@@ -243,19 +243,23 @@ def is_shift_plan_active(year: int, month: int) -> bool:
     return schedule is not None and schedule.activated
 
 
-def find_day_shift_candidates() -> list:
+def find_day_shift_candidate_ids(day: date) -> list:
     session = sm(bind=db)
     s = session()
-    employees: list = s.scalars(s.query(Employee.id).order_by(asc(Employee.score), desc(Employee.referenceValue))).all()
+    employees: list = s.query(Employee).order_by(asc(Employee.score), desc(Employee.referenceValue)).all()
+    filtered = filter(lambda e: not e.has_off_period(day), employees)
+    ids = [e.id for e in filtered]
     s.close()
-    return employees
+    return ids
 
 
-def find_night_shift_candidates() -> list:
+def find_night_shift_candidate_ids(day: date) -> list:
     session = sm(bind=db)
     s = session()
-    employees: list = s.scalars(s.query(Employee.id)
-                                .filter_by(night_shifts=True)
-                                .order_by(asc(Employee.score), desc(Employee.referenceValue))).all()
+    employees: list = s.query(Employee).filter_by(night_shifts=True) \
+        .order_by(asc(Employee.score),
+                  desc(Employee.referenceValue)).all()
+    filtered = filter(lambda e: not e.has_off_period(day), employees)
+    ids = [e.id for e in filtered]
     s.close()
-    return employees
+    return ids
