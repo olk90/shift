@@ -52,6 +52,23 @@ class EmployeeItemDelegate(CenteredItemDelegate):
             super(EmployeeItemDelegate, self).paint(painter, option, index)
 
 
+class OffPeriodItemDelegate(CenteredItemDelegate):
+
+    def __init__(self):
+        super(OffPeriodItemDelegate, self).__init__()
+
+    def paint(self, painter: QPainter, option: QStyleOptionViewItem, index: Union[QModelIndex, QPersistentModelIndex]):
+        model = index.model()
+        if index.column() in [1, 2]:
+            date_str: str = model.index(index.row(), index.column()).data()
+            date = datetime.strptime(date_str, '%Y-%m-%d')
+            text = date.strftime("%a, %d %b %Y")
+            option.displayAlignment = Qt.AlignCenter
+            self.drawDisplay(painter, option, option.rect, text)
+        else:
+            super(OffPeriodItemDelegate, self).paint(painter, option, index)
+
+
 class ScheduleItemDelegate(CenteredItemDelegate):
 
     def __init__(self):

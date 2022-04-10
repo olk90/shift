@@ -117,6 +117,19 @@ class OffPeriodEditorWidget(EditorWidget):
         self.name_label = self.widget.name_label  # noqa
         self.startEdit = self.widget.startEdit  # noqa
         self.endEdit = self.widget.endEdit  # noqa
+        self.configure_widgets()
+
+    def configure_widgets(self):
+        self.endEdit.selectionChanged.connect(self.update_start)
+        self.startEdit.selectionChanged.connect(self.update_end)
+
+    def update_start(self):
+        end_date: QDate = self.endEdit.selectedDate()
+        self.startEdit.setMaximumDate(end_date)
+
+    def update_end(self):
+        start_date: QDate = self.startEdit.selectedDate()
+        self.endEdit.setMinimumDate(start_date)
 
     def fill_fields(self, period: OffPeriod):
         self.item_id = period.id

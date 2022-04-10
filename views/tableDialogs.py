@@ -16,7 +16,8 @@ from views.editorDialogs import AddEmployeeDialog, AddOffPeriodDialog
 from views.editorDialogs import AddEmployeeTypeDialog
 from views.editorWidgets import EmployeeEditorWidget, EditorWidget, EmployeeTypeEditorWidget, OffPeriodEditorWidget, \
     ScheduleEditorWidget
-from views.helpers import load_ui_file, EmployeeItemDelegate, CenteredItemDelegate, ScheduleItemDelegate
+from views.helpers import load_ui_file, EmployeeItemDelegate, CenteredItemDelegate, ScheduleItemDelegate, \
+    OffPeriodItemDelegate
 
 
 class TableDialog(QWidget):
@@ -202,7 +203,7 @@ class OffPeriodWidget(TableDialog):
         self.setup_table(OffPeriodModel(), range(1, 4))
 
         tableview: QTableView = self.get_table()
-        delegate: CenteredItemDelegate = CenteredItemDelegate()
+        delegate: OffPeriodItemDelegate = OffPeriodItemDelegate()
         tableview.setItemDelegate(delegate)
 
     def get_editor_widget(self) -> EditorWidget:

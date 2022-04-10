@@ -179,8 +179,23 @@ class AddOffPeriodDialog(EditorDialog):
         self.layout = QHBoxLayout(self)
         self.layout.addWidget(self.widget)
         self.buttonBox: QDialogButtonBox = self.widget.buttonBox  # noqa
+        self.startEdit = self.widget.startEdit  # noqa
+        self.endEdit = self.widget.endEdit  # noqa
 
         self.configure_widgets()
+
+    def configure_widgets(self):
+        super(AddOffPeriodDialog, self).configure_widgets()
+        self.endEdit.selectionChanged.connect(self.update_start)
+        self.startEdit.selectionChanged.connect(self.update_end)
+
+    def update_start(self):
+        end_date: QDate = self.endEdit.selectedDate()
+        self.startEdit.setMaximumDate(end_date)
+
+    def update_end(self):
+        start_date: QDate = self.startEdit.selectedDate()
+        self.endEdit.setMinimumDate(start_date)
 
     def commit(self):
         model: QSqlTableModel = self.employee_box.model()
