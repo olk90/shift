@@ -6,8 +6,8 @@ from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAb
     QPushButton, QSpinBox, QMessageBox
 
 from logic.database import EmployeeModel, SearchTableModel, update_employee_type, OffPeriodModel, \
-    find_off_period_by_id, update_off_period, ScheduleModel, find_schedule_by_id, delete_item, is_shift_plan_active, \
-    update_schedule
+    find_off_period_by_id, update_off_period, ScheduleModel, find_schedule_by_id, delete_item, shift_plan_active, \
+    update_schedule, schedule_exists
 from logic.database import find_employee_by_id, update_employee, EmployeeTypeModel, find_employee_type_by_id
 from logic.model import Employee, EmployeeType, OffPeriod, Schedule
 from logic.planning import fill_schedule, toggle_schedule_state, create_schedule
@@ -265,6 +265,8 @@ class PlanningWidget(TableDialog):
         tableview.setItemDelegate(delegate)
         tableview.verticalHeader().setVisible(False)
 
+        self.trigger_reload()
+
     def get_editor_widget(self) -> EditorWidget:
         return ScheduleEditorWidget()
 
@@ -324,14 +326,17 @@ class PlanningWidget(TableDialog):
     def trigger_reload(self):
         month: int = self.month_box.currentIndex() + 1
         year: int = self.year_box.value()
-        check_button: bool = is_shift_plan_active(year, month)
-        self.activate_button.setChecked(check_button)
+        planning_needed: bool = not schedule_exists(year, month)
+        self.create_button.setEnabled(planning_needed)
+        plan_active: bool = shift_plan_active(year, month)
+        self.activate_button.setChecked(plan_active)
         self.reload_table_contents(ScheduleModel(year, month))
 
     def create_schedule(self):
         month: int = self.month_box.currentIndex() + 1
         year: int = self.year_box.value()
         create_schedule(month, year)
+        self.create_button.setEnabled(False)
         self.reload_table_contents(ScheduleModel(year, month))
 
     def fill_schedule(self):

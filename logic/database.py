@@ -248,7 +248,16 @@ def find_schedule_by_date(d: datetime.date) -> Schedule:
     return schedule
 
 
-def is_shift_plan_active(year: int, month: int) -> bool:
+def schedule_exists(year: int, month: int) -> bool:
+    session = sm(bind=db)
+    s = session()
+    start_day = date(year, month, 1)
+    schedule: Schedule = s.query(Schedule).filter_by(date=start_day).first()
+    s.close()
+    return schedule is not None
+
+
+def shift_plan_active(year: int, month: int) -> bool:
     session = sm(bind=db)
     s = session()
     start_day = date(year, month, 1)
