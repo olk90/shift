@@ -1,3 +1,4 @@
+import locale
 import sys
 
 import qdarktheme
@@ -21,6 +22,7 @@ if __name__ == "__main__":
     path = './translations'
     if properties.locale_index == 1:
         translator.load(QLocale(QLocale.German, QLocale.Germany), 'base', '_', path)
+        locale.setlocale(locale.LC_TIME, "de_DE.utf8")
         app.installTranslator(translator)
 
     if properties.theme_index == 0:
