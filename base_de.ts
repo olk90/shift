@@ -351,62 +351,62 @@
 <context>
     <name>PlanningWidget</name>
     <message>
-        <location filename="views/tableDialogs.py" line="285"/>
+        <location filename="views/tableDialogs.py" line="297"/>
         <source>January</source>
         <translation>Januar</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="286"/>
+        <location filename="views/tableDialogs.py" line="298"/>
         <source>February</source>
         <translation>Februar</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="287"/>
+        <location filename="views/tableDialogs.py" line="299"/>
         <source>March</source>
         <translation>März</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="288"/>
+        <location filename="views/tableDialogs.py" line="300"/>
         <source>April</source>
         <translation>April</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="289"/>
+        <location filename="views/tableDialogs.py" line="301"/>
         <source>May</source>
         <translation>Mai</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="290"/>
+        <location filename="views/tableDialogs.py" line="302"/>
         <source>June</source>
         <translation>Juni</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="291"/>
+        <location filename="views/tableDialogs.py" line="303"/>
         <source>July</source>
         <translation>Juli</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="292"/>
+        <location filename="views/tableDialogs.py" line="304"/>
         <source>August</source>
         <translation>August</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="293"/>
+        <location filename="views/tableDialogs.py" line="305"/>
         <source>September</source>
         <translation>September</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="294"/>
+        <location filename="views/tableDialogs.py" line="306"/>
         <source>October</source>
         <translation>Oktober</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="295"/>
+        <location filename="views/tableDialogs.py" line="307"/>
         <source>November</source>
         <translation>November</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="298"/>
+        <location filename="views/tableDialogs.py" line="310"/>
         <source>December</source>
         <translation>Dezember</translation>
     </message>
@@ -558,6 +558,11 @@
     </message>
     <message>
         <location filename="ui/planningView.ui" line="76"/>
+        <source>Plan Schedule</source>
+        <translation>Plane Schichten</translation>
+    </message>
+    <message>
+        <location filename="ui/planningView.ui" line="89"/>
         <source>Activate Schedule</source>
         <translation>Aktiviere Schichtplan</translation>
     </message>

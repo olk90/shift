@@ -77,25 +77,29 @@ def off_period_query(search: str) -> str:
 
 def schedule_query(year: int, month: int, search: str) -> str:
     query = """
-    select 
-        s.id,
-        s.date,
-        d.firstname || ' ' || d.lastname as d_fullname,
-        n.firstname || ' ' || n.lastname as n_fullname,
-        s.comment
-    from Schedule s
-    left join Employee d
-    on d.id = s.day_id
-    left join Employee n 
-    on n.id = s.night_id
-    where 
-        strftime('%m', s.date) = '{month}' and strftime('%Y', s.date) = '{year}'
-        and (d.firstname like '%{search}%'
-        or d.lastname like '%{search}%'
-        or n.firstname like '%{search}%'
-        or n.lastname like '%{search}%'
-        or s.comment like '%{search}%')
-    """.format(year=year, month=str(month).zfill(2), search=search)
+            select 
+                s.id,
+                s.date,
+                d.firstname || ' ' || d.lastname as d_fullname,
+                n.firstname || ' ' || n.lastname as n_fullname,
+                s.comment
+            from Schedule s
+            left join Employee d
+            on d.id = s.day_id
+            left join Employee n 
+            on n.id = s.night_id
+            where 
+                strftime('%m', s.date) = '{month}' and strftime('%Y', s.date) = '{year}'
+                
+        """.format(year=year, month=str(month).zfill(2))
+    if len(search) > 0:
+        query += """
+            and (d.firstname like '%{search}%'
+            or d.lastname like '%{search}%'
+            or n.firstname like '%{search}%'
+            or n.lastname like '%{search}%'
+            or s.comment like '%{search}%')
+    """.format(search=search)
     return query
 
 

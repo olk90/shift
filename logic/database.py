@@ -193,24 +193,27 @@ def update_schedule(value_dict: dict):
     session = sm(bind=db)
     s = session()
     schedule: Schedule = s.query(Schedule).filter_by(id=value_dict["item_id"]).first()
+    s_date = schedule.date
+    new_day_id: int = value_dict["d_id"]
+    new_night_id: int = value_dict["n_id"]
     if schedule.activated:
-        s_date = schedule.date
-
         current_day_id: int = schedule.day_id
-        new_day_id: int = value_dict["d_id"]
-        update_score(s, current_day_id, new_day_id, s_date)
+        update_global_score(s, current_day_id, new_day_id, s_date)
 
         current_night_id: int = schedule.night_id
-        new_night_id: int = value_dict["n_id"]
-        update_score(s, current_night_id, new_night_id, s_date)
-
-    schedule.day_id = value_dict["d_id"]
-    schedule.night_id = value_dict["n_id"]
+        update_global_score(s, current_night_id, new_night_id, s_date)
+    else:
+        if new_day_id is not None:
+            update_score(s, new_day_id, s_date)
+        if new_night_id is not None:
+            update_score(s, new_night_id, s_date)
+    schedule.day_id = new_day_id
+    schedule.night_id = new_night_id
     schedule.comment = value_dict["comment"]
     s.commit()
 
 
-def update_score(s, current_id: int, new_id:int, s_date: date):
+def update_global_score(s, current_id: int, new_id: int, s_date: date):
     score_offset: int = 2 if s_date.weekday() > 3 else 1
     off_period_bonus: int = 3
     if current_id != new_id:
@@ -221,6 +224,12 @@ def update_score(s, current_id: int, new_id:int, s_date: date):
             new_night.global_score += off_period_bonus
         else:
             new_night.global_score += score_offset
+
+
+def update_score(s, e_id: int, s_date: date):
+    score_offset: int = 10 if s_date.weekday() > 3 else 1
+    employee: Employee = s.query(Employee).filter_by(id=e_id).first()
+    employee.score += score_offset
 
 
 def find_schedule_by_id(s_id: int) -> Schedule:

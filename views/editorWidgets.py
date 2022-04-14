@@ -199,11 +199,13 @@ class ScheduleEditorWidget(EditorWidget):
 
         self.d_id: int = schedule.day_id
         day_shift: Employee = find_employee_by_id(self.d_id)
-        self.day_box.setCurrentText(day_shift.get_full_name_and_score())
+        if day_shift is not None:
+            self.day_box.setCurrentText(day_shift.get_full_name_and_score())
 
         self.n_id: int = schedule.night_id
         night_shift: Employee = find_employee_by_id(self.n_id)
-        self.night_box.setCurrentText(night_shift.get_full_name_and_score())
+        if night_shift is not None:
+            self.night_box.setCurrentText(night_shift.get_full_name_and_score())
 
         self.comment_edit.setText(schedule.comment)
 

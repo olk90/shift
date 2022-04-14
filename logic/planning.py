@@ -18,12 +18,28 @@ def create_schedule(month: int, year: int):
     end_day = calendar.monthrange(year, month)[1]
     day_range = range(start_day, end_day + 1)
 
+    session = sm(bind=db)
+    s = session()
+    for day in day_range:
+        date = datetime.date(year, month, day)
+        schedule: Schedule = Schedule(date=date)
+        s.add(schedule)
+    s.commit()
+
+
+def fill_schedule(month: int, year: int):
+    print("Fill open shifts for {}/{}".format(month, year))
+    start_day = datetime.date(year, month, 1).day
+    end_day = calendar.monthrange(year, month)[1]
+    day_range = range(start_day, end_day + 1)
+
     for day in day_range:
         date_of_day = datetime.date(year, month, day)
         d_candidates: list = find_day_shift_candidate_ids(date_of_day)
         n_candidates: list = find_night_shift_candidate_ids(date_of_day)
         date = datetime.date(year, month, day)
         day_before = date - datetime.timedelta(days=1)
+        day_after = date + datetime.timedelta(days=1)
         d_replacement_index = 1
         n_replacement_index = 1
         d_candidate_id: int = d_candidates[0]
@@ -32,10 +48,10 @@ def create_schedule(month: int, year: int):
             n_candidate_id = n_candidates[n_replacement_index]
             n_replacement_index += 1
 
-        last_Schedule: Schedule = find_schedule_by_date(day_before)
-        if last_Schedule:
-            day_id: int = last_Schedule.day_id
-            night_id: int = last_Schedule.night_id
+        last_schedule: Schedule = find_schedule_by_date(day_before)
+        if last_schedule:
+            day_id: int = last_schedule.day_id
+            night_id: int = last_schedule.night_id
             if d_candidate_id in [day_id, night_id]:
                 d_candidate_id = d_candidates[d_replacement_index]
                 d_replacement_index += 1
@@ -43,19 +59,31 @@ def create_schedule(month: int, year: int):
                 n_candidate_id = n_candidates[n_replacement_index]
                 n_replacement_index += 1
 
+        next_schedule: Schedule = find_schedule_by_date(day_after)
+        if next_schedule:
+            day_id = next_schedule.day_id
+            night_id = next_schedule.night_id
+            if n_candidate_id in [day_id, night_id]:
+                n_candidate_id = n_candidates[n_replacement_index]
+                n_replacement_index += 1
+            if d_candidate_id == day_id:
+                d_candidate_id = d_candidates[d_replacement_index]
+                d_replacement_index += 1
+
+        score_offset: int = 10 if date.weekday() > 3 else 1
+
         session = sm(bind=db)
         s = session()
-        d_candidate: Employee = s.query(Employee).filter_by(id=d_candidate_id).first()
-        n_candidate: Employee = s.query(Employee).filter_by(id=n_candidate_id).first()
-        if date.weekday() > 3:
-            d_candidate.score += 10
-            n_candidate.score += 10
-        else:
-            d_candidate.score += 1
-            n_candidate.score += 1
+        schedule: Schedule = s.query(Schedule).filter_by(date=date_of_day).first()
+        if schedule.day_id is None:
+            d_candidate: Employee = s.query(Employee).filter_by(id=d_candidate_id).first()
+            d_candidate.score += score_offset
+            schedule.day_id = d_candidate_id
 
-        schedule: Schedule = Schedule(date=date, day_id=d_candidate.id, night_id=n_candidate.id)
-        s.add(schedule)
+        if schedule.night_id is None:
+            n_candidate: Employee = s.query(Employee).filter_by(id=n_candidate_id).first()
+            n_candidate.score += score_offset
+            schedule.night_id = n_candidate_id
         s.commit()
 
 
