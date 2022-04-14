@@ -1,17 +1,23 @@
-from datetime import datetime
+import datetime
+
+from sqlalchemy import create_engine as ce
+from sqlalchemy.orm import sessionmaker as sm
 
 import qdarktheme
 from PySide6.QtCore import QDate
 from PySide6.QtCore import QLibraryInfo, QTranslator, QLocale
 from PySide6.QtSql import QSqlTableModel, QSqlQueryModel
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialog, QMainWindow, QApplication, QDialogButtonBox
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialog, QMainWindow, QApplication, QDialogButtonBox, QComboBox, \
+    QSpinBox
 
 from logic.config import properties
 from logic.database import EmployeeModel, EmployeeTypeModel, OffPeriodModel, configure_query_model, persist_item
 from logic.model import EmployeeType, Employee, RotationPeriod, OffPeriod
 from logic.queries import employee_fullname_query, employee_type_designation_query
-from views.helpers import load_ui_file
+from views.helpers import load_ui_file, configure_month_box, configure_year_box, configure_weekday_box, get_day_range
+
+db = ce("sqlite:///shift.db")
 
 
 class EditorDialog(QDialog):
@@ -202,9 +208,9 @@ class AddOffPeriodDialog(EditorDialog):
         index: int = self.employee_box.currentIndex()
         e_id = model.index(index, 1).data()
         start: QDate = self.widget.startEdit.selectedDate()  # noqa
-        start_date = datetime(start.year(), start.month(), start.day())
+        start_date = datetime.datetime(start.year(), start.month(), start.day())
         end: QDate = self.widget.endEdit.selectedDate()  # noqa
-        end_date = datetime(end.year(), end.month(), end.day())
+        end_date = datetime.datetime(end.year(), end.month(), end.day())
         off_period = OffPeriod(e_id=e_id, start=start_date, end=end_date)
         persist_item(off_period)
         self.parent.reload_table_contents(model=OffPeriodModel())
@@ -216,3 +222,53 @@ class AddOffPeriodDialog(EditorDialog):
         self.employee_box.setCurrentIndex(0)  # noqa
         self.widget.startEdit.setSelectedDate(QDate.currentDate())  # noqa
         self.widget.endEdit.setSelectedDate(QDate.currentDate())  # noqa
+
+
+class AddRepeatingOffPeriodDialog(EditorDialog):
+
+    def __init__(self, parent: QWidget):
+        super().__init__(parent=parent, ui_file_name="ui/repeatingOffPeriodAddDialog.ui")
+
+        self.layout = QHBoxLayout(self)
+        self.layout.addWidget(self.widget)
+        self.buttonBox: QDialogButtonBox = self.widget.buttonBox  # noqa
+
+        self.employee_box: QComboBox = self.widget.employeeBox  # noqa
+        query: str = employee_fullname_query()
+        configure_query_model(self.employee_box, query)
+
+        self.month_box: QComboBox = self.widget.monthBox  # noqa
+        self.year_box: QSpinBox = self.widget.yearBox  # noqa
+        self.weekday_box: QComboBox = self.widget.weekdayBox  # noqa
+
+        self.configure_widgets()
+
+    def configure_widgets(self):
+        super(AddRepeatingOffPeriodDialog, self).configure_widgets()
+        configure_month_box(self, self.month_box)
+        configure_year_box(self.year_box)
+        configure_weekday_box(self, self.weekday_box)
+
+    def clear_fields(self):
+        query: str = employee_fullname_query()
+        self.employee_box.model().setQuery(query)
+        self.employee_box.setCurrentIndex(0)  # noqa
+
+    def commit(self):
+        model: QSqlTableModel = self.employee_box.model()
+        index: int = self.employee_box.currentIndex()
+        e_id = model.index(index, 1).data()
+        month: int = self.month_box.currentIndex()
+        year: int = self.year_box.value()
+        weekday: int = self.weekday_box.currentIndex()
+        day_range = get_day_range(month, year)
+
+        session = sm(bind=db)
+        s = session()
+        for day in day_range:
+            date = datetime.date(year, month, day)
+            if date.weekday() == weekday:
+                off_period = OffPeriod(start=date, end=date, e_id=e_id)
+                s.add(off_period)
+        s.commit()
+        self.parent.reload_table_contents(model=OffPeriodModel())

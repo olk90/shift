@@ -4,9 +4,11 @@ import datetime
 from sqlalchemy import create_engine as ce
 from sqlalchemy.orm import sessionmaker as sm
 
-from logic.database import find_day_shift_candidate_ids, find_night_shift_candidate_ids, find_schedule_by_date, reset_scores
+from logic.database import find_day_shift_candidate_ids, find_night_shift_candidate_ids, find_schedule_by_date, \
+    reset_scores
 from logic.model import Schedule, Employee
 from logic.queries import schedule_id_query
+from views.helpers import get_day_range
 
 db = ce("sqlite:///shift.db")
 
@@ -14,9 +16,7 @@ db = ce("sqlite:///shift.db")
 def create_schedule(month: int, year: int):
     print("Set up new schedule for {}/{}".format(month, year))
     reset_scores()
-    start_day = datetime.date(year, month, 1).day
-    end_day = calendar.monthrange(year, month)[1]
-    day_range = range(start_day, end_day + 1)
+    day_range = get_day_range(month, year)
 
     session = sm(bind=db)
     s = session()

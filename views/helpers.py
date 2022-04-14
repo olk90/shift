@@ -1,10 +1,11 @@
+import calendar
 import sys
-from datetime import datetime
+import datetime
 from typing import Union
 
-from PySide6.QtCore import QFile, QCoreApplication, QModelIndex, QPersistentModelIndex, Qt
+from PySide6.QtCore import QFile, QModelIndex, QPersistentModelIndex, Qt
 from PySide6.QtGui import QPainter, QBrush, QColor
-from PySide6.QtWidgets import QItemDelegate, QStyleOptionViewItem, QStyleOptionButton
+from PySide6.QtWidgets import QItemDelegate, QStyleOptionViewItem, QStyleOptionButton, QComboBox, QWidget, QSpinBox
 
 from logic.config import properties
 
@@ -17,8 +18,56 @@ def load_ui_file(filename):
     return ui_file
 
 
-def translate(context, text):
-    return QCoreApplication.translate(context, text, None)
+def configure_month_box(parent: QWidget, month_box: QComboBox):
+    months: list = [
+        parent.tr("January"),
+        parent.tr("February"),
+        parent.tr("March"),
+        parent.tr("April"),
+        parent.tr("May"),
+        parent.tr("June"),
+        parent.tr("July"),
+        parent.tr("August"),
+        parent.tr("September"),
+        parent.tr("October"),
+        parent.tr("November"),
+        parent.tr("December")
+    ]
+    month_box.addItems(months)
+    date = datetime.date.today()
+    month: int = date.month - 1  # indices start at 0!
+    month_box.setCurrentIndex(month)
+
+
+def configure_weekday_box(parent: QWidget, weekday_box: QComboBox):
+    months: list = [
+        parent.tr("Monday"),
+        parent.tr("Tuesday"),
+        parent.tr("Wednesday"),
+        parent.tr("Thursday"),
+        parent.tr("Friday"),
+        parent.tr("Saturday"),
+        parent.tr("Sunday")
+    ]
+    weekday_box.addItems(months)
+    date = datetime.date.today()
+    day: int = date.day - 1  # indices start at 0!
+    weekday_box.setCurrentIndex(day)
+
+
+def configure_year_box(year_box: QSpinBox):
+    date = datetime.date.today()
+    year: int = date.year
+    year_box.setMinimum(year)
+    year_box.setValue(year)
+    year_box.setMaximum(9999)
+
+
+def get_day_range(month: int, year: int):
+    start_day = datetime.date(year, month, 1).day
+    end_day = calendar.monthrange(year, month)[1]
+    day_range = range(start_day, end_day + 1)
+    return day_range
 
 
 class CenteredItemDelegate(QItemDelegate):
@@ -61,7 +110,7 @@ class OffPeriodItemDelegate(CenteredItemDelegate):
         model = index.model()
         if index.column() in [1, 2]:
             date_str: str = model.index(index.row(), index.column()).data()
-            date = datetime.strptime(date_str, '%Y-%m-%d')
+            date = datetime.datetime.strptime(date_str, '%Y-%m-%d')
             text = date.strftime("%a, %d %b %Y")
             option.displayAlignment = Qt.AlignCenter
             self.drawDisplay(painter, option, option.rect, text)
@@ -77,7 +126,7 @@ class ScheduleItemDelegate(CenteredItemDelegate):
     def paint(self, painter: QPainter, option: QStyleOptionViewItem, index: Union[QModelIndex, QPersistentModelIndex]):
         model = index.model()
         date_str: str = model.index(index.row(), 1).data()
-        date = datetime.strptime(date_str, '%Y-%m-%d')
+        date = datetime.datetime.strptime(date_str, '%Y-%m-%d')
         if date.weekday() > 3:
             theme: int = properties.theme_index
             color: QColor = QColor("#3f4042") if theme == 0 else QColor("#dadce0")

@@ -12,12 +12,12 @@ from logic.database import find_employee_by_id, update_employee, EmployeeTypeMod
 from logic.model import Employee, EmployeeType, OffPeriod, Schedule
 from logic.planning import fill_schedule, toggle_schedule_state, create_schedule
 from views.confirmationDialogs import ConfirmScheduleUpdateDialog, ConfirmDeletionDialog
-from views.editorDialogs import AddEmployeeDialog, AddOffPeriodDialog
+from views.editorDialogs import AddEmployeeDialog, AddOffPeriodDialog, AddRepeatingOffPeriodDialog
 from views.editorDialogs import AddEmployeeTypeDialog
 from views.editorWidgets import EmployeeEditorWidget, EditorWidget, EmployeeTypeEditorWidget, OffPeriodEditorWidget, \
     ScheduleEditorWidget
 from views.helpers import load_ui_file, EmployeeItemDelegate, CenteredItemDelegate, ScheduleItemDelegate, \
-    OffPeriodItemDelegate
+    OffPeriodItemDelegate, configure_month_box, configure_year_box
 
 
 class TableDialog(QWidget):
@@ -198,13 +198,26 @@ class EmployeeTypeWidget(TableDialog):
 class OffPeriodWidget(TableDialog):
 
     def __init__(self):
-        super(OffPeriodWidget, self).__init__(table_ui_name="ui/offPeriodView.ui")
+        super(OffPeriodWidget, self).__init__(table_ui_name="ui/offPeriodView.ui", configure_widgets=False)
         self.add_dialog = AddOffPeriodDialog(self)
         self.setup_table(OffPeriodModel(), range(1, 4))
+
+        self.repeating_button: QPushButton = self.table_widget.repeatingButton  # noqa
+        self.add_repeating_dialog = AddRepeatingOffPeriodDialog(self)
 
         tableview: QTableView = self.get_table()
         delegate: OffPeriodItemDelegate = OffPeriodItemDelegate()
         tableview.setItemDelegate(delegate)
+
+        self.configure_widgets()
+
+    def configure_widgets(self):
+        super(OffPeriodWidget, self).configure_widgets()
+        self.repeating_button.clicked.connect(self.repeating_day)
+
+    def repeating_day(self):
+        self.add_repeating_dialog.clear_fields()
+        self.add_repeating_dialog.exec_()
 
     def get_editor_widget(self) -> EditorWidget:
         return OffPeriodEditorWidget()
@@ -295,32 +308,11 @@ class PlanningWidget(TableDialog):
         return ScheduleModel(year, month, search)
 
     def configure_month_box(self):
-        months: list = [
-            self.tr("January"),
-            self.tr("February"),
-            self.tr("March"),
-            self.tr("April"),
-            self.tr("May"),
-            self.tr("June"),
-            self.tr("July"),
-            self.tr("August"),
-            self.tr("September"),
-            self.tr("October"),
-            self.tr("November"),
-            self.tr("December")
-        ]
-        self.month_box.addItems(months)
-        date = datetime.date.today()
-        month: int = date.month - 1  # indices start at 0!
-        self.month_box.setCurrentIndex(month)
+        configure_month_box(self, self.month_box)
         self.month_box.currentIndexChanged.connect(self.trigger_reload)
 
     def configure_year_box(self):
-        date = datetime.date.today()
-        year: int = date.year
-        self.year_box.setMinimum(year)
-        self.year_box.setValue(year)
-        self.year_box.setMaximum(9999)
+        configure_year_box(self.year_box)
         self.year_box.valueChanged.connect(self.trigger_reload)
 
     def trigger_reload(self):
