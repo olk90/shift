@@ -4,7 +4,7 @@
 <context>
     <name>AddEmployeeDialog</name>
     <message>
-        <location filename="views/editorDialogs.py" line="106"/>
+        <location filename="views/editorDialogs.py" line="112"/>
         <source>Add Employee</source>
         <translation>Mitarbeiter hinzufügen</translation>
     </message>
@@ -20,7 +20,7 @@
 <context>
     <name>AddEmployeeTypeDialog</name>
     <message>
-        <location filename="views/editorDialogs.py" line="148"/>
+        <location filename="views/editorDialogs.py" line="154"/>
         <source>Add Employee Type</source>
         <translation>Mitarbeitertyp hinzufügen</translation>
     </message>
@@ -65,12 +65,12 @@
 <context>
     <name>EditorDialog</name>
     <message>
-        <location filename="views/editorDialogs.py" line="37"/>
+        <location filename="views/editorDialogs.py" line="43"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="views/editorDialogs.py" line="38"/>
+        <location filename="views/editorDialogs.py" line="44"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
@@ -164,6 +164,7 @@
         <location filename="ui/offPeriodAddDialog.ui" line="14"/>
         <location filename="ui/offPeriodEditor.ui" line="14"/>
         <location filename="ui/optionsEditor.ui" line="14"/>
+        <location filename="ui/repeatingOffPeriodAddDialog.ui" line="14"/>
         <location filename="ui/scheduleEditor.ui" line="14"/>
         <source>Form</source>
         <translation>Formular</translation>
@@ -241,6 +242,7 @@
     <message>
         <location filename="ui/offPeriodAddDialog.ui" line="41"/>
         <location filename="ui/offPeriodEditor.ui" line="41"/>
+        <location filename="ui/repeatingOffPeriodAddDialog.ui" line="41"/>
         <source>Employee</source>
         <translation>Mitarbeiter</translation>
     </message>
@@ -286,6 +288,26 @@
         <source>Comment</source>
         <oldsource>Kommentar</oldsource>
         <translation>Kommentar</translation>
+    </message>
+    <message>
+        <location filename="ui/repeatingOffPeriodAddDialog.ui" line="32"/>
+        <source>Add Repeating Off Period</source>
+        <translation>Regelmäßige freie Tage einfügen</translation>
+    </message>
+    <message>
+        <location filename="ui/repeatingOffPeriodAddDialog.ui" line="48"/>
+        <source>Month</source>
+        <translation>Monat</translation>
+    </message>
+    <message>
+        <location filename="ui/repeatingOffPeriodAddDialog.ui" line="55"/>
+        <source>Year</source>
+        <translation>Jahr</translation>
+    </message>
+    <message>
+        <location filename="ui/repeatingOffPeriodAddDialog.ui" line="65"/>
+        <source>Weekday</source>
+        <translation>Wochentag</translation>
     </message>
 </context>
 <context>
@@ -351,64 +373,52 @@
 <context>
     <name>PlanningWidget</name>
     <message>
-        <location filename="views/tableDialogs.py" line="297"/>
         <source>January</source>
-        <translation>Januar</translation>
+        <translation type="vanished">Januar</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="298"/>
         <source>February</source>
-        <translation>Februar</translation>
+        <translation type="vanished">Februar</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="299"/>
         <source>March</source>
-        <translation>März</translation>
+        <translation type="vanished">März</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="300"/>
         <source>April</source>
-        <translation>April</translation>
+        <translation type="vanished">April</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="301"/>
         <source>May</source>
-        <translation>Mai</translation>
+        <translation type="vanished">Mai</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="302"/>
         <source>June</source>
-        <translation>Juni</translation>
+        <translation type="vanished">Juni</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="303"/>
         <source>July</source>
-        <translation>Juli</translation>
+        <translation type="vanished">Juli</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="304"/>
         <source>August</source>
-        <translation>August</translation>
+        <translation type="vanished">August</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="305"/>
         <source>September</source>
-        <translation>September</translation>
+        <translation type="vanished">September</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="306"/>
         <source>October</source>
-        <translation>Oktober</translation>
+        <translation type="vanished">Oktober</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="307"/>
         <source>November</source>
-        <translation>November</translation>
+        <translation type="vanished">November</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="310"/>
         <source>December</source>
-        <translation>Dezember</translation>
+        <translation type="vanished">Dezember</translation>
     </message>
 </context>
 <context>
@@ -535,8 +545,111 @@
     </message>
     <message>
         <location filename="ui/offPeriodView.ui" line="56"/>
+        <source>Repeating Day</source>
+        <translation>Regelmäßiger Tag</translation>
+    </message>
+    <message>
+        <location filename="ui/offPeriodView.ui" line="69"/>
         <source>Delete</source>
         <translation>Löschen</translation>
+    </message>
+</context>
+<context>
+    <name>parent</name>
+    <message>
+        <location filename="views/helpers.py" line="23"/>
+        <source>January</source>
+        <translation>Januar</translation>
+    </message>
+    <message>
+        <location filename="views/helpers.py" line="24"/>
+        <source>February</source>
+        <translation>Februar</translation>
+    </message>
+    <message>
+        <location filename="views/helpers.py" line="25"/>
+        <source>March</source>
+        <translation>März</translation>
+    </message>
+    <message>
+        <location filename="views/helpers.py" line="26"/>
+        <source>April</source>
+        <translation>April</translation>
+    </message>
+    <message>
+        <location filename="views/helpers.py" line="27"/>
+        <source>May</source>
+        <translation>Mai</translation>
+    </message>
+    <message>
+        <location filename="views/helpers.py" line="28"/>
+        <source>June</source>
+        <translation>Juni</translation>
+    </message>
+    <message>
+        <location filename="views/helpers.py" line="29"/>
+        <source>July</source>
+        <translation>Juli</translation>
+    </message>
+    <message>
+        <location filename="views/helpers.py" line="30"/>
+        <source>August</source>
+        <translation>August</translation>
+    </message>
+    <message>
+        <location filename="views/helpers.py" line="31"/>
+        <source>September</source>
+        <translation>September</translation>
+    </message>
+    <message>
+        <location filename="views/helpers.py" line="32"/>
+        <source>October</source>
+        <translation>Oktober</translation>
+    </message>
+    <message>
+        <location filename="views/helpers.py" line="33"/>
+        <source>November</source>
+        <translation>November</translation>
+    </message>
+    <message>
+        <location filename="views/helpers.py" line="36"/>
+        <source>December</source>
+        <translation>Dezember</translation>
+    </message>
+    <message>
+        <location filename="views/helpers.py" line="44"/>
+        <source>Monday</source>
+        <translation>Montag</translation>
+    </message>
+    <message>
+        <location filename="views/helpers.py" line="45"/>
+        <source>Tuesday</source>
+        <translation>Dienstag</translation>
+    </message>
+    <message>
+        <location filename="views/helpers.py" line="46"/>
+        <source>Wednesday</source>
+        <translation>Mittwoch</translation>
+    </message>
+    <message>
+        <location filename="views/helpers.py" line="47"/>
+        <source>Thursday</source>
+        <translation>Donnerstag</translation>
+    </message>
+    <message>
+        <location filename="views/helpers.py" line="48"/>
+        <source>Friday</source>
+        <translation>Freitag</translation>
+    </message>
+    <message>
+        <location filename="views/helpers.py" line="49"/>
+        <source>Saturday</source>
+        <translation>Samstag</translation>
+    </message>
+    <message>
+        <location filename="views/helpers.py" line="52"/>
+        <source>Sunday</source>
+        <translation>Sonntag</translation>
     </message>
 </context>
 <context>
