@@ -245,9 +245,10 @@ class AddRepeatingOffPeriodDialog(EditorDialog):
 
     def configure_widgets(self):
         super(AddRepeatingOffPeriodDialog, self).configure_widgets()
-        configure_month_box(self, self.month_box)
+        app = QApplication.instance()
+        configure_month_box(app, self.month_box)
         configure_year_box(self.year_box)
-        configure_weekday_box(self, self.weekday_box)
+        configure_weekday_box(app, self.weekday_box)
 
     def clear_fields(self):
         query: str = employee_fullname_query()

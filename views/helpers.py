@@ -1,11 +1,12 @@
 import calendar
-import sys
 import datetime
+import sys
 from typing import Union
 
 from PySide6.QtCore import QFile, QModelIndex, QPersistentModelIndex, Qt
 from PySide6.QtGui import QPainter, QBrush, QColor
-from PySide6.QtWidgets import QItemDelegate, QStyleOptionViewItem, QStyleOptionButton, QComboBox, QWidget, QSpinBox
+from PySide6.QtWidgets import QItemDelegate, QStyleOptionViewItem, QStyleOptionButton, QComboBox, QSpinBox, \
+    QApplication
 
 from logic.config import properties
 
@@ -18,20 +19,20 @@ def load_ui_file(filename):
     return ui_file
 
 
-def configure_month_box(parent: QWidget, month_box: QComboBox):
+def configure_month_box(app: QApplication, month_box: QComboBox):
     months: list = [
-        parent.tr("January"),
-        parent.tr("February"),
-        parent.tr("March"),
-        parent.tr("April"),
-        parent.tr("May"),
-        parent.tr("June"),
-        parent.tr("July"),
-        parent.tr("August"),
-        parent.tr("September"),
-        parent.tr("October"),
-        parent.tr("November"),
-        parent.tr("December")
+        app.translate("app", "January"),
+        app.translate("app", "February"),
+        app.translate("app", "March"),
+        app.translate("app", "April"),
+        app.translate("app", "May"),
+        app.translate("app", "June"),
+        app.translate("app", "July"),
+        app.translate("app", "August"),
+        app.translate("app", "September"),
+        app.translate("app", "October"),
+        app.translate("app", "November"),
+        app.translate("app", "December")
     ]
     month_box.addItems(months)
     date = datetime.date.today()
@@ -39,15 +40,15 @@ def configure_month_box(parent: QWidget, month_box: QComboBox):
     month_box.setCurrentIndex(month)
 
 
-def configure_weekday_box(parent: QWidget, weekday_box: QComboBox):
+def configure_weekday_box(app: QApplication, weekday_box: QComboBox):
     months: list = [
-        parent.tr("Monday"),
-        parent.tr("Tuesday"),
-        parent.tr("Wednesday"),
-        parent.tr("Thursday"),
-        parent.tr("Friday"),
-        parent.tr("Saturday"),
-        parent.tr("Sunday")
+        app.translate("app", "Monday"),
+        app.translate("app", "Tuesday"),
+        app.translate("app", "Wednesday"),
+        app.translate("app", "Thursday"),
+        app.translate("app", "Friday"),
+        app.translate("app", "Saturday"),
+        app.translate("app", "Sunday")
     ]
     weekday_box.addItems(months)
     date = datetime.date.today()

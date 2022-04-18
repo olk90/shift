@@ -1,9 +1,7 @@
-import datetime
-
 from PySide6.QtCore import QModelIndex, QItemSelectionModel
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAbstractItemView, QLineEdit, \
-    QPushButton, QSpinBox, QMessageBox
+    QPushButton, QSpinBox, QMessageBox, QApplication
 
 from logic.database import EmployeeModel, SearchTableModel, update_employee_type, OffPeriodModel, \
     find_off_period_by_id, update_off_period, ScheduleModel, find_schedule_by_id, delete_item, shift_plan_active, \
@@ -308,7 +306,8 @@ class PlanningWidget(TableDialog):
         return ScheduleModel(year, month, search)
 
     def configure_month_box(self):
-        configure_month_box(self, self.month_box)
+        app = QApplication.instance()
+        configure_month_box(app, self.month_box)
         self.month_box.currentIndexChanged.connect(self.trigger_reload)
 
     def configure_year_box(self):

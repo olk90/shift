@@ -219,11 +219,13 @@ def update_global_score(s, current_id: int, new_id: int, s_date: date):
     if current_id != new_id:
         current_night: Employee = s.query(Employee).filter_by(id=current_id).first()
         new_night: Employee = s.query(Employee).filter_by(id=new_id).first()
-        current_night.global_score -= score_offset
-        if new_night.has_off_period(s_date):
-            new_night.global_score += off_period_bonus
-        else:
-            new_night.global_score += score_offset
+        if current_night:
+            current_night.global_score -= score_offset
+        if new_night:
+            if new_night.has_off_period(s_date):
+                new_night.global_score += off_period_bonus
+            else:
+                new_night.global_score += score_offset
 
 
 def update_score(s, e_id: int, s_date: date):

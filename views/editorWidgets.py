@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker as sm
 
 from PySide6.QtCore import QDate
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialogButtonBox, QTextEdit, QComboBox
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialogButtonBox, QTextEdit, QComboBox, QToolButton
 
 from logic.database import find_employee_by_id, configure_query_model, find_employee_type_by_id
 from logic.model import RotationPeriod, EmployeeType, Employee, OffPeriod, Schedule
@@ -166,11 +166,18 @@ class ScheduleEditorWidget(EditorWidget):
         self.day_box.currentTextChanged.connect(lambda x: self.update_selection_id(self.day_box))
         day_query: str = day_shift_replacement_query()
         configure_query_model(self.day_box, day_query)
+        self.day_box.setCurrentIndex(-1)
 
         self.night_box: QComboBox = self.widget.nightBox  # noqa
         self.night_box.currentTextChanged.connect(lambda x: self.update_selection_id(self.night_box))
         night_query: str = night_shift_replacement_query()
         configure_query_model(self.night_box, night_query)
+        self.night_box.setCurrentIndex(-1)
+
+        self.remove_day_button: QToolButton = self.widget.removeDayButton  # noqa
+        self.remove_night_button: QToolButton = self.widget.removeNightButton  # noqa
+        self.remove_day_button.clicked.connect(lambda x: self.remove_shift(self.day_box))
+        self.remove_night_button.clicked.connect(lambda x: self.remove_shift(self.night_box))
 
         self.comment_edit: QTextEdit = self.widget.commentEdit  # noqa
 
@@ -187,6 +194,13 @@ class ScheduleEditorWidget(EditorWidget):
             elif box == self.night_box:
                 self.n_id = e_id[0]
 
+    def remove_shift(self, box: QComboBox):
+        box.setCurrentIndex(-1)
+        if box == self.day_box:
+            self.d_id = None
+        elif box == self.night_box:
+            self.n_id = None
+
     def fill_fields(self, schedule: Schedule):
 
         day_query: str = day_shift_replacement_query()
@@ -201,11 +215,15 @@ class ScheduleEditorWidget(EditorWidget):
         day_shift: Employee = find_employee_by_id(self.d_id)
         if day_shift is not None:
             self.day_box.setCurrentText(day_shift.get_full_name_and_score())
+        else:
+            self.day_box.setCurrentIndex(-1)
 
         self.n_id: int = schedule.night_id
         night_shift: Employee = find_employee_by_id(self.n_id)
         if night_shift is not None:
             self.night_box.setCurrentText(night_shift.get_full_name_and_score())
+        else:
+            self.night_box.setCurrentIndex(-1)
 
         self.comment_edit.setText(schedule.comment)
 
