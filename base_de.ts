@@ -764,5 +764,10 @@
         <source>Activate Schedule</source>
         <translation>Aktiviere Schichtplan</translation>
     </message>
+    <message>
+        <location filename="ui/planningView.ui" line="108"/>
+        <source>Clear Schedule</source>
+        <translation>Schichtplan löschen</translation>
+    </message>
 </context>
 </TS>

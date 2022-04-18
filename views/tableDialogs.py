@@ -8,7 +8,7 @@ from logic.database import EmployeeModel, SearchTableModel, update_employee_type
     update_schedule, schedule_exists
 from logic.database import find_employee_by_id, update_employee, EmployeeTypeModel, find_employee_type_by_id
 from logic.model import Employee, EmployeeType, OffPeriod, Schedule
-from logic.planning import fill_schedule, toggle_schedule_state, create_schedule
+from logic.planning import fill_schedule, toggle_schedule_state, create_schedule, clear_schedule
 from views.confirmationDialogs import ConfirmScheduleUpdateDialog, ConfirmDeletionDialog
 from views.editorDialogs import AddEmployeeDialog, AddOffPeriodDialog, AddRepeatingOffPeriodDialog
 from views.editorDialogs import AddEmployeeTypeDialog
@@ -263,6 +263,7 @@ class PlanningWidget(TableDialog):
         self.create_button: QPushButton = self.table_widget.createButton  # noqa
         self.planning_button: QPushButton = self.table_widget.planningButton  # noqa
         self.activate_button: QPushButton = self.table_widget.activateButton  # noqa
+        self.clear_button: QPushButton = self.table_widget.clearScheduleButton  # noqa
 
         self.configure_widgets()
         self.configure_search()
@@ -286,7 +287,8 @@ class PlanningWidget(TableDialog):
         self.configure_year_box()
         self.create_button.clicked.connect(self.create_schedule)
         self.planning_button.clicked.connect(self.fill_schedule)
-        self.activate_button.clicked.connect(self.configure_activate_button)
+        self.activate_button.clicked.connect(self.activate_schedule)
+        self.clear_button.clicked.connect(self.clear_schedule)
         self.editor.buttonBox.accepted.connect(self.commit_changes)
         self.editor.buttonBox.rejected.connect(self.revert_changes)
 
@@ -321,6 +323,8 @@ class PlanningWidget(TableDialog):
         self.create_button.setEnabled(planning_needed)
         plan_active: bool = shift_plan_active(year, month)
         self.activate_button.setChecked(plan_active)
+        self.planning_button.setEnabled(not plan_active)
+        self.clear_button.setEnabled(not plan_active)
         self.reload_table_contents(ScheduleModel(year, month))
 
     def create_schedule(self):
@@ -336,11 +340,18 @@ class PlanningWidget(TableDialog):
         fill_schedule(month, year)
         self.reload_table_contents(ScheduleModel(year, month))
 
-    def configure_activate_button(self):
+    def activate_schedule(self):
         month: int = self.month_box.currentIndex() + 1
         year: int = self.year_box.value()
         activated: bool = self.activate_button.isChecked()
         toggle_schedule_state(year, month, activated)
+        self.trigger_reload()
+
+    def clear_schedule(self):
+        month: int = self.month_box.currentIndex() + 1
+        year: int = self.year_box.value()
+        clear_schedule(year, month)
+        self.trigger_reload()
 
     def commit_changes(self):
         month: int = self.month_box.currentIndex() + 1

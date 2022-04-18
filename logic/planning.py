@@ -104,3 +104,14 @@ def toggle_schedule_state(year: int, month: int, activate: bool):
         schedule: Schedule = s.query(Schedule).filter_by(id=sid[0]).first()
         schedule.activated = activate
     s.commit()
+
+
+def clear_schedule(year: int, month: int):
+    session = sm(bind=db)
+    s = session()
+    query = schedule_id_query(year, month)
+    s_ids = s.execute(query)
+    for sid in s_ids:
+        schedule: Schedule = s.query(Schedule).filter_by(id=sid[0]).first()
+        s.delete(schedule)
+    s.commit()
