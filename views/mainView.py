@@ -1,3 +1,4 @@
+from PySide6.QtGui import QIcon
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 
@@ -14,6 +15,7 @@ class MainWindow(QMainWindow):
         self.adjustSize()
 
         form.setWindowTitle("Shift")
+        form.setWindowIcon(QIcon("icon.svg"))
 
         self.layout = QVBoxLayout(form)
         self.options_dialog = OptionsEditorDialog(self)

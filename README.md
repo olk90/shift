@@ -1,5 +1,7 @@
 # shift
 
+![icon](icon.svg)
+
 This is an app to create shift plans for a month. **Detailed documentation will
 follow soon!**
 
