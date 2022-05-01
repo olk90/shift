@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 from logic.database import EmployeeTypeModel, EmployeeModel, OffPeriodModel, ScheduleModel
 from views.editorDialogs import OptionsEditorDialog
 from views.tableDialogs import EmployeeWidget, EmployeeTypeWidget, TableDialog, OffPeriodWidget, PlanningWidget
-from views.helpers import load_ui_file
+from views.helpers.helper_functions import load_ui_file
 
 
 class MainWindow(QMainWindow):

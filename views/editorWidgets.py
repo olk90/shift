@@ -9,7 +9,7 @@ from logic.database import find_employee_by_id, configure_query_model, find_empl
 from logic.model import RotationPeriod, EmployeeType, Employee, OffPeriod, Schedule
 from logic.queries import employee_type_designation_query, day_shift_replacement_query, night_shift_replacement_query, \
     employee_id_by_name_and_score_query
-from views.helpers import load_ui_file
+from views.helpers.helper_functions import load_ui_file
 
 
 class EditorWidget(QWidget):

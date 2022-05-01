@@ -15,7 +15,8 @@ from logic.config import properties
 from logic.database import EmployeeModel, EmployeeTypeModel, OffPeriodModel, configure_query_model, persist_item
 from logic.model import EmployeeType, Employee, RotationPeriod, OffPeriod
 from logic.queries import employee_fullname_query, employee_type_designation_query
-from views.helpers import load_ui_file, configure_month_box, configure_year_box, configure_weekday_box, get_day_range
+from views.helpers.helper_functions import load_ui_file, configure_month_box, configure_weekday_box, configure_year_box, \
+    get_day_range
 
 db = ce("sqlite:///shift.db")
 

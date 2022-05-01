@@ -5,9 +5,9 @@ from PySide6.QtCore import QObject
 
 
 class Properties(QObject):
-    userHome = Path.home()
-    configDirectory = Path.joinpath(userHome, ".shift")
-    configFile = Path.joinpath(configDirectory, "config.json")
+    user_home = Path.home()
+    config_directory = Path.joinpath(user_home, ".shift")
+    config_file = Path.joinpath(config_directory, "config.json")
 
     theme_index = 0
 
@@ -24,15 +24,15 @@ class Properties(QObject):
             "locale": self.locale_index
         }
         config = json.dumps(config_dict, indent=4)
-        with open(self.configFile, "w") as f:
+        with open(self.config_file, "w") as f:
             f.write(config)
             f.close()
 
     def load_config_file(self):
-        if not self.configDirectory.exists():
-            self.configDirectory.mkdir()
-        if self.configFile.exists():
-            file = open(self.configFile)
+        if not self.config_directory.exists():
+            self.config_directory.mkdir()
+        if self.config_file.exists():
+            file = open(self.config_file)
             config = json.load(file)
             properties.theme_index = get_theme_index(config)
             properties.locale_index = get_locale_index(config)

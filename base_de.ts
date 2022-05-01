@@ -4,7 +4,7 @@
 <context>
     <name>AddEmployeeDialog</name>
     <message>
-        <location filename="views/editorDialogs.py" line="112"/>
+        <location filename="views/editorDialogs.py" line="113"/>
         <source>Add Employee</source>
         <translation>Mitarbeiter hinzufügen</translation>
     </message>
@@ -20,7 +20,7 @@
 <context>
     <name>AddEmployeeTypeDialog</name>
     <message>
-        <location filename="views/editorDialogs.py" line="154"/>
+        <location filename="views/editorDialogs.py" line="155"/>
         <source>Add Employee Type</source>
         <translation>Mitarbeitertyp hinzufügen</translation>
     </message>
@@ -65,12 +65,12 @@
 <context>
     <name>EditorDialog</name>
     <message>
-        <location filename="views/editorDialogs.py" line="43"/>
+        <location filename="views/editorDialogs.py" line="44"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="views/editorDialogs.py" line="44"/>
+        <location filename="views/editorDialogs.py" line="45"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
@@ -319,22 +319,22 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="views/mainView.py" line="40"/>
+        <location filename="views/mainView.py" line="42"/>
         <source>Employee Types</source>
         <translation>Mitarbeitertypen</translation>
     </message>
     <message>
-        <location filename="views/mainView.py" line="43"/>
+        <location filename="views/mainView.py" line="45"/>
         <source>Employees</source>
         <translation>Mitarbeiter</translation>
     </message>
     <message>
-        <location filename="views/mainView.py" line="46"/>
+        <location filename="views/mainView.py" line="48"/>
         <source>Days Off</source>
         <translation>Freie Tage</translation>
     </message>
     <message>
-        <location filename="views/mainView.py" line="49"/>
+        <location filename="views/mainView.py" line="51"/>
         <source>Planning</source>
         <translation>Planung</translation>
     </message>
@@ -426,6 +426,16 @@
         <source>December</source>
         <translation type="vanished">Dezember</translation>
     </message>
+    <message>
+        <location filename="views/tableDialogs.py" line="383"/>
+        <source>Export Schedule</source>
+        <translation>Schichtplan exportieren</translation>
+    </message>
+    <message>
+        <location filename="views/tableDialogs.py" line="386"/>
+        <source>Spreadsheets (*.xlsx)</source>
+        <translation>Tabellen (*.xlsx)</translation>
+    </message>
 </context>
 <context>
     <name>Properties</name>
@@ -466,99 +476,80 @@
 <context>
     <name>app</name>
     <message>
-        <location filename="views/helpers.py" line="24"/>
         <source>January</source>
-        <translation>Januar</translation>
+        <translation type="vanished">Januar</translation>
     </message>
     <message>
-        <location filename="views/helpers.py" line="25"/>
         <source>February</source>
-        <translation>Februar</translation>
+        <translation type="vanished">Februar</translation>
     </message>
     <message>
-        <location filename="views/helpers.py" line="26"/>
         <source>March</source>
-        <translation>März</translation>
+        <translation type="vanished">März</translation>
     </message>
     <message>
-        <location filename="views/helpers.py" line="27"/>
         <source>April</source>
-        <translation>April</translation>
+        <translation type="vanished">April</translation>
     </message>
     <message>
-        <location filename="views/helpers.py" line="28"/>
         <source>May</source>
-        <translation>Mai</translation>
+        <translation type="vanished">Mai</translation>
     </message>
     <message>
-        <location filename="views/helpers.py" line="29"/>
         <source>June</source>
-        <translation>Juni</translation>
+        <translation type="vanished">Juni</translation>
     </message>
     <message>
-        <location filename="views/helpers.py" line="30"/>
         <source>July</source>
-        <translation>Juli</translation>
+        <translation type="vanished">Juli</translation>
     </message>
     <message>
-        <location filename="views/helpers.py" line="31"/>
         <source>August</source>
-        <translation>August</translation>
+        <translation type="vanished">August</translation>
     </message>
     <message>
-        <location filename="views/helpers.py" line="32"/>
         <source>September</source>
-        <translation>September</translation>
+        <translation type="vanished">September</translation>
     </message>
     <message>
-        <location filename="views/helpers.py" line="33"/>
         <source>October</source>
-        <translation>Oktober</translation>
+        <translation type="vanished">Oktober</translation>
     </message>
     <message>
-        <location filename="views/helpers.py" line="34"/>
         <source>November</source>
-        <translation>November</translation>
+        <translation type="vanished">November</translation>
     </message>
     <message>
-        <location filename="views/helpers.py" line="37"/>
         <source>December</source>
-        <translation>Dezember</translation>
+        <translation type="vanished">Dezember</translation>
     </message>
     <message>
-        <location filename="views/helpers.py" line="45"/>
         <source>Monday</source>
-        <translation>Montag</translation>
+        <translation type="vanished">Montag</translation>
     </message>
     <message>
-        <location filename="views/helpers.py" line="46"/>
         <source>Tuesday</source>
-        <translation>Dienstag</translation>
+        <translation type="vanished">Dienstag</translation>
     </message>
     <message>
-        <location filename="views/helpers.py" line="47"/>
         <source>Wednesday</source>
-        <translation>Mittwoch</translation>
+        <translation type="vanished">Mittwoch</translation>
     </message>
     <message>
-        <location filename="views/helpers.py" line="48"/>
         <source>Thursday</source>
-        <translation>Donnerstag</translation>
+        <translation type="vanished">Donnerstag</translation>
     </message>
     <message>
-        <location filename="views/helpers.py" line="49"/>
         <source>Friday</source>
-        <translation>Freitag</translation>
+        <translation type="vanished">Freitag</translation>
     </message>
     <message>
-        <location filename="views/helpers.py" line="50"/>
         <source>Saturday</source>
-        <translation>Samstag</translation>
+        <translation type="vanished">Samstag</translation>
     </message>
     <message>
-        <location filename="views/helpers.py" line="53"/>
         <source>Sunday</source>
-        <translation>Sonntag</translation>
+        <translation type="vanished">Sonntag</translation>
     </message>
 </context>
 <context>
@@ -751,23 +742,35 @@
     </message>
     <message>
         <location filename="ui/planningView.ui" line="63"/>
-        <source>Create Schedule</source>
-        <translation>Erstelle Schichtplan</translation>
+        <source>Create</source>
+        <oldsource>Create Schedule</oldsource>
+        <translation>Erstellen</translation>
     </message>
     <message>
         <location filename="ui/planningView.ui" line="76"/>
+        <source>Plan</source>
+        <translation>Planen</translation>
+    </message>
+    <message>
+        <location filename="ui/planningView.ui" line="127"/>
+        <source>Export</source>
+        <translation>Exportieren</translation>
+    </message>
+    <message>
         <source>Plan Schedule</source>
-        <translation>Plane Schichten</translation>
+        <translation type="vanished">Plane Schichten</translation>
     </message>
     <message>
         <location filename="ui/planningView.ui" line="89"/>
-        <source>Activate Schedule</source>
-        <translation>Aktiviere Schichtplan</translation>
+        <source>Activate</source>
+        <oldsource>Activate Schedule</oldsource>
+        <translation>Aktivieren</translation>
     </message>
     <message>
         <location filename="ui/planningView.ui" line="108"/>
-        <source>Clear Schedule</source>
-        <translation>Schichtplan löschen</translation>
+        <source>Clear</source>
+        <oldsource>Clear Schedule</oldsource>
+        <translation>Löschen</translation>
     </message>
 </context>
 </TS>

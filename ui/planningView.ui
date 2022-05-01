@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>988</width>
+    <width>1186</width>
     <height>688</height>
    </rect>
   </property>
@@ -60,7 +60,7 @@
           </size>
          </property>
          <property name="text">
-          <string>Create Schedule</string>
+          <string>Create</string>
          </property>
         </widget>
        </item>
@@ -73,7 +73,7 @@
           </size>
          </property>
          <property name="text">
-          <string>Plan Schedule</string>
+          <string>Plan</string>
          </property>
         </widget>
        </item>
@@ -86,7 +86,7 @@
           </size>
          </property>
          <property name="text">
-          <string>Activate Schedule</string>
+          <string>Activate</string>
          </property>
          <property name="checkable">
           <bool>true</bool>
@@ -97,7 +97,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="clearScheduleButton">
+        <widget class="QPushButton" name="clearButton">
          <property name="minimumSize">
           <size>
            <width>150</width>
@@ -105,7 +105,26 @@
           </size>
          </property>
          <property name="text">
-          <string>Clear Schedule</string>
+          <string>Clear</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="exportButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>150</width>
+           <height>37</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Export</string>
          </property>
         </widget>
        </item>

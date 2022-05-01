@@ -1,8 +1,9 @@
 from PySide6.QtCore import QModelIndex, QItemSelectionModel
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QHeaderView, QTableView, QAbstractItemView, QLineEdit, \
-    QPushButton, QSpinBox, QMessageBox, QApplication
+    QPushButton, QSpinBox, QMessageBox, QApplication, QFileDialog
 
+from logic.config import properties
 from logic.database import EmployeeModel, SearchTableModel, update_employee_type, OffPeriodModel, \
     find_off_period_by_id, update_off_period, ScheduleModel, find_schedule_by_id, delete_item, shift_plan_active, \
     update_schedule, schedule_exists
@@ -14,8 +15,9 @@ from views.editorDialogs import AddEmployeeDialog, AddOffPeriodDialog, AddRepeat
 from views.editorDialogs import AddEmployeeTypeDialog
 from views.editorWidgets import EmployeeEditorWidget, EditorWidget, EmployeeTypeEditorWidget, OffPeriodEditorWidget, \
     ScheduleEditorWidget
-from views.helpers import load_ui_file, EmployeeItemDelegate, CenteredItemDelegate, ScheduleItemDelegate, \
-    OffPeriodItemDelegate, configure_month_box, configure_year_box
+from views.helpers.helper_classes import CenteredItemDelegate, EmployeeItemDelegate, OffPeriodItemDelegate, \
+    ScheduleItemDelegate
+from views.helpers.helper_functions import load_ui_file, configure_month_box, configure_year_box
 
 
 class TableDialog(QWidget):
@@ -263,7 +265,8 @@ class PlanningWidget(TableDialog):
         self.create_button: QPushButton = self.table_widget.createButton  # noqa
         self.planning_button: QPushButton = self.table_widget.planningButton  # noqa
         self.activate_button: QPushButton = self.table_widget.activateButton  # noqa
-        self.clear_button: QPushButton = self.table_widget.clearScheduleButton  # noqa
+        self.clear_button: QPushButton = self.table_widget.clearButton  # noqa
+        self.export_button: QPushButton = self.table_widget.exportButton  # noqa
 
         self.configure_widgets()
         self.configure_search()
@@ -289,6 +292,7 @@ class PlanningWidget(TableDialog):
         self.planning_button.clicked.connect(self.fill_schedule)
         self.activate_button.clicked.connect(self.activate_schedule)
         self.clear_button.clicked.connect(self.clear_schedule)
+        self.export_button.clicked.connect(self.export_schedule)
         self.editor.buttonBox.accepted.connect(self.commit_changes)
         self.editor.buttonBox.rejected.connect(self.revert_changes)
 
@@ -325,6 +329,7 @@ class PlanningWidget(TableDialog):
         self.activate_button.setChecked(plan_active)
         self.planning_button.setEnabled(not plan_active)
         self.clear_button.setEnabled(not plan_active)
+        self.export_button.setEnabled(not planning_needed)
         self.reload_table_contents(ScheduleModel(year, month))
 
     def create_schedule(self):
@@ -372,3 +377,16 @@ class PlanningWidget(TableDialog):
     def revert_changes(self):
         schedule: Schedule = find_schedule_by_id(self.editor.item_id)
         self.editor.fill_fields(schedule)
+
+    def export_schedule(self):
+        export_dialog: QFileDialog = QFileDialog(parent=self)
+        export_dialog.setWindowTitle(self.tr("Export Schedule"))
+        export_dialog.setDirectory(str(properties.user_home))
+        export_dialog.setAcceptMode(QFileDialog.AcceptSave)
+        export_dialog.setNameFilter(self.tr("Spreadsheets (*.xlsx)"))
+        export_dialog.setDefaultSuffix("xlsx")
+        if export_dialog.exec_() == QFileDialog.Accepted:
+            file_path: str = export_dialog.selectedFiles()[0]
+            table: QTableView = self.get_table()
+            model: ScheduleModel = table.model()
+            model.export_schedule(file_path, table.rootIndex())
