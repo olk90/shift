@@ -279,21 +279,24 @@ def find_schedule_by_date(d: datetime.date) -> Schedule:
     return schedule
 
 
-def schedule_exists(year: int, month: int) -> bool:
+def find_schedule_by_year_and_month(year: int, month: int) -> Schedule | None:
+    if month < 1:
+        return None
     session = sm(bind=db)
     s = session()
     start_day = date(year, month, 1)
     schedule: Schedule = s.query(Schedule).filter_by(date=start_day).first()
     s.close()
+    return schedule
+
+
+def schedule_exists(year: int, month: int) -> bool:
+    schedule = find_schedule_by_year_and_month(year, month)
     return schedule is not None
 
 
 def shift_plan_active(year: int, month: int) -> bool:
-    session = sm(bind=db)
-    s = session()
-    start_day = date(year, month, 1)
-    schedule: Schedule = s.query(Schedule).filter_by(date=start_day).first()
-    s.close()
+    schedule = find_schedule_by_year_and_month(year, month)
     return schedule is not None and schedule.activated
 
 

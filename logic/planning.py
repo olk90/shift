@@ -8,7 +8,7 @@ from logic.database import find_day_shift_candidate_ids, find_night_shift_candid
     reset_scores
 from logic.model import Schedule, Employee
 from logic.queries import schedule_id_query
-from views.helpers.helper_functions import get_day_range
+from views.base_functions import get_day_range
 
 db = ce("sqlite:///shift.db")
 

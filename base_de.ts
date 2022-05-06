@@ -4,33 +4,17 @@
 <context>
     <name>AddEmployeeDialog</name>
     <message>
-        <location filename="views/editorDialogs.py" line="113"/>
+        <location filename="views/employee.py" line="22"/>
         <source>Add Employee</source>
         <translation>Mitarbeiter hinzufügen</translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation type="vanished">OK</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="vanished">Abbrechen</translation>
     </message>
 </context>
 <context>
     <name>AddEmployeeTypeDialog</name>
     <message>
-        <location filename="views/editorDialogs.py" line="155"/>
+        <location filename="views/employeeType.py" line="14"/>
         <source>Add Employee Type</source>
         <translation>Mitarbeitertyp hinzufügen</translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation type="vanished">OK</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="vanished">Abbrechen</translation>
     </message>
 </context>
 <context>
@@ -65,12 +49,12 @@
 <context>
     <name>EditorDialog</name>
     <message>
-        <location filename="views/editorDialogs.py" line="44"/>
+        <location filename="views/base_classes.py" line="36"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="views/editorDialogs.py" line="45"/>
+        <location filename="views/base_classes.py" line="37"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
@@ -78,80 +62,58 @@
 <context>
     <name>EditorWidget</name>
     <message>
-        <location filename="views/editorWidgets.py" line="33"/>
+        <location filename="views/base_classes.py" line="61"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="views/editorWidgets.py" line="34"/>
+        <location filename="views/base_classes.py" line="62"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
 </context>
 <context>
-    <name>EmployeeEditorWidget</name>
-    <message>
-        <source>OK</source>
-        <translation type="vanished">OK</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="vanished">Abbrechen</translation>
-    </message>
-</context>
-<context>
     <name>EmployeeModel</name>
     <message>
-        <location filename="logic/database.py" line="55"/>
+        <location filename="logic/database.py" line="57"/>
         <source>First Name</source>
         <translation>Vorname</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="56"/>
+        <location filename="logic/database.py" line="58"/>
         <source>Last Name</source>
         <translation>Nachname</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="57"/>
+        <location filename="logic/database.py" line="59"/>
         <source>Reference Value</source>
         <translation>Referenzwert</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="58"/>
+        <location filename="logic/database.py" line="60"/>
         <source>Night Shifts</source>
         <translation>Nachtschichten</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="59"/>
+        <location filename="logic/database.py" line="61"/>
         <source>Score</source>
         <translation>Punkte</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="60"/>
+        <location filename="logic/database.py" line="62"/>
         <source>Type</source>
         <translation>Typ</translation>
     </message>
 </context>
 <context>
-    <name>EmployeeTypeEditorWidget</name>
-    <message>
-        <source>OK</source>
-        <translation type="vanished">OK</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="vanished">Abbrechen</translation>
-    </message>
-</context>
-<context>
     <name>EmployeeTypeModel</name>
     <message>
-        <location filename="logic/database.py" line="45"/>
+        <location filename="logic/database.py" line="47"/>
         <source>Designation</source>
         <translation>Bezeichnung</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="46"/>
+        <location filename="logic/database.py" line="48"/>
         <source>Rotation Period</source>
         <translation>Rotationsintervall</translation>
     </message>
@@ -205,21 +167,6 @@
         <translation>Punkte</translation>
     </message>
     <message>
-        <location filename="ui/optionsEditor.ui" line="29"/>
-        <source>Options</source>
-        <translation>Optionen</translation>
-    </message>
-    <message>
-        <location filename="ui/optionsEditor.ui" line="38"/>
-        <source>Locale</source>
-        <translation>Sprache</translation>
-    </message>
-    <message>
-        <location filename="ui/optionsEditor.ui" line="48"/>
-        <source>Theme</source>
-        <translation>Theme</translation>
-    </message>
-    <message>
         <location filename="ui/employeeTypeEditor.ui" line="32"/>
         <source>Edit Employee Type</source>
         <translation>Mitarbeitertyp bearbeiten</translation>
@@ -264,6 +211,41 @@
         <translation>Auszeit bearbeiten</translation>
     </message>
     <message>
+        <location filename="ui/optionsEditor.ui" line="29"/>
+        <source>Options</source>
+        <translation>Optionen</translation>
+    </message>
+    <message>
+        <location filename="ui/optionsEditor.ui" line="38"/>
+        <source>Locale</source>
+        <translation>Sprache</translation>
+    </message>
+    <message>
+        <location filename="ui/optionsEditor.ui" line="48"/>
+        <source>Theme</source>
+        <translation>Theme</translation>
+    </message>
+    <message>
+        <location filename="ui/repeatingOffPeriodAddDialog.ui" line="32"/>
+        <source>Add Repeating Off Period</source>
+        <translation>Regelmäßige freie Tage einfügen</translation>
+    </message>
+    <message>
+        <location filename="ui/repeatingOffPeriodAddDialog.ui" line="48"/>
+        <source>Month</source>
+        <translation>Monat</translation>
+    </message>
+    <message>
+        <location filename="ui/repeatingOffPeriodAddDialog.ui" line="55"/>
+        <source>Year</source>
+        <translation>Jahr</translation>
+    </message>
+    <message>
+        <location filename="ui/repeatingOffPeriodAddDialog.ui" line="65"/>
+        <source>Weekday</source>
+        <translation>Wochentag</translation>
+    </message>
+    <message>
         <location filename="ui/scheduleEditor.ui" line="32"/>
         <source>Edit Schedule</source>
         <translation>Schichtplan bearbeiten</translation>
@@ -286,7 +268,6 @@
     <message>
         <location filename="ui/scheduleEditor.ui" line="69"/>
         <source>Comment</source>
-        <oldsource>Kommentar</oldsource>
         <translation>Kommentar</translation>
     </message>
     <message>
@@ -295,144 +276,120 @@
         <source>Remove</source>
         <translation>Entfernen</translation>
     </message>
-    <message>
-        <location filename="ui/repeatingOffPeriodAddDialog.ui" line="32"/>
-        <source>Add Repeating Off Period</source>
-        <translation>Regelmäßige freie Tage einfügen</translation>
-    </message>
-    <message>
-        <location filename="ui/repeatingOffPeriodAddDialog.ui" line="48"/>
-        <source>Month</source>
-        <translation>Monat</translation>
-    </message>
-    <message>
-        <location filename="ui/repeatingOffPeriodAddDialog.ui" line="55"/>
-        <source>Year</source>
-        <translation>Jahr</translation>
-    </message>
-    <message>
-        <location filename="ui/repeatingOffPeriodAddDialog.ui" line="65"/>
-        <source>Weekday</source>
-        <translation>Wochentag</translation>
-    </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="views/mainView.py" line="42"/>
+        <location filename="views/mainView.py" line="45"/>
         <source>Employee Types</source>
-        <translation>Mitarbeitertypen</translation>
+        <translation>Mitarbeitertyp bearbeiten</translation>
     </message>
     <message>
-        <location filename="views/mainView.py" line="45"/>
+        <location filename="views/mainView.py" line="48"/>
         <source>Employees</source>
         <translation>Mitarbeiter</translation>
     </message>
     <message>
-        <location filename="views/mainView.py" line="48"/>
+        <location filename="views/mainView.py" line="51"/>
         <source>Days Off</source>
         <translation>Freie Tage</translation>
     </message>
     <message>
-        <location filename="views/mainView.py" line="51"/>
+        <location filename="views/mainView.py" line="54"/>
         <source>Planning</source>
         <translation>Planung</translation>
     </message>
 </context>
 <context>
+    <name>MonthList</name>
+    <message>
+        <location filename="views/lists.py" line="8"/>
+        <source>January</source>
+        <translation>Januar</translation>
+    </message>
+    <message>
+        <location filename="views/lists.py" line="9"/>
+        <source>February</source>
+        <translation>Februar</translation>
+    </message>
+    <message>
+        <location filename="views/lists.py" line="10"/>
+        <source>March</source>
+        <translation>März</translation>
+    </message>
+    <message>
+        <location filename="views/lists.py" line="11"/>
+        <source>April</source>
+        <translation>April</translation>
+    </message>
+    <message>
+        <location filename="views/lists.py" line="12"/>
+        <source>May</source>
+        <translation>Mai</translation>
+    </message>
+    <message>
+        <location filename="views/lists.py" line="13"/>
+        <source>June</source>
+        <translation>Juni</translation>
+    </message>
+    <message>
+        <location filename="views/lists.py" line="14"/>
+        <source>July</source>
+        <translation>Juli</translation>
+    </message>
+    <message>
+        <location filename="views/lists.py" line="15"/>
+        <source>August</source>
+        <translation>August</translation>
+    </message>
+    <message>
+        <location filename="views/lists.py" line="16"/>
+        <source>September</source>
+        <translation>September</translation>
+    </message>
+    <message>
+        <location filename="views/lists.py" line="17"/>
+        <source>October</source>
+        <translation>Oktober</translation>
+    </message>
+    <message>
+        <location filename="views/lists.py" line="18"/>
+        <source>November</source>
+        <translation>November</translation>
+    </message>
+    <message>
+        <location filename="views/lists.py" line="23"/>
+        <source>December</source>
+        <translation>Dezember</translation>
+    </message>
+</context>
+<context>
     <name>OffPeriodModel</name>
     <message>
-        <location filename="logic/database.py" line="69"/>
+        <location filename="logic/database.py" line="71"/>
         <source>Start</source>
         <translation>Anfang</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="70"/>
+        <location filename="logic/database.py" line="72"/>
         <source>End</source>
         <translation>Ende</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="71"/>
+        <location filename="logic/database.py" line="73"/>
         <source>Employee</source>
         <translation>Mitarbeiter</translation>
-    </message>
-    <message>
-        <source>First Name</source>
-        <translation type="vanished">Vorname</translation>
-    </message>
-    <message>
-        <source>Last Name</source>
-        <translation type="vanished">Nachname</translation>
-    </message>
-</context>
-<context>
-    <name>OptionsEditorDialog</name>
-    <message>
-        <source>OK</source>
-        <translation type="vanished">OK</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="vanished">Abbrechen</translation>
     </message>
 </context>
 <context>
     <name>PlanningWidget</name>
     <message>
-        <source>January</source>
-        <translation type="vanished">Januar</translation>
-    </message>
-    <message>
-        <source>February</source>
-        <translation type="vanished">Februar</translation>
-    </message>
-    <message>
-        <source>March</source>
-        <translation type="vanished">März</translation>
-    </message>
-    <message>
-        <source>April</source>
-        <translation type="vanished">April</translation>
-    </message>
-    <message>
-        <source>May</source>
-        <translation type="vanished">Mai</translation>
-    </message>
-    <message>
-        <source>June</source>
-        <translation type="vanished">Juni</translation>
-    </message>
-    <message>
-        <source>July</source>
-        <translation type="vanished">Juli</translation>
-    </message>
-    <message>
-        <source>August</source>
-        <translation type="vanished">August</translation>
-    </message>
-    <message>
-        <source>September</source>
-        <translation type="vanished">September</translation>
-    </message>
-    <message>
-        <source>October</source>
-        <translation type="vanished">Oktober</translation>
-    </message>
-    <message>
-        <source>November</source>
-        <translation type="vanished">November</translation>
-    </message>
-    <message>
-        <source>December</source>
-        <translation type="vanished">Dezember</translation>
-    </message>
-    <message>
-        <location filename="views/tableDialogs.py" line="383"/>
+        <location filename="views/schedule.py" line="236"/>
         <source>Export Schedule</source>
-        <translation>Schichtplan exportieren</translation>
+        <translation>Plan exportieren</translation>
     </message>
     <message>
-        <location filename="views/tableDialogs.py" line="386"/>
+        <location filename="views/schedule.py" line="239"/>
         <source>Spreadsheets (*.xlsx)</source>
         <translation>Tabellen (*.xlsx)</translation>
     </message>
@@ -453,103 +410,66 @@
 <context>
     <name>ScheduleModel</name>
     <message>
-        <location filename="logic/database.py" line="80"/>
+        <location filename="logic/database.py" line="86"/>
+        <location filename="logic/database.py" line="96"/>
         <source>Date</source>
         <translation>Datum</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="81"/>
+        <location filename="logic/database.py" line="87"/>
+        <location filename="logic/database.py" line="97"/>
         <source>Day Shift</source>
         <translation>Tagschicht</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="82"/>
+        <location filename="logic/database.py" line="88"/>
+        <location filename="logic/database.py" line="98"/>
         <source>Night Shift</source>
         <translation>Nachtschicht</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="83"/>
+        <location filename="logic/database.py" line="89"/>
+        <location filename="logic/database.py" line="99"/>
         <source>Comment</source>
         <translation>Kommentar</translation>
     </message>
 </context>
 <context>
-    <name>app</name>
+    <name>WeekdayList</name>
     <message>
-        <source>January</source>
-        <translation type="vanished">Januar</translation>
-    </message>
-    <message>
-        <source>February</source>
-        <translation type="vanished">Februar</translation>
-    </message>
-    <message>
-        <source>March</source>
-        <translation type="vanished">März</translation>
-    </message>
-    <message>
-        <source>April</source>
-        <translation type="vanished">April</translation>
-    </message>
-    <message>
-        <source>May</source>
-        <translation type="vanished">Mai</translation>
-    </message>
-    <message>
-        <source>June</source>
-        <translation type="vanished">Juni</translation>
-    </message>
-    <message>
-        <source>July</source>
-        <translation type="vanished">Juli</translation>
-    </message>
-    <message>
-        <source>August</source>
-        <translation type="vanished">August</translation>
-    </message>
-    <message>
-        <source>September</source>
-        <translation type="vanished">September</translation>
-    </message>
-    <message>
-        <source>October</source>
-        <translation type="vanished">Oktober</translation>
-    </message>
-    <message>
-        <source>November</source>
-        <translation type="vanished">November</translation>
-    </message>
-    <message>
-        <source>December</source>
-        <translation type="vanished">Dezember</translation>
-    </message>
-    <message>
+        <location filename="views/lists.py" line="27"/>
         <source>Monday</source>
-        <translation type="vanished">Montag</translation>
+        <translation>Montag</translation>
     </message>
     <message>
+        <location filename="views/lists.py" line="28"/>
         <source>Tuesday</source>
-        <translation type="vanished">Dienstag</translation>
+        <translation>Dienstag</translation>
     </message>
     <message>
+        <location filename="views/lists.py" line="29"/>
         <source>Wednesday</source>
-        <translation type="vanished">Mittwoch</translation>
+        <translation>Mittwoch</translation>
     </message>
     <message>
+        <location filename="views/lists.py" line="30"/>
         <source>Thursday</source>
-        <translation type="vanished">Donnerstag</translation>
+        <translation>Donnerstag</translation>
     </message>
     <message>
+        <location filename="views/lists.py" line="31"/>
         <source>Friday</source>
-        <translation type="vanished">Freitag</translation>
+        <translation>Freitag</translation>
     </message>
     <message>
+        <location filename="views/lists.py" line="32"/>
         <source>Saturday</source>
-        <translation type="vanished">Samstag</translation>
+        <translation>Samstag</translation>
     </message>
     <message>
+        <location filename="views/lists.py" line="35"/>
         <source>Sunday</source>
-        <translation type="vanished">Sonntag</translation>
+        <translation>Sonntag</translation>
     </message>
 </context>
 <context>
@@ -603,6 +523,7 @@
     <message>
         <location filename="ui/main.ui" line="20"/>
         <source>Shift</source>
+        <translatorcomment>App name!</translatorcomment>
         <translation>Shift</translation>
     </message>
     <message>
@@ -650,85 +571,6 @@
     </message>
 </context>
 <context>
-    <name>parent</name>
-    <message>
-        <source>January</source>
-        <translation type="vanished">Januar</translation>
-    </message>
-    <message>
-        <source>February</source>
-        <translation type="vanished">Februar</translation>
-    </message>
-    <message>
-        <source>March</source>
-        <translation type="vanished">März</translation>
-    </message>
-    <message>
-        <source>April</source>
-        <translation type="vanished">April</translation>
-    </message>
-    <message>
-        <source>May</source>
-        <translation type="vanished">Mai</translation>
-    </message>
-    <message>
-        <source>June</source>
-        <translation type="vanished">Juni</translation>
-    </message>
-    <message>
-        <source>July</source>
-        <translation type="vanished">Juli</translation>
-    </message>
-    <message>
-        <source>August</source>
-        <translation type="vanished">August</translation>
-    </message>
-    <message>
-        <source>September</source>
-        <translation type="vanished">September</translation>
-    </message>
-    <message>
-        <source>October</source>
-        <translation type="vanished">Oktober</translation>
-    </message>
-    <message>
-        <source>November</source>
-        <translation type="vanished">November</translation>
-    </message>
-    <message>
-        <source>December</source>
-        <translation type="vanished">Dezember</translation>
-    </message>
-    <message>
-        <source>Monday</source>
-        <translation type="vanished">Montag</translation>
-    </message>
-    <message>
-        <source>Tuesday</source>
-        <translation type="vanished">Dienstag</translation>
-    </message>
-    <message>
-        <source>Wednesday</source>
-        <translation type="vanished">Mittwoch</translation>
-    </message>
-    <message>
-        <source>Thursday</source>
-        <translation type="vanished">Donnerstag</translation>
-    </message>
-    <message>
-        <source>Friday</source>
-        <translation type="vanished">Freitag</translation>
-    </message>
-    <message>
-        <source>Saturday</source>
-        <translation type="vanished">Samstag</translation>
-    </message>
-    <message>
-        <source>Sunday</source>
-        <translation type="vanished">Sonntag</translation>
-    </message>
-</context>
-<context>
     <name>planningView</name>
     <message>
         <location filename="ui/planningView.ui" line="20"/>
@@ -743,7 +585,6 @@
     <message>
         <location filename="ui/planningView.ui" line="63"/>
         <source>Create</source>
-        <oldsource>Create Schedule</oldsource>
         <translation>Erstellen</translation>
     </message>
     <message>
@@ -752,25 +593,19 @@
         <translation>Planen</translation>
     </message>
     <message>
-        <location filename="ui/planningView.ui" line="127"/>
-        <source>Export</source>
-        <translation>Exportieren</translation>
-    </message>
-    <message>
-        <source>Plan Schedule</source>
-        <translation type="vanished">Plane Schichten</translation>
-    </message>
-    <message>
         <location filename="ui/planningView.ui" line="89"/>
         <source>Activate</source>
-        <oldsource>Activate Schedule</oldsource>
         <translation>Aktivieren</translation>
     </message>
     <message>
         <location filename="ui/planningView.ui" line="108"/>
         <source>Clear</source>
-        <oldsource>Clear Schedule</oldsource>
         <translation>Löschen</translation>
+    </message>
+    <message>
+        <location filename="ui/planningView.ui" line="127"/>
+        <source>Export</source>
+        <translation>Exportieren</translation>
     </message>
 </context>
 </TS>
