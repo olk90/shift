@@ -2,7 +2,7 @@ from PySide6.QtGui import QIcon
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 
-from logic.database import EmployeeTypeModel, EmployeeModel, OffPeriodModel, ScheduleModel
+from logic.table_models import EmployeeTypeModel, EmployeeModel, OffPeriodModel, ScheduleModel
 from views.base_classes import OptionsEditorDialog, TableDialog
 from views.base_functions import load_ui_file
 from views.offPeriod import OffPeriodWidget

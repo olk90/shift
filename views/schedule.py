@@ -9,10 +9,11 @@ from sqlalchemy import create_engine as ce
 from sqlalchemy.orm import sessionmaker as sm
 
 from logic.config import properties
-from logic.database import configure_query_model, find_employee_by_id, ScheduleModel, find_schedule_by_id, \
+from logic.database import configure_query_model, find_employee_by_id, find_schedule_by_id, \
     schedule_exists, shift_plan_active, update_schedule
+from logic.table_models import ScheduleModel
 from logic.model import Schedule, Employee
-from logic.planning import create_schedule, fill_schedule, toggle_schedule_state, clear_schedule
+from logic.schedule.planning import create_schedule, fill_schedule, toggle_schedule_state, clear_schedule
 from logic.queries import day_shift_replacement_query, night_shift_replacement_query, \
     employee_id_by_name_and_score_query
 from views.confirmationDialogs import ConfirmDeletionDialog, ConfirmScheduleUpdateDialog

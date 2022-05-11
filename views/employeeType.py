@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialogButtonBox, QTableView, QMessageBox
 
-from logic.database import persist_item, EmployeeTypeModel, find_employee_type_by_id, delete_item, update_employee_type
+from logic.database import persist_item, find_employee_type_by_id, delete_item, update_employee_type
+from logic.table_models import EmployeeTypeModel
 from logic.model import RotationPeriod, EmployeeType
 from views.confirmationDialogs import ConfirmDeletionDialog
 from views.base_classes import EditorDialog, EditorWidget, TableDialog, CenteredItemDelegate

@@ -1,19 +1,18 @@
 import sys
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
-from PySide6.QtCore import QDate, QModelIndex
+from PySide6.QtCore import QDate
 from PySide6.QtGui import Qt
 from PySide6.QtSql import QSqlQueryModel, QSqlDatabase
 from PySide6.QtWidgets import QComboBox
-from sqlalchemy import create_engine as ce, desc, asc
+from sqlalchemy import create_engine as ce, and_, extract, or_
 from sqlalchemy.orm import sessionmaker as sm, join
-from xlsxwriter import Workbook
-from xlsxwriter.format import Format
 
 from logic.model import create_tables, Employee, EmployeeType, OffPeriod, Schedule, Base
-from logic.queries import employee_query, employee_type_query, off_period_query, schedule_query
+from views.base_functions import get_day_range
 
 db = ce("sqlite:///shift.db")
+session = sm(bind=db)
 
 
 def init_database():
@@ -32,86 +31,6 @@ def init_database():
         sys.exit(1)
 
 
-class SearchTableModel(QSqlQueryModel):
-    def __init__(self, search: str = ""):
-        super(SearchTableModel, self).__init__()
-        self.search = search
-
-
-class EmployeeTypeModel(SearchTableModel):
-    def __init__(self, search: str = ""):
-        super(EmployeeTypeModel, self).__init__(search)
-        query = employee_type_query(self.search)
-        self.setQuery(query)
-        self.setHeaderData(0, Qt.Horizontal, "ID")
-        self.setHeaderData(1, Qt.Horizontal, self.tr("Designation"))
-        self.setHeaderData(2, Qt.Horizontal, self.tr("Rotation Period"))
-
-
-class EmployeeModel(SearchTableModel):
-    def __init__(self, search: str = ""):
-        super(EmployeeModel, self).__init__(search)
-        query = employee_query(self.search)
-        self.setQuery(query)
-        self.setHeaderData(0, Qt.Horizontal, "ID")
-        self.setHeaderData(1, Qt.Horizontal, self.tr("First Name"))
-        self.setHeaderData(2, Qt.Horizontal, self.tr("Last Name"))
-        self.setHeaderData(3, Qt.Horizontal, self.tr("Reference Value"))
-        self.setHeaderData(4, Qt.Horizontal, self.tr("Night Shifts"))
-        self.setHeaderData(5, Qt.Horizontal, self.tr("Score"))
-        self.setHeaderData(6, Qt.Horizontal, self.tr("Type"))
-
-
-class OffPeriodModel(SearchTableModel):
-    def __init__(self, search: str = ""):
-        super(OffPeriodModel, self).__init__(search)
-        query = off_period_query(self.search)
-        self.setQuery(query)
-        self.setHeaderData(0, Qt.Horizontal, "ID")
-        self.setHeaderData(1, Qt.Horizontal, self.tr("Start"))
-        self.setHeaderData(2, Qt.Horizontal, self.tr("End"))
-        self.setHeaderData(3, Qt.Horizontal, self.tr("Employee"))
-
-
-class ScheduleModel(SearchTableModel):
-    def __init__(self, year: int, month: int, search: str = ""):
-        super(ScheduleModel, self).__init__(search)
-
-        self.year: int = year
-        self.month: int = month
-
-        query = schedule_query(year, month, self.search)
-        self.setQuery(query)
-        self.setHeaderData(0, Qt.Horizontal, "ID")
-        self.setHeaderData(1, Qt.Horizontal, self.tr("Date"))
-        self.setHeaderData(2, Qt.Horizontal, self.tr("Day Shift"))
-        self.setHeaderData(3, Qt.Horizontal, self.tr("Night Shift"))
-        self.setHeaderData(4, Qt.Horizontal, self.tr("Comment"))
-
-    def export_schedule(self, file_path: str, root_index: QModelIndex):
-        wb = Workbook(file_path)
-        bold: Format = wb.add_format({"bold": True})
-        weekend: Format = wb.add_format({"bg_color": "#dadce0"})
-        ws = wb.add_worksheet("{month}-{year}".format(month=self.month, year=self.year))
-        ws.write("A1", self.tr("Date"), bold)
-        ws.write("B1", self.tr("Day Shift"), bold)
-        ws.write("C1", self.tr("Night Shift"), bold)
-        ws.write("D1", self.tr("Comment"), bold)
-        for row in range(self.rowCount(root_index)):
-            use_weekend = False
-            for column in range(1, 5):
-                content = self.index(row, column, root_index).data()
-                if column == 1:
-                    date_ = datetime.strptime(content, "%Y-%m-%d")
-                    content = date_.strftime("%a, %d %b %Y")
-                    use_weekend = date_.weekday() > 3
-                if use_weekend:
-                    ws.write(row + 1, column - 1, content, weekend)
-                else:
-                    ws.write(row + 1, column - 1, content)
-        wb.close()
-
-
 def configure_query_model(box: QComboBox, query: str):
     model = QSqlQueryModel(box)
     model.setQuery(query)
@@ -120,30 +39,19 @@ def configure_query_model(box: QComboBox, query: str):
     box.setEditable(True)
 
 
-def find_employee_types() -> list:
-    session = sm(bind=db)
-    s = session()
-    types = s.query(EmployeeType).all()
-    s.close()
-    return types
-
-
 def persist_item(item: Base):
-    session = sm(bind=db)
     s = session()
     s.add(item)
     s.commit()
 
 
 def delete_item(item: Base):
-    session = sm(bind=db)
     s = session()
     s.delete(item)
     s.commit()
 
 
 def find_employee_type_by_id(e_id: int) -> EmployeeType:
-    session = sm(bind=db)
     s = session()
     e_type: EmployeeType = s.query(EmployeeType).filter_by(id=e_id).first()
     s.close()
@@ -151,7 +59,6 @@ def find_employee_type_by_id(e_id: int) -> EmployeeType:
 
 
 def find_employee_by_id(e_id: int) -> Employee:
-    session = sm(bind=db)
     s = session()
     employee: Employee = s.query(Employee).filter_by(id=e_id).first()
     s.close()
@@ -159,7 +66,6 @@ def find_employee_by_id(e_id: int) -> Employee:
 
 
 def update_employee_type(value_dict: dict):
-    session = sm(bind=db)
     s = session()
     e_type: EmployeeType = s.query(EmployeeType).filter_by(id=value_dict["item_id"]).first()
     e_type.designation = value_dict["designation"]
@@ -168,7 +74,6 @@ def update_employee_type(value_dict: dict):
 
 
 def find_e_type_by_e_id(e_id: int) -> EmployeeType:
-    session = sm(bind=db)
     s = session()
     e_type: EmployeeType = s.query(EmployeeType).select_from(join(EmployeeType, Employee)).filter(
         Employee.id == e_id).first()
@@ -177,12 +82,11 @@ def find_e_type_by_e_id(e_id: int) -> EmployeeType:
 
 
 def update_employee(value_dict: dict):
-    session = sm(bind=db)
     s = session()
     employee: Employee = s.query(Employee).filter_by(id=value_dict["item_id"]).first()
     employee.firstname = value_dict["firstname"]
     employee.lastname = value_dict["lastname"]
-    employee.referenceValue = value_dict["reference_value"]
+    employee.reference_value = value_dict["reference_value"]
     employee.global_score = value_dict["global_score"]
     employee.night_shifts = value_dict["night_shifts"]
     e_type = s.query(EmployeeType).filter_by(designation=value_dict["e_type"]).one()
@@ -191,7 +95,6 @@ def update_employee(value_dict: dict):
 
 
 def reset_scores():
-    session = sm(bind=db)
     s = session()
     employees: list = s.query(Employee).all()
     for e in employees:
@@ -200,7 +103,6 @@ def reset_scores():
 
 
 def find_off_period_by_id(p_id: int) -> OffPeriod:
-    session = sm(bind=db)
     s = session()
     period: OffPeriod = s.query(OffPeriod).filter_by(id=p_id).first()
     s.close()
@@ -208,7 +110,6 @@ def find_off_period_by_id(p_id: int) -> OffPeriod:
 
 
 def update_off_period(value_dict: dict):
-    session = sm(bind=db)
     s = session()
     period: OffPeriod = s.query(OffPeriod).filter_by(id=value_dict["item_id"]).first()
     q_start: QDate = value_dict["start"]
@@ -219,7 +120,6 @@ def update_off_period(value_dict: dict):
 
 
 def update_schedule(value_dict: dict):
-    session = sm(bind=db)
     s = session()
     schedule: Schedule = s.query(Schedule).filter_by(id=value_dict["item_id"]).first()
     s_date = schedule.date
@@ -264,30 +164,49 @@ def update_score(s, e_id: int, s_date: date):
 
 
 def find_schedule_by_id(s_id: int) -> Schedule:
-    session = sm(bind=db)
     s = session()
     schedule: Schedule = s.query(Schedule).filter_by(id=s_id).first()
     s.close()
     return schedule
 
 
-def find_schedule_by_date(d: datetime.date) -> Schedule:
-    session = sm(bind=db)
+def find_surrounding_schedules(schedule: Schedule) -> dict:
     s = session()
-    schedule: Schedule = s.query(Schedule).filter_by(date=d).first()
+    before = schedule.date - timedelta(days=1)
+    after = schedule.date + timedelta(days=1)
+    schedule_before: Schedule = s.query(Schedule).filter_by(date=before).first()
+    schedule_after: Schedule = s.query(Schedule).filter_by(date=after).first()
     s.close()
-    return schedule
+    return {
+        "d_before": schedule_before.day_id if schedule_before else None,
+        "n_before": schedule_before.night_id if schedule_before else None,
+        "d_today": schedule.day_id,
+        "n_today": schedule.night_id,
+        "d_after": schedule_after.day_id if schedule_after else None,
+        "n_after": schedule_after.night_id if schedule_after else None
+    }
 
 
 def find_schedule_by_year_and_month(year: int, month: int) -> Schedule | None:
     if month < 1:
         return None
-    session = sm(bind=db)
     s = session()
     start_day = date(year, month, 1)
     schedule: Schedule = s.query(Schedule).filter_by(date=start_day).first()
     s.close()
     return schedule
+
+
+def find_weekends_by_year_and_month(year: int, month: int) -> dict | None:
+    if month < 1:
+        return None
+    day_range = get_day_range(month, year)
+    for d in day_range:
+        day = date(year, month, d)
+        if day.weekday() > 3:
+            pass  # TODO track weekend start and end -> consider also overlapping weekends between 2 months!
+    weekends = {}
+    return weekends
 
 
 def schedule_exists(year: int, month: int) -> bool:
@@ -300,23 +219,49 @@ def shift_plan_active(year: int, month: int) -> bool:
     return schedule is not None and schedule.activated
 
 
-def find_day_shift_candidate_ids(day: date) -> list:
-    session = sm(bind=db)
+def find_candidates() -> list:
     s = session()
-    employees: list = s.query(Employee).order_by(asc(Employee.score), desc(Employee.referenceValue)).all()
-    filtered = filter(lambda e: not e.has_off_period(day), employees)
-    ids = [e.id for e in filtered]
+    employees: list = s.query(Employee).all()
     s.close()
-    return ids
+    return employees
 
 
-def find_night_shift_candidate_ids(day: date) -> list:
-    session = sm(bind=db)
+def find_days_off(month: int, year: int, e_id: int) -> list:
     s = session()
-    employees: list = s.query(Employee).filter_by(night_shifts=True) \
-        .order_by(asc(Employee.score),
-                  desc(Employee.referenceValue)).all()
-    filtered = filter(lambda e: not e.has_off_period(day), employees)
-    ids = [e.id for e in filtered]
+    periods = s.query(OffPeriod).filter(
+        and_(OffPeriod.e_id == e_id, (
+            or_(
+                and_(extract("year", OffPeriod.start) == year, extract("month", OffPeriod.start) == month)
+                , and_(extract("year", OffPeriod.end) == year, extract("month", OffPeriod.end) == month)))
+             )
+    ).all()
     s.close()
-    return ids
+    day_list = []
+    for p in periods:
+        start = p.start.day
+        end = p.end.day
+        day_range = range(start, end + 1)
+        for day in day_range:
+            d = date(year, month, day)
+            day_list.append(d)
+    return day_list
+
+
+def count_shifts(month: int, year: int, e_id: int) -> int:
+    s = session()
+    day_count: int = s.query(Schedule).filter(
+        and_(
+            extract("year", Schedule.date) == year,
+            extract("month", Schedule.date) == month,
+            Schedule.day_id == e_id
+        )
+    ).count()
+    night_count: int = s.query(Schedule).filter(
+        and_(
+            extract("year", Schedule.date) == year,
+            extract("month", Schedule.date) == month,
+            Schedule.night_id == e_id
+        )
+    ).count()
+    s.close()
+    return day_count + night_count

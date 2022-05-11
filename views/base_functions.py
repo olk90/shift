@@ -40,8 +40,7 @@ def configure_year_box(year_box: QSpinBox):
     year_box.setMaximum(9999)
 
 
-def get_day_range(month: int, year: int):
-    start_day = datetime.date(year, month, 1).day
+def get_day_range(month: int, year: int) -> range:
     end_day = calendar.monthrange(year, month)[1]
-    day_range = range(start_day, end_day + 1)
+    day_range = range(1, end_day + 1)
     return day_range

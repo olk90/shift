@@ -6,8 +6,9 @@ from PySide6.QtSql import QSqlQueryModel
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialogButtonBox, QTableView, QMessageBox, QStyleOptionViewItem, \
     QStyleOptionButton
 
-from logic.database import configure_query_model, persist_item, EmployeeModel, find_employee_type_by_id, \
+from logic.database import configure_query_model, persist_item, find_employee_type_by_id, \
     find_employee_by_id, delete_item, update_employee
+from logic.table_models import EmployeeModel
 from logic.model import Employee, EmployeeType
 from logic.queries import employee_type_designation_query
 from views.confirmationDialogs import ConfirmDeletionDialog
@@ -40,7 +41,7 @@ class AddEmployeeDialog(EditorDialog):
         model: QSqlQueryModel = self.type_box.model()
         index: int = self.type_box.currentIndex()
         et_id = model.index(index, 1).data()
-        employee = Employee(firstname=first_name, lastname=last_name, referenceValue=reference,
+        employee = Employee(firstname=first_name, lastname=last_name, reference_value=reference,
                             night_shifts=night_shifts, e_type_id=et_id, global_score=global_score)
         persist_item(employee)
         self.parent.reload_table_contents(model=EmployeeModel())
@@ -75,7 +76,7 @@ class EmployeeEditorWidget(EditorWidget):
         self.item_id = employee.id
         self.firstNameEdit.setText(employee.firstname)
         self.lastNameEdit.setText(employee.lastname)
-        self.referenceSpinner.setValue(employee.referenceValue)
+        self.referenceSpinner.setValue(employee.reference_value)
         self.nightShiftsEdit.setChecked(employee.night_shifts)
         self.scoreSpinner.setValue(employee.global_score)
 

@@ -37,7 +37,7 @@ class Employee(Base):
     id = Column(Integer, primary_key=True)
     firstname = Column(String(100), nullable=False)
     lastname = Column(String(100), nullable=False)
-    referenceValue = Column(Integer, nullable=False, default=0)
+    reference_value = Column(Integer, nullable=False, default=0)
     night_shifts = Column(Boolean, nullable=False, default=True)
     global_score = Column(Integer, nullable=False, default=0)
     score = Column(Integer, nullable=False, default=0)

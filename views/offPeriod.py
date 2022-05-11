@@ -9,8 +9,9 @@ from PySide6.QtWidgets import QWidget, QComboBox, QHBoxLayout, QDialogButtonBox,
 from sqlalchemy import create_engine as ce
 from sqlalchemy.orm import sessionmaker as sm
 
-from logic.database import configure_query_model, persist_item, OffPeriodModel, find_employee_by_id, \
+from logic.database import configure_query_model, persist_item, find_employee_by_id, \
     find_off_period_by_id, delete_item, update_off_period
+from logic.table_models import OffPeriodModel
 from logic.model import OffPeriod, Employee
 from logic.queries import employee_fullname_query
 from views.confirmationDialogs import ConfirmDeletionDialog

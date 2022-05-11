@@ -19,7 +19,7 @@ def employee_query(search: str) -> str:
         e.id,
         e.firstname,
         e.lastname,
-        e.referenceValue,
+        e.reference_value,
         e.night_shifts,
         e.global_score,
         t.designation

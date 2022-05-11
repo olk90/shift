@@ -9,7 +9,7 @@ from PySide6.QtWidgets import QDialog, QWidget, QDialogButtonBox, QHBoxLayout, Q
     QLineEdit, QTableView, QAbstractItemView, QHeaderView, QItemDelegate, QStyleOptionViewItem
 
 from logic.config import properties
-from logic.database import SearchTableModel
+from logic.table_models import SearchTableModel
 from views.base_functions import load_ui_file
 
 
