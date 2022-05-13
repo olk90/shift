@@ -10,6 +10,7 @@ pyinstaller -n "shift" \
   --add-data "ui/offPeriodView.ui:./ui" \
   --add-data "ui/optionsEditor.ui:./ui" \
   --add-data "ui/planningView.ui:./ui" \
+  --add-data "ui/repeatingOffPeriodAddDialog.ui:./ui" \
   --add-data "ui/scheduleEditor.ui:./ui" \
   --add-data "translations/base_de.qm:./translations" \
   -D --clean main.py
