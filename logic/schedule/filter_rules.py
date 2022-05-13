@@ -46,8 +46,9 @@ def days_off_violated(day: date, c_data: dict, nights: bool) -> bool:
     return violated
 
 
-def free_weekends_violated(day: date, c_data: dict) -> bool:
+def free_weekends_violated(day: date, c_data: dict, weekends: list) -> bool:
     if day.weekday() < 4:
         return False
-
-    return False
+    c_id: int = c_data["c_id"]
+    free_weekends = filter(lambda x: c_id not in x[2], weekends)
+    return len(list(free_weekends)) <= 2

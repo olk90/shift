@@ -197,18 +197,6 @@ def find_schedule_by_year_and_month(year: int, month: int) -> Schedule | None:
     return schedule
 
 
-def find_weekends_by_year_and_month(year: int, month: int) -> dict | None:
-    if month < 1:
-        return None
-    day_range = get_day_range(month, year)
-    for d in day_range:
-        day = date(year, month, d)
-        if day.weekday() > 3:
-            pass  # TODO track weekend start and end -> consider also overlapping weekends between 2 months!
-    weekends = {}
-    return weekends
-
-
 def schedule_exists(year: int, month: int) -> bool:
     schedule = find_schedule_by_year_and_month(year, month)
     return schedule is not None
