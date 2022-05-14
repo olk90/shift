@@ -54,9 +54,9 @@ class AddOffPeriodDialog(EditorDialog):
         index: int = self.employee_box.currentIndex()
         e_id = model.index(index, 1).data()
         start: QDate = self.widget.startEdit.selectedDate()  # noqa
-        start_date = datetime.datetime(start.year(), start.month(), start.day())
+        start_date = datetime.date(start.year(), start.month(), start.day())
         end: QDate = self.widget.endEdit.selectedDate()  # noqa
-        end_date = datetime.datetime(end.year(), end.month(), end.day())
+        end_date = datetime.date(end.year(), end.month(), end.day())
         off_period = OffPeriod(e_id=e_id, start=start_date, end=end_date)
         persist_item(off_period)
         self.parent.reload_table_contents(model=OffPeriodModel())
@@ -179,6 +179,7 @@ class OffPeriodWidget(TableDialog):
         tableview.setItemDelegate(delegate)
 
         self.configure_widgets()
+        self.configure_search()
 
     def configure_widgets(self):
         super(OffPeriodWidget, self).configure_widgets()
