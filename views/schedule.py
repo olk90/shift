@@ -2,7 +2,7 @@ import datetime
 from typing import Union
 
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt
-from PySide6.QtGui import QPainter, QColor, QBrush
+from PySide6.QtGui import QPainter, QColor, QBrush, QPen
 from PySide6.QtWidgets import QComboBox, QToolButton, QTextEdit, QSpinBox, QPushButton, QTableView, QMessageBox, \
     QFileDialog, QStyleOptionViewItem
 from sqlalchemy import create_engine as ce
@@ -260,7 +260,9 @@ class ScheduleItemDelegate(CenteredItemDelegate):
             color: QColor = QColor("#3f4042") if theme == 0 else QColor("#dadce0")
             brush: QBrush = QBrush(color)
             painter.setBrush(brush)
-            # TODO the borders still need a bit tweaking
+            pen = QPen()
+            pen.setStyle(Qt.NoPen)
+            painter.setPen(pen)
             painter.drawRect(option.rect)
         if index.column() == 1:
             text = date.strftime("%a, %d %b %Y")
