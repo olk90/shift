@@ -35,14 +35,14 @@ class AddEmployeeDialog(EditorDialog):
         first_name: str = self.widget.firstNameEdit.text()  # noqa
         last_name: str = self.widget.lastNameEdit.text()  # noqa
         reference: int = self.widget.referenceSpinner.value()  # noqa
-        global_score: int = self.widget.scoreSpinner.value()  # noqa
+        score: int = self.widget.scoreSpinner.value()  # noqa
         night_shifts: bool = self.widget.nightShiftsEdit.isChecked()  # noqa
 
         model: QSqlQueryModel = self.type_box.model()
         index: int = self.type_box.currentIndex()
         et_id = model.index(index, 1).data()
         employee = Employee(firstname=first_name, lastname=last_name, reference_value=reference,
-                            night_shifts=night_shifts, e_type_id=et_id, global_score=global_score)
+                            night_shifts=night_shifts, e_type_id=et_id, score=score)
         persist_item(employee)
         self.parent.reload_table_contents(model=EmployeeModel())
         self.close()
@@ -78,7 +78,7 @@ class EmployeeEditorWidget(EditorWidget):
         self.lastNameEdit.setText(employee.lastname)
         self.referenceSpinner.setValue(employee.reference_value)
         self.nightShiftsEdit.setChecked(employee.night_shifts)
-        self.scoreSpinner.setValue(employee.global_score)
+        self.scoreSpinner.setValue(employee.score)
 
         query: str = employee_type_designation_query()
         configure_query_model(self.typeCombobox, query)
@@ -92,7 +92,7 @@ class EmployeeEditorWidget(EditorWidget):
             "firstname": self.firstNameEdit.text(),
             "lastname": self.lastNameEdit.text(),
             "reference_value": self.referenceSpinner.value(),
-            "global_score": self.scoreSpinner.value(),
+            "score": self.scoreSpinner.value(),
             "night_shifts": self.nightShiftsEdit.isChecked(),
             "e_type": self.typeCombobox.currentText()
         }

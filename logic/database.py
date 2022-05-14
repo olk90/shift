@@ -87,18 +87,10 @@ def update_employee(value_dict: dict):
     employee.firstname = value_dict["firstname"]
     employee.lastname = value_dict["lastname"]
     employee.reference_value = value_dict["reference_value"]
-    employee.global_score = value_dict["global_score"]
+    employee.score = value_dict["score"]
     employee.night_shifts = value_dict["night_shifts"]
     e_type = s.query(EmployeeType).filter_by(designation=value_dict["e_type"]).one()
     employee.e_type = e_type
-    s.commit()
-
-
-def reset_scores():
-    s = session()
-    employees: list = s.query(Employee).all()
-    for e in employees:
-        e.score = 0
     s.commit()
 
 
@@ -127,10 +119,10 @@ def update_schedule(value_dict: dict):
     new_night_id: int = value_dict["n_id"]
     if schedule.activated:
         current_day_id: int = schedule.day_id
-        update_global_score(s, current_day_id, new_day_id, s_date)
+        update_score(s, current_day_id, new_day_id, s_date)
 
         current_night_id: int = schedule.night_id
-        update_global_score(s, current_night_id, new_night_id, s_date)
+        update_score(s, current_night_id, new_night_id, s_date)
     else:
         if new_day_id is not None:
             update_score(s, new_day_id, s_date)
@@ -142,19 +134,19 @@ def update_schedule(value_dict: dict):
     s.commit()
 
 
-def update_global_score(s, current_id: int, new_id: int, s_date: date):
+def update_score(s, current_id: int, new_id: int, s_date: date):
     score_offset: int = 2 if s_date.weekday() > 3 else 1
     off_period_bonus: int = 3
     if current_id != new_id:
         current_night: Employee = s.query(Employee).filter_by(id=current_id).first()
         new_night: Employee = s.query(Employee).filter_by(id=new_id).first()
         if current_night:
-            current_night.global_score -= score_offset
+            current_night.score -= score_offset
         if new_night:
             if new_night.has_off_period(s_date):
-                new_night.global_score += off_period_bonus
+                new_night.score += off_period_bonus
             else:
-                new_night.global_score += score_offset
+                new_night.score += score_offset
 
 
 def update_score(s, e_id: int, s_date: date):

@@ -4,7 +4,7 @@ from sqlalchemy import create_engine as ce
 from sqlalchemy.orm import sessionmaker as sm
 
 import logic.schedule.filter_rules as fr
-from logic.database import find_candidates, reset_scores, find_days_off, count_shifts
+from logic.database import find_candidates, find_days_off, count_shifts
 from logic.model import Schedule
 from logic.queries import schedule_id_query
 from views.base_functions import get_day_range
@@ -15,7 +15,6 @@ session = sm(bind=db)
 
 def create_schedule(month: int, year: int):
     print("Set up new schedule for {}/{}".format(month, year))
-    reset_scores()
     day_range = get_day_range(month, year)
 
     s = session()
@@ -73,6 +72,7 @@ def init_candidate_dict(month: int, year: int, candidates: list) -> dict:
         shift_count = count_shifts(month, year, c_id)
         c_dict[c_id] = {
             "c_id": c_id,
+            "score": c.score * -1,  # must be inverted to sort the dict correctly
             "reference_value": c.reference_value - shift_count,
             "night_shifts": c.night_shifts,
             "days_off": find_days_off(month, year, c_id),
@@ -109,7 +109,7 @@ def calculate_weekends(year: int, month: int) -> list | None:
 
 def sort_candidate_dict(c_dict) -> dict:
     items = c_dict.items()
-    sorted_items = sorted(items, key=lambda x: x[1]["reference_value"], reverse=True)
+    sorted_items = sorted(items, key=lambda x: (x[1]["reference_value"], x[1]["score"]), reverse=True)
     print(sorted_items)
     return dict(sorted_items)
 

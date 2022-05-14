@@ -39,7 +39,6 @@ class Employee(Base):
     lastname = Column(String(100), nullable=False)
     reference_value = Column(Integer, nullable=False, default=0)
     night_shifts = Column(Boolean, nullable=False, default=True)
-    global_score = Column(Integer, nullable=False, default=0)
     score = Column(Integer, nullable=False, default=0)
 
     e_type_id = Column(Integer, ForeignKey("EmployeeType.id"))
@@ -49,7 +48,7 @@ class Employee(Base):
         return "{} {}".format(self.firstname, self.lastname)
 
     def get_full_name_and_score(self) -> str:
-        return "{} {} ({})".format(self.firstname, self.lastname, self.global_score)
+        return "{} {} ({})".format(self.firstname, self.lastname, self.score)
 
     def has_off_period(self, day: date) -> bool:
         periods = self.off_periods  # noqa -> backref from OffPeriod
