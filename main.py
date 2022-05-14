@@ -13,8 +13,8 @@ from views.mainView import MainWindow
 if __name__ == "__main__":
     QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
 
-    init_database()
     properties.load_config_file()
+    init_database()
 
     app = QApplication()
 

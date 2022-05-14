@@ -1,7 +1,9 @@
 from PySide6.QtGui import QIcon
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QFileDialog
 
+from logic.config import properties
+from logic.database import init_database
 from logic.table_models import EmployeeTypeModel, EmployeeModel, OffPeriodModel, ScheduleModel
 from views.base_classes import OptionsEditorDialog, TableDialog
 from views.base_functions import load_ui_file
@@ -31,7 +33,8 @@ class MainWindow(QMainWindow):
         ui_file.close()
 
         self.tabview = self.widget.tabview  # noqa -> tabview is loaded from ui file
-        self.optionsButton = self.widget.optionsButton  # noqa
+        self.load_db_button = self.widget.loadDbButton  # noqa
+        self.options_button = self.widget.optionsButton  # noqa
 
         self.configure_buttons()
         self.configure_tabview()
@@ -71,7 +74,21 @@ class MainWindow(QMainWindow):
                 current.reload_table_contents(ScheduleModel(year, month, search))
 
     def configure_buttons(self):
-        self.optionsButton.clicked.connect(self.open_options)
+        self.load_db_button.clicked.connect(self.load_database)
+        self.options_button.clicked.connect(self.open_options)
+
+    def load_database(self):
+        load_dialog: QFileDialog = QFileDialog(parent=self)
+        load_dialog.setWindowTitle(self.tr("Load Database"))
+        load_dialog.setDirectory(str(properties.user_home))
+        load_dialog.setAcceptMode(QFileDialog.AcceptOpen)
+        load_dialog.setNameFilter(self.tr("SQLite3 (*.db)"))
+        if load_dialog.exec_() == QFileDialog.Accepted:
+            file_path: str = load_dialog.selectedFiles()[0]
+            properties.database_path = file_path
+            init_database(True)
+            self.reload_current_widget()
+            properties.write_config_file()
 
     def open_options(self):
         self.options_dialog.exec_()

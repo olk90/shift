@@ -6,16 +6,14 @@ from PySide6.QtGui import Qt
 from PySide6.QtSql import QSqlQueryModel, QSqlDatabase
 from PySide6.QtWidgets import QComboBox
 from sqlalchemy import create_engine as ce, and_, extract, or_
-from sqlalchemy.orm import sessionmaker as sm, join
+from sqlalchemy.orm import join
 
+from logic.config import properties
 from logic.model import create_tables, Employee, EmployeeType, OffPeriod, Schedule, Base
-from views.base_functions import get_day_range
-
-db = ce("sqlite:///shift.db")
-session = sm(bind=db)
 
 
-def init_database():
+def init_database(remove_old: bool = False):
+    db = ce("sqlite:///" + properties.database_path)
     print("Connecting to database {}".format(db))
     db.connect()
 
@@ -23,8 +21,11 @@ def init_database():
     create_tables(db)
 
     print("Connect database to PySide")
+
+    if remove_old:
+        QSqlDatabase.removeDatabase("QSQLITE")
     database = QSqlDatabase.addDatabase("QSQLITE")
-    database.setDatabaseName("shift.db")
+    database.setDatabaseName(properties.database_path)
 
     if not database.open():
         print("Unable to open database")
@@ -40,33 +41,33 @@ def configure_query_model(box: QComboBox, query: str):
 
 
 def persist_item(item: Base):
-    s = session()
+    s = properties.open_session()
     s.add(item)
     s.commit()
 
 
 def delete_item(item: Base):
-    s = session()
+    s = properties.open_session()
     s.delete(item)
     s.commit()
 
 
 def find_employee_type_by_id(e_id: int) -> EmployeeType:
-    s = session()
+    s = properties.open_session()
     e_type: EmployeeType = s.query(EmployeeType).filter_by(id=e_id).first()
     s.close()
     return e_type
 
 
 def find_employee_by_id(e_id: int) -> Employee:
-    s = session()
+    s = properties.open_session()
     employee: Employee = s.query(Employee).filter_by(id=e_id).first()
     s.close()
     return employee
 
 
 def update_employee_type(value_dict: dict):
-    s = session()
+    s = properties.open_session()
     e_type: EmployeeType = s.query(EmployeeType).filter_by(id=value_dict["item_id"]).first()
     e_type.designation = value_dict["designation"]
     e_type.rotation_period = value_dict["rotation_period"]
@@ -74,7 +75,7 @@ def update_employee_type(value_dict: dict):
 
 
 def find_e_type_by_e_id(e_id: int) -> EmployeeType:
-    s = session()
+    s = properties.open_session()
     e_type: EmployeeType = s.query(EmployeeType).select_from(join(EmployeeType, Employee)).filter(
         Employee.id == e_id).first()
     s.close()
@@ -82,7 +83,7 @@ def find_e_type_by_e_id(e_id: int) -> EmployeeType:
 
 
 def update_employee(value_dict: dict):
-    s = session()
+    s = properties.open_session()
     employee: Employee = s.query(Employee).filter_by(id=value_dict["item_id"]).first()
     employee.firstname = value_dict["firstname"]
     employee.lastname = value_dict["lastname"]
@@ -95,14 +96,14 @@ def update_employee(value_dict: dict):
 
 
 def find_off_period_by_id(p_id: int) -> OffPeriod:
-    s = session()
+    s = properties.open_session()
     period: OffPeriod = s.query(OffPeriod).filter_by(id=p_id).first()
     s.close()
     return period
 
 
 def update_off_period(value_dict: dict):
-    s = session()
+    s = properties.open_session()
     period: OffPeriod = s.query(OffPeriod).filter_by(id=value_dict["item_id"]).first()
     q_start: QDate = value_dict["start"]
     q_end: QDate = value_dict["end"]
@@ -112,7 +113,7 @@ def update_off_period(value_dict: dict):
 
 
 def update_schedule(value_dict: dict):
-    s = session()
+    s = properties.open_session()
     schedule: Schedule = s.query(Schedule).filter_by(id=value_dict["item_id"]).first()
     s_date = schedule.date
     new_day_id: int = value_dict["d_id"]
@@ -123,11 +124,6 @@ def update_schedule(value_dict: dict):
 
         current_night_id: int = schedule.night_id
         update_score(s, current_night_id, new_night_id, s_date)
-    else:
-        if new_day_id is not None:
-            update_score(s, new_day_id, s_date)
-        if new_night_id is not None:
-            update_score(s, new_night_id, s_date)
     schedule.day_id = new_day_id
     schedule.night_id = new_night_id
     schedule.comment = value_dict["comment"]
@@ -149,21 +145,15 @@ def update_score(s, current_id: int, new_id: int, s_date: date):
                 new_night.score += score_offset
 
 
-def update_score(s, e_id: int, s_date: date):
-    score_offset: int = 10 if s_date.weekday() > 3 else 1
-    employee: Employee = s.query(Employee).filter_by(id=e_id).first()
-    employee.score += score_offset
-
-
 def find_schedule_by_id(s_id: int) -> Schedule:
-    s = session()
+    s = properties.open_session()
     schedule: Schedule = s.query(Schedule).filter_by(id=s_id).first()
     s.close()
     return schedule
 
 
 def find_surrounding_schedules(schedule: Schedule) -> dict:
-    s = session()
+    s = properties.open_session()
     before = schedule.date - timedelta(days=1)
     after = schedule.date + timedelta(days=1)
     schedule_before: Schedule = s.query(Schedule).filter_by(date=before).first()
@@ -182,7 +172,7 @@ def find_surrounding_schedules(schedule: Schedule) -> dict:
 def find_schedule_by_year_and_month(year: int, month: int) -> Schedule | None:
     if month < 1:
         return None
-    s = session()
+    s = properties.open_session()
     start_day = date(year, month, 1)
     schedule: Schedule = s.query(Schedule).filter_by(date=start_day).first()
     s.close()
@@ -200,14 +190,14 @@ def shift_plan_active(year: int, month: int) -> bool:
 
 
 def find_candidates() -> list:
-    s = session()
+    s = properties.open_session()
     employees: list = s.query(Employee).all()
     s.close()
     return employees
 
 
 def find_days_off(month: int, year: int, e_id: int) -> list:
-    s = session()
+    s = properties.open_session()
     periods = s.query(OffPeriod).filter(
         and_(OffPeriod.e_id == e_id, (
             or_(
@@ -228,7 +218,7 @@ def find_days_off(month: int, year: int, e_id: int) -> list:
 
 
 def count_shifts(month: int, year: int, e_id: int) -> int:
-    s = session()
+    s = properties.open_session()
     day_count: int = s.query(Schedule).filter(
         and_(
             extract("year", Schedule.date) == year,

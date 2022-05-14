@@ -9,6 +9,7 @@ from PySide6.QtWidgets import QWidget, QComboBox, QHBoxLayout, QDialogButtonBox,
 from sqlalchemy import create_engine as ce
 from sqlalchemy.orm import sessionmaker as sm
 
+from logic.config import properties
 from logic.database import configure_query_model, persist_item, find_employee_by_id, \
     find_off_period_by_id, delete_item, update_off_period
 from logic.table_models import OffPeriodModel
@@ -109,9 +110,7 @@ class AddRepeatingOffPeriodDialog(EditorDialog):
         weekday: int = self.weekday_box.currentIndex()
         day_range = get_day_range(month, year)
 
-        db = ce("sqlite:///shift.db")
-        session = sm(bind=db)
-        s = session()
+        s = properties.open_session()
         for day in day_range:
             date = datetime.date(year, month, day)
             if date.weekday() == weekday:

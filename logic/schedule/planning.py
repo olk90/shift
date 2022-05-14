@@ -1,23 +1,18 @@
 import datetime as dt
 
-from sqlalchemy import create_engine as ce
-from sqlalchemy.orm import sessionmaker as sm
-
 import logic.schedule.filter_rules as fr
+from logic.config import properties
 from logic.database import find_candidates, find_days_off, count_shifts
 from logic.model import Schedule
 from logic.queries import schedule_id_query
 from views.base_functions import get_day_range
-
-db = ce("sqlite:///shift.db")
-session = sm(bind=db)
 
 
 def create_schedule(month: int, year: int):
     print("Set up new schedule for {}/{}".format(month, year))
     day_range = get_day_range(month, year)
 
-    s = session()
+    s = properties.open_session()
     for day in day_range:
         date = dt.date(year, month, day)
         schedule: Schedule = Schedule(date=date)
@@ -33,7 +28,7 @@ def fill_schedule(month: int, year: int):
     c_dict = init_candidate_dict(month, year, candidates)
     weekends = calculate_weekends(year, month)
     for day in day_range:
-        s = session()
+        s = properties.open_session()
         date_of_day = dt.date(year, month, day)
         schedule: Schedule = s.query(Schedule).filter_by(date=date_of_day).first()
         if schedule.day_id is None:
@@ -110,7 +105,6 @@ def calculate_weekends(year: int, month: int) -> list | None:
 def sort_candidate_dict(c_dict) -> dict:
     items = c_dict.items()
     sorted_items = sorted(items, key=lambda x: (x[1]["reference_value"], x[1]["score"]), reverse=True)
-    print(sorted_items)
     return dict(sorted_items)
 
 
@@ -124,7 +118,7 @@ def update_weekends(schedule: Schedule, weekends: list):
 
 
 def toggle_schedule_state(year: int, month: int, activate: bool):
-    s = session()
+    s = properties.open_session()
     query = schedule_id_query(year, month)
     s_ids = s.execute(query)
     for sid in s_ids:
@@ -134,7 +128,7 @@ def toggle_schedule_state(year: int, month: int, activate: bool):
 
 
 def clear_schedule(year: int, month: int):
-    s = session()
+    s = properties.open_session()
     query = schedule_id_query(year, month)
     s_ids = s.execute(query)
     for sid in s_ids:
