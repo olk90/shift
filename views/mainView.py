@@ -97,4 +97,5 @@ class MainWindow(QMainWindow):
         self.options_dialog.exec_()
 
     def open_logs(self):
+        self.log_dialog.load_log_files()
         self.log_dialog.exec_()

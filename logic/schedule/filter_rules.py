@@ -23,6 +23,7 @@ def shift_gap_violated(schedule: Schedule, c_data: dict, is_night_shift: bool = 
     c_id: int = c_data["c_id"]
     schedules: dict = find_surrounding_schedules(schedule)
     if is_night_shift:
+        shift_type = "night"
         shift_ids = [
             schedules["n_before"],
             schedules["d_today"],
@@ -30,6 +31,7 @@ def shift_gap_violated(schedule: Schedule, c_data: dict, is_night_shift: bool = 
             schedules["n_after"]
         ]
     else:
+        shift_type = "day"
         shift_ids = [
             schedules["d_before"],
             schedules["n_before"],
@@ -38,12 +40,11 @@ def shift_gap_violated(schedule: Schedule, c_data: dict, is_night_shift: bool = 
         ]
     violated = c_id in shift_ids
     if violated:
-        shift_type = "Night" if is_night_shift else "Day"
         logger.info(
-            "%s shift gap for %s (id=%d) violated (day=%s)",
-            shift_type,
+            "Cannot plan %s (id=%d) for %s shift (shift gap violated) (day=%s)",
             c_data["name"],
             c_data["c_id"],
+            shift_type,
             schedule.date
         )
     return violated
