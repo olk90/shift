@@ -4,7 +4,7 @@
 <context>
     <name>AddEmployeeDialog</name>
     <message>
-        <location filename="views/employee.py" line="22"/>
+        <location filename="views/employee.py" line="23"/>
         <source>Add Employee</source>
         <translation>Mitarbeiter hinzufügen</translation>
     </message>
@@ -12,7 +12,7 @@
 <context>
     <name>AddEmployeeTypeDialog</name>
     <message>
-        <location filename="views/employeeType.py" line="14"/>
+        <location filename="views/employeeType.py" line="15"/>
         <source>Add Employee Type</source>
         <translation>Mitarbeitertyp hinzufügen</translation>
     </message>
@@ -49,12 +49,12 @@
 <context>
     <name>EditorDialog</name>
     <message>
-        <location filename="views/base_classes.py" line="36"/>
+        <location filename="views/base_classes.py" line="37"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="views/base_classes.py" line="37"/>
+        <location filename="views/base_classes.py" line="38"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
@@ -62,12 +62,12 @@
 <context>
     <name>EditorWidget</name>
     <message>
-        <location filename="views/base_classes.py" line="61"/>
+        <location filename="views/base_classes.py" line="62"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="views/base_classes.py" line="62"/>
+        <location filename="views/base_classes.py" line="63"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
@@ -75,32 +75,32 @@
 <context>
     <name>EmployeeModel</name>
     <message>
-        <location filename="logic/database.py" line="57"/>
+        <location filename="logic/table_models.py" line="34"/>
         <source>First Name</source>
         <translation>Vorname</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="58"/>
+        <location filename="logic/table_models.py" line="35"/>
         <source>Last Name</source>
         <translation>Nachname</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="59"/>
+        <location filename="logic/table_models.py" line="36"/>
         <source>Reference Value</source>
         <translation>Referenzwert</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="60"/>
+        <location filename="logic/table_models.py" line="37"/>
         <source>Night Shifts</source>
         <translation>Nachtschichten</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="61"/>
+        <location filename="logic/table_models.py" line="38"/>
         <source>Score</source>
         <translation>Punkte</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="62"/>
+        <location filename="logic/table_models.py" line="39"/>
         <source>Type</source>
         <translation>Typ</translation>
     </message>
@@ -108,12 +108,12 @@
 <context>
     <name>EmployeeTypeModel</name>
     <message>
-        <location filename="logic/database.py" line="47"/>
+        <location filename="logic/table_models.py" line="24"/>
         <source>Designation</source>
         <translation>Bezeichnung</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="48"/>
+        <location filename="logic/table_models.py" line="25"/>
         <source>Rotation Period</source>
         <translation>Rotationsintervall</translation>
     </message>
@@ -123,6 +123,7 @@
     <message>
         <location filename="ui/employeeEditor.ui" line="14"/>
         <location filename="ui/employeeTypeEditor.ui" line="14"/>
+        <location filename="ui/logDialog.ui" line="14"/>
         <location filename="ui/offPeriodAddDialog.ui" line="14"/>
         <location filename="ui/offPeriodEditor.ui" line="14"/>
         <location filename="ui/optionsEditor.ui" line="14"/>
@@ -276,28 +277,59 @@
         <source>Remove</source>
         <translation>Entfernen</translation>
     </message>
+    <message>
+        <location filename="ui/logDialog.ui" line="29"/>
+        <source>Log Files</source>
+        <translation>Logdateien</translation>
+    </message>
+    <message>
+        <location filename="ui/logDialog.ui" line="43"/>
+        <source>Database</source>
+        <translation>Datenbank</translation>
+    </message>
+    <message>
+        <location filename="ui/logDialog.ui" line="57"/>
+        <location filename="ui/logDialog.ui" line="85"/>
+        <source>No log file found.</source>
+        <translation>Keine Logdatei gefunden.</translation>
+    </message>
+    <message>
+        <location filename="ui/logDialog.ui" line="65"/>
+        <source>Planning</source>
+        <translation>Planung</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="views/mainView.py" line="45"/>
+        <location filename="views/mainView.py" line="50"/>
         <source>Employee Types</source>
         <translation>Mitarbeitertyp bearbeiten</translation>
     </message>
     <message>
-        <location filename="views/mainView.py" line="48"/>
+        <location filename="views/mainView.py" line="53"/>
         <source>Employees</source>
         <translation>Mitarbeiter</translation>
     </message>
     <message>
-        <location filename="views/mainView.py" line="51"/>
+        <location filename="views/mainView.py" line="56"/>
         <source>Days Off</source>
         <translation>Freie Tage</translation>
     </message>
     <message>
-        <location filename="views/mainView.py" line="54"/>
+        <location filename="views/mainView.py" line="59"/>
         <source>Planning</source>
         <translation>Planung</translation>
+    </message>
+    <message>
+        <location filename="views/mainView.py" line="85"/>
+        <source>Load Database</source>
+        <translation>Datenbank laden</translation>
+    </message>
+    <message>
+        <location filename="views/mainView.py" line="88"/>
+        <source>SQLite3 (*.db)</source>
+        <translation>SQLite3 (*.db)</translation>
     </message>
 </context>
 <context>
@@ -366,17 +398,17 @@
 <context>
     <name>OffPeriodModel</name>
     <message>
-        <location filename="logic/database.py" line="71"/>
+        <location filename="logic/table_models.py" line="48"/>
         <source>Start</source>
         <translation>Anfang</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="72"/>
+        <location filename="logic/table_models.py" line="49"/>
         <source>End</source>
         <translation>Ende</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="73"/>
+        <location filename="logic/table_models.py" line="50"/>
         <source>Employee</source>
         <translation>Mitarbeiter</translation>
     </message>
@@ -384,12 +416,12 @@
 <context>
     <name>PlanningWidget</name>
     <message>
-        <location filename="views/schedule.py" line="236"/>
+        <location filename="views/schedule.py" line="233"/>
         <source>Export Schedule</source>
         <translation>Plan exportieren</translation>
     </message>
     <message>
-        <location filename="views/schedule.py" line="239"/>
+        <location filename="views/schedule.py" line="236"/>
         <source>Spreadsheets (*.xlsx)</source>
         <translation>Tabellen (*.xlsx)</translation>
     </message>
@@ -397,12 +429,12 @@
 <context>
     <name>Properties</name>
     <message>
-        <location filename="logic/config.py" line="18"/>
+        <location filename="logic/config.py" line="21"/>
         <source>dark</source>
         <translation>dunkel</translation>
     </message>
     <message>
-        <location filename="logic/config.py" line="19"/>
+        <location filename="logic/config.py" line="22"/>
         <source>light</source>
         <translation>hell</translation>
     </message>
@@ -410,26 +442,26 @@
 <context>
     <name>ScheduleModel</name>
     <message>
-        <location filename="logic/database.py" line="86"/>
-        <location filename="logic/database.py" line="96"/>
+        <location filename="logic/table_models.py" line="63"/>
+        <location filename="logic/table_models.py" line="73"/>
         <source>Date</source>
         <translation>Datum</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="87"/>
-        <location filename="logic/database.py" line="97"/>
+        <location filename="logic/table_models.py" line="64"/>
+        <location filename="logic/table_models.py" line="74"/>
         <source>Day Shift</source>
         <translation>Tagschicht</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="88"/>
-        <location filename="logic/database.py" line="98"/>
+        <location filename="logic/table_models.py" line="65"/>
+        <location filename="logic/table_models.py" line="75"/>
         <source>Night Shift</source>
         <translation>Nachtschicht</translation>
     </message>
     <message>
-        <location filename="logic/database.py" line="89"/>
-        <location filename="logic/database.py" line="99"/>
+        <location filename="logic/table_models.py" line="66"/>
+        <location filename="logic/table_models.py" line="76"/>
         <source>Comment</source>
         <translation>Kommentar</translation>
     </message>
@@ -540,6 +572,11 @@
         <location filename="ui/main.ui" line="74"/>
         <source>Options</source>
         <translation>Optionen</translation>
+    </message>
+    <message>
+        <location filename="ui/main.ui" line="87"/>
+        <source>Logs</source>
+        <translation>Logs</translation>
     </message>
 </context>
 <context>

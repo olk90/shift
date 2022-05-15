@@ -76,6 +76,19 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="logButton">
+         <property name="minimumSize">
+          <size>
+           <width>150</width>
+           <height>34</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Logs</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>

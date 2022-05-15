@@ -1,4 +1,5 @@
 from typing import Union
+from os.path import exists
 
 import qdarktheme
 from PySide6.QtCore import QLibraryInfo, QTranslator, QLocale, QItemSelectionModel, QModelIndex, \
@@ -6,7 +7,7 @@ from PySide6.QtCore import QLibraryInfo, QTranslator, QLocale, QItemSelectionMod
 from PySide6.QtGui import QPainter
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QDialog, QWidget, QDialogButtonBox, QHBoxLayout, QMainWindow, QComboBox, QApplication, \
-    QLineEdit, QTableView, QAbstractItemView, QHeaderView, QItemDelegate, QStyleOptionViewItem
+    QLineEdit, QTableView, QAbstractItemView, QHeaderView, QItemDelegate, QStyleOptionViewItem, QTextBrowser
 
 from logic.config import properties
 from logic.table_models import SearchTableModel
@@ -128,6 +129,32 @@ class OptionsEditorDialog(EditorDialog):
             app.setStyleSheet(qdarktheme.load_stylesheet("light"))
         else:
             app.setStyleSheet(None)
+
+
+class LogDialog(EditorDialog):
+    def __init__(self, parent: QMainWindow):
+        super(LogDialog, self).__init__(parent=parent, ui_file_name="ui/logDialog.ui")
+
+        self.database_log: QTextBrowser = self.widget.databaseLog  # noqa
+        self.planning_log: QTextBrowser = self.widget.planningLog  # noqa
+
+        self.load_log_files()
+        self.resize(1200, 800)
+        self.layout = QHBoxLayout(self)
+        self.layout.addWidget(self.widget)
+
+    def load_log_files(self):
+        database_content = self.load_log_content("logs/database.log")
+        planning_content = self.load_log_content("logs/schedule.log")
+        self.database_log.setText(database_content)
+        self.planning_log.setText(planning_content)
+
+    def load_log_content(self, path: str) -> str | None:
+        if exists(path):
+            file = open(path, "r")
+            return file.read()
+        else:
+            return None
 
 
 class TableDialog(QWidget):

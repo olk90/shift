@@ -9,6 +9,7 @@ pyinstaller -n "shift" \
   --add-data "ui/offPeriodEditor.ui:./ui" \
   --add-data "ui/offPeriodView.ui:./ui" \
   --add-data "ui/optionsEditor.ui:./ui" \
+  --add-data "ui/logDialog.ui:./ui" \
   --add-data "ui/planningView.ui:./ui" \
   --add-data "ui/repeatingOffPeriodAddDialog.ui:./ui" \
   --add-data "ui/scheduleEditor.ui:./ui" \

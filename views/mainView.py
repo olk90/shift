@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QFileDialog
 from logic.config import properties
 from logic.database import init_database
 from logic.table_models import EmployeeTypeModel, EmployeeModel, OffPeriodModel, ScheduleModel
-from views.base_classes import OptionsEditorDialog, TableDialog
+from views.base_classes import OptionsEditorDialog, TableDialog, LogDialog
 from views.base_functions import load_ui_file
 from views.employee import EmployeeWidget
 from views.employeeType import EmployeeTypeWidget
@@ -24,6 +24,7 @@ class MainWindow(QMainWindow):
 
         self.layout = QVBoxLayout(form)
         self.options_dialog = OptionsEditorDialog(self)
+        self.log_dialog = LogDialog(self)
 
         ui_file_name = "ui/main.ui"
         ui_file = load_ui_file(ui_file_name)
@@ -35,6 +36,7 @@ class MainWindow(QMainWindow):
         self.tabview = self.widget.tabview  # noqa -> tabview is loaded from ui file
         self.load_db_button = self.widget.loadDbButton  # noqa
         self.options_button = self.widget.optionsButton  # noqa
+        self.log_button = self.widget.logButton  # noqa
 
         self.configure_buttons()
         self.configure_tabview()
@@ -76,6 +78,7 @@ class MainWindow(QMainWindow):
     def configure_buttons(self):
         self.load_db_button.clicked.connect(self.load_database)
         self.options_button.clicked.connect(self.open_options)
+        self.log_button.clicked.connect(self.open_logs)
 
     def load_database(self):
         load_dialog: QFileDialog = QFileDialog(parent=self)
@@ -92,3 +95,6 @@ class MainWindow(QMainWindow):
 
     def open_options(self):
         self.options_dialog.exec_()
+
+    def open_logs(self):
+        self.log_dialog.exec_()
