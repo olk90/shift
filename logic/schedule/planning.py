@@ -5,11 +5,12 @@ from logic.config import properties
 from logic.database import find_candidates, find_days_off, count_shifts
 from logic.model import Schedule
 from logic.queries import schedule_id_query
+from logic.schedule import logger
 from views.base_functions import get_day_range
 
 
 def create_schedule(month: int, year: int):
-    print("Set up new schedule for {}/{}".format(month, year))
+    logger.info("Set up new schedule for %d/%d", month, year)
     day_range = get_day_range(month, year)
 
     s = properties.open_session()
@@ -21,7 +22,7 @@ def create_schedule(month: int, year: int):
 
 
 def fill_schedule(month: int, year: int):
-    print("Fill open shifts for {}/{}".format(month, year))
+    logger.info("Fill open shifts of %d/%d", month, year)
     day_range = get_day_range(month, year)
 
     candidates: list = find_candidates()
@@ -47,11 +48,10 @@ def find_candidate(c_dict: dict, candidates: list, weekends: list, schedule: Sch
                    nights: bool = False) -> int | None:
     for c in candidates:
         c_data: dict = c_dict[c.id]
-        if fr.reference_value_violated(c_data) \
-                or fr.day_shift_gap_violated(schedule, c_data) \
-                or fr.night_shift_gap_violated(schedule, c_data) \
+        if fr.reference_value_violated(c_data, date_of_day) \
+                or fr.shift_gap_violated(schedule, c_data, nights) \
                 or fr.days_off_violated(date_of_day, c_data, nights) \
-                or fr.night_shifts_violated(c_data, nights) \
+                or fr.night_shifts_violated(c_data, nights, date_of_day) \
                 or fr.free_weekends_violated(date_of_day, c_data, weekends):
             continue
         else:
@@ -67,6 +67,7 @@ def init_candidate_dict(month: int, year: int, candidates: list) -> dict:
         shift_count = count_shifts(month, year, c_id)
         c_dict[c_id] = {
             "c_id": c_id,
+            "name": c.get_full_name(),
             "score": c.score * -1,  # must be inverted to sort the dict correctly
             "reference_value": c.reference_value - shift_count,
             "night_shifts": c.night_shifts,

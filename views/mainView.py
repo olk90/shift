@@ -7,9 +7,9 @@ from logic.database import init_database
 from logic.table_models import EmployeeTypeModel, EmployeeModel, OffPeriodModel, ScheduleModel
 from views.base_classes import OptionsEditorDialog, TableDialog
 from views.base_functions import load_ui_file
-from views.offPeriod import OffPeriodWidget
-from views.employeeType import EmployeeTypeWidget
 from views.employee import EmployeeWidget
+from views.employeeType import EmployeeTypeWidget
+from views.offPeriod import OffPeriodWidget
 from views.schedule import PlanningWidget
 
 

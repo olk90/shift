@@ -1,26 +1,36 @@
+import logging
 import sys
 from datetime import datetime, date, timedelta
+from logging.handlers import RotatingFileHandler
 
 from PySide6.QtCore import QDate
 from PySide6.QtGui import Qt
 from PySide6.QtSql import QSqlQueryModel, QSqlDatabase
 from PySide6.QtWidgets import QComboBox
 from sqlalchemy import create_engine as ce, and_, extract, or_
-from sqlalchemy.orm import join
 
+from logic import configure_file_handler
 from logic.config import properties
 from logic.model import create_tables, Employee, EmployeeType, OffPeriod, Schedule, Base
+
+rfh: RotatingFileHandler = configure_file_handler("database")
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+logger.addHandler(rfh)
+
+logger.info("Logger initialised")
 
 
 def init_database(remove_old: bool = False):
     db = ce("sqlite:///" + properties.database_path)
-    print("Connecting to database {}".format(db))
+    logger.info("Connecting to database %s", db)
     db.connect()
 
-    print("Initializing database")
+    logger.info("Initialising database")
     create_tables(db)
 
-    print("Connect database to PySide")
+    logger.info("Connect database to PySide")
 
     if remove_old:
         QSqlDatabase.removeDatabase("QSQLITE")
@@ -28,7 +38,7 @@ def init_database(remove_old: bool = False):
     database.setDatabaseName(properties.database_path)
 
     if not database.open():
-        print("Unable to open database")
+        logger.error("Unable to open database")
         sys.exit(1)
 
 
@@ -44,12 +54,14 @@ def persist_item(item: Base):
     s = properties.open_session()
     s.add(item)
     s.commit()
+    logger.info("Added new item to database: %s", item)
 
 
 def delete_item(item: Base):
     s = properties.open_session()
     s.delete(item)
     s.commit()
+    logger.info("Removed entry from database: %s", item)
 
 
 def find_employee_type_by_id(e_id: int) -> EmployeeType:
@@ -72,14 +84,6 @@ def update_employee_type(value_dict: dict):
     e_type.designation = value_dict["designation"]
     e_type.rotation_period = value_dict["rotation_period"]
     s.commit()
-
-
-def find_e_type_by_e_id(e_id: int) -> EmployeeType:
-    s = properties.open_session()
-    e_type: EmployeeType = s.query(EmployeeType).select_from(join(EmployeeType, Employee)).filter(
-        Employee.id == e_id).first()
-    s.close()
-    return e_type
 
 
 def update_employee(value_dict: dict):
@@ -201,8 +205,8 @@ def find_days_off(month: int, year: int, e_id: int) -> list:
     periods = s.query(OffPeriod).filter(
         and_(OffPeriod.e_id == e_id, (
             or_(
-                and_(extract("year", OffPeriod.start) == year, extract("month", OffPeriod.start) == month)
-                , and_(extract("year", OffPeriod.end) == year, extract("month", OffPeriod.end) == month)))
+                and_(extract("year", OffPeriod.start) == year, extract("month", OffPeriod.start) == month),
+                and_(extract("year", OffPeriod.end) == year, extract("month", OffPeriod.end) == month)))
              )
     ).all()
     s.close()
@@ -214,6 +218,7 @@ def find_days_off(month: int, year: int, e_id: int) -> list:
         for day in day_range:
             d = date(year, month, day)
             day_list.append(d)
+    logger.info("Days off for Employee %d in %d/%d: %s", e_id, month, year, list(map(lambda x: str(x), day_list)))
     return day_list
 
 
@@ -234,4 +239,5 @@ def count_shifts(month: int, year: int, e_id: int) -> int:
         )
     ).count()
     s.close()
+    logger.info("Employee %d occupies %d days and %d nights in %d/%d", e_id, day_count, night_count, month, year)
     return day_count + night_count
