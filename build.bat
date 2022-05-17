@@ -14,4 +14,5 @@ pyinstaller -n "shift"^
   --add-data "ui/scheduleEditor.ui;./ui"^
   --add-data "translations/base_de.qm;./translations"^
   --add-data "icon.svg;./"^
-  -D --clean main.py
+  --add-data "icon.ico;./"^
+  -D --icon="icon.ico" --clean main.py
