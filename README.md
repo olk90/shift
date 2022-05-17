@@ -2,8 +2,8 @@
 
 ![icon](icon.svg)
 
-This is an app to create shift plans for a month. **Detailed documentation will
-follow soon!**
+This is an app to create monthly work schedules. Detailed documentation is 
+in the works and available in the project's [wiki](https://github.com/olk90/shift/wiki).
 
 ## Locales
 
