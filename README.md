@@ -3,7 +3,7 @@
 ![icon](icon.svg)
 
 This is an app to create monthly work schedules. Detailed documentation is 
-in the works and available in the project's [wiki](https://github.com/olk90/shift/wiki).
+in available in the project's [wiki](https://github.com/olk90/shift/wiki).
 
 ## Locales
 
