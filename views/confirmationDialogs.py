@@ -14,6 +14,13 @@ class ConfirmationDialog(QMessageBox):
         self.setText(label_text)
 
 
+class ConfirmRestartDialog(ConfirmationDialog):
+
+    def __init__(self, parent):
+        label_text: str = self.tr("Changes applied require a restart. Restart now?")
+        super(ConfirmRestartDialog, self).__init__(parent, label_text)
+
+
 class ConfirmScheduleUpdateDialog(ConfirmationDialog):
 
     def __init__(self, parent):

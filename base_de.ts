@@ -20,15 +20,23 @@
 <context>
     <name>ConfirmDeletionDialog</name>
     <message>
-        <location filename="views/confirmationDialogs.py" line="28"/>
+        <location filename="views/confirmationDialogs.py" line="35"/>
         <source>Delete selected item?</source>
         <translation>Ausgewählten Eintrag löschen?</translation>
     </message>
 </context>
 <context>
-    <name>ConfirmScheduleUpdateDialog</name>
+    <name>ConfirmRestartDialog</name>
     <message>
         <location filename="views/confirmationDialogs.py" line="21"/>
+        <source>Changes applied require a restart. Restart now?</source>
+        <translation>Vorgenommene Änderungen erfordern einen Neustart. Jetzt neustarten?</translation>
+    </message>
+</context>
+<context>
+    <name>ConfirmScheduleUpdateDialog</name>
+    <message>
+        <location filename="views/confirmationDialogs.py" line="28"/>
         <source>Write changes to database?</source>
         <translation>Änderungen in die Datenbank schreiben?</translation>
     </message>
@@ -49,12 +57,12 @@
 <context>
     <name>EditorDialog</name>
     <message>
-        <location filename="views/base_classes.py" line="37"/>
+        <location filename="views/base_classes.py" line="41"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="views/base_classes.py" line="38"/>
+        <location filename="views/base_classes.py" line="42"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
@@ -62,12 +70,12 @@
 <context>
     <name>EditorWidget</name>
     <message>
-        <location filename="views/base_classes.py" line="62"/>
+        <location filename="views/base_classes.py" line="66"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="views/base_classes.py" line="63"/>
+        <location filename="views/base_classes.py" line="67"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>

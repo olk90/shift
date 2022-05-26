@@ -1,17 +1,21 @@
-from typing import Union
+import os
+import sys
 from os.path import exists
+from typing import Union
 
 import qdarktheme
-from PySide6.QtCore import QLibraryInfo, QTranslator, QLocale, QItemSelectionModel, QModelIndex, \
+from PySide6.QtCore import QItemSelectionModel, QModelIndex, \
     QPersistentModelIndex, Qt
 from PySide6.QtGui import QPainter
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QDialog, QWidget, QDialogButtonBox, QHBoxLayout, QMainWindow, QComboBox, QApplication, \
-    QLineEdit, QTableView, QAbstractItemView, QHeaderView, QItemDelegate, QStyleOptionViewItem, QTextBrowser
+    QLineEdit, QTableView, QAbstractItemView, QHeaderView, QItemDelegate, QStyleOptionViewItem, QTextBrowser, \
+    QMessageBox
 
 from logic.config import properties
 from logic.table_models import SearchTableModel
 from views.base_functions import load_ui_file
+from views.confirmationDialogs import ConfirmRestartDialog
 
 
 class EditorDialog(QDialog):
@@ -98,26 +102,22 @@ class OptionsEditorDialog(EditorDialog):
         self.themeBox.setCurrentIndex(properties.theme_index)
 
     def commit(self):
-        self.update_locale()
+        restart_required: bool = self.update_locale()
         self.update_theme()
 
         properties.write_config_file()
+        if restart_required:
+            dialog = ConfirmRestartDialog(self)
+            button = dialog.exec_()
+            if button == QMessageBox.AcceptRole:
+                os.execl(sys.executable, sys.executable, *sys.argv)
         self.close()
 
-    def update_locale(self):
+    def update_locale(self) -> bool:
         selected_index = self.localeBox.currentIndex()
+        restart_required: bool = selected_index != properties.locale_index
         properties.locale_index = selected_index
-        app = QApplication.instance()
-
-        path = QLibraryInfo.location(QLibraryInfo.TranslationsPath)
-        translator = QTranslator(app)
-        if translator.load(QLocale.system(), 'qtbase', '_', path):
-            app.installTranslator(translator)
-        translator = QTranslator(app)
-        path = './translations'
-        if selected_index == 1:
-            translator.load(QLocale(QLocale.German, QLocale.Germany), 'base', '_', path)
-            app.installTranslator(translator)
+        return restart_required
 
     def update_theme(self):
         selected_index = self.themeBox.currentIndex()
