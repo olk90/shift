@@ -157,7 +157,8 @@ class LogDialog(EditorDialog):
         self.database_log.setText(database_content)
         self.planning_log.setText(planning_content)
 
-    def load_log_content(self, path: str) -> str | None:
+    @staticmethod
+    def load_log_content(path: str) -> str | None:
         if exists(path):
             file = open(path, "r")
             return file.read()
