@@ -10,7 +10,7 @@ from PySide6.QtGui import QPainter
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QDialog, QWidget, QDialogButtonBox, QHBoxLayout, QMainWindow, QComboBox, QApplication, \
     QLineEdit, QTableView, QAbstractItemView, QHeaderView, QItemDelegate, QStyleOptionViewItem, QTextBrowser, \
-    QMessageBox
+    QMessageBox, QSpinBox
 
 from logic.config import properties
 from logic.table_models import SearchTableModel
@@ -83,9 +83,11 @@ class OptionsEditorDialog(EditorDialog):
     def __init__(self, parent: QMainWindow):
         super().__init__(parent=parent, ui_file_name="ui/optionsEditor.ui")
 
-        self.localeBox: QComboBox = self.widget.localeBox  # noqa
-        self.themeBox: QComboBox = self.widget.themeBox  # noqa
-        self.buttonBox: QDialogButtonBox = self.widget.buttonBox  # noqa
+        self.locale_box: QComboBox = self.widget.localeBox  # noqa
+        self.theme_box: QComboBox = self.widget.themeBox  # noqa
+        self.button_box: QDialogButtonBox = self.widget.buttonBox  # noqa
+
+        self.history_box: QSpinBox = self.widget.historyBox  # noqa
 
         self.configure_widgets()
 
@@ -95,15 +97,18 @@ class OptionsEditorDialog(EditorDialog):
     def configure_widgets(self):
         super(OptionsEditorDialog, self).configure_widgets()
 
-        self.localeBox.addItems(properties.locales)
-        self.localeBox.setCurrentIndex(properties.locale_index)
+        self.locale_box.addItems(properties.locales)
+        self.locale_box.setCurrentIndex(properties.locale_index)
 
-        self.themeBox.addItems(properties.get_themes())
-        self.themeBox.setCurrentIndex(properties.theme_index)
+        self.theme_box.addItems(properties.get_themes())
+        self.theme_box.setCurrentIndex(properties.theme_index)
+
+        self.history_box.setValue(properties.history_size)
 
     def commit(self):
         restart_required: bool = self.update_locale()
         self.update_theme()
+        self.update_history_size()
 
         properties.write_config_file()
         if restart_required:
@@ -114,13 +119,13 @@ class OptionsEditorDialog(EditorDialog):
         self.close()
 
     def update_locale(self) -> bool:
-        selected_index = self.localeBox.currentIndex()
+        selected_index = self.locale_box.currentIndex()
         restart_required: bool = selected_index != properties.locale_index
         properties.locale_index = selected_index
         return restart_required
 
     def update_theme(self):
-        selected_index = self.themeBox.currentIndex()
+        selected_index = self.theme_box.currentIndex()
         properties.theme_index = selected_index
         app = QApplication.instance()
         if selected_index == 0:
@@ -129,6 +134,9 @@ class OptionsEditorDialog(EditorDialog):
             app.setStyleSheet(qdarktheme.load_stylesheet("light"))
         else:
             app.setStyleSheet(None)
+
+    def update_history_size(self):
+        properties.history_size = self.history_box.value()
 
 
 class LogDialog(EditorDialog):

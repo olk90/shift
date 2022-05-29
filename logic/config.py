@@ -17,6 +17,8 @@ class Properties(QObject):
     locales = ["English", "Deutsch"]
     locale_index = 0
 
+    history_size = 12
+
     def get_themes(self) -> list:
         themes = [self.tr("dark"), self.tr("light")]
         return themes
@@ -25,6 +27,7 @@ class Properties(QObject):
         config_dict = {
             "theme": self.theme_index,
             "locale": self.locale_index,
+            "history_size": self.history_size,
             "database": self.database_path
         }
         config = json.dumps(config_dict, indent=4)
@@ -40,6 +43,7 @@ class Properties(QObject):
             config = json.load(file)
             properties.theme_index = get_theme_index(config)
             properties.locale_index = get_locale_index(config)
+            properties.history_size = get_history_size(config)
             properties.database_path = get_database(config)
         else:
             self.write_config_file()
@@ -57,18 +61,25 @@ def get_theme_index(config: dict) -> int:
     try:
         return config["theme"]
     except KeyError:
-        return 0
+        return properties.theme_index
 
 
 def get_locale_index(config: dict) -> int:
     try:
         return config["locale"]
     except KeyError:
-        return 0
+        return properties.locale_index
+
+
+def get_history_size(config: dict) -> int:
+    try:
+        return config["history_size"]
+    except KeyError:
+        return properties.history_size
 
 
 def get_database(config: dict) -> str:
     try:
         return config["database"]
     except KeyError:
-        return "shift.db"
+        return properties.database_path

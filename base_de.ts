@@ -235,6 +235,11 @@
         <translation>Theme</translation>
     </message>
     <message>
+        <location filename="ui/optionsEditor.ui" line="58"/>
+        <source>Keep Months in History</source>
+        <translation>Behalte Monate in Historie</translation>
+    </message>
+    <message>
         <location filename="ui/repeatingOffPeriodAddDialog.ui" line="32"/>
         <source>Add Repeating Off Period</source>
         <translation>Regelmäßige freie Tage einfügen</translation>
