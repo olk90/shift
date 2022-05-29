@@ -42,6 +42,18 @@ def init_database(remove_old: bool = False):
         sys.exit(1)
 
 
+def cleanup_database():
+    s = properties.open_session()
+    now = datetime.now()
+    off_periods = s.query(OffPeriod).filter(OffPeriod.start < now - timedelta(days=properties.history_size)).all()
+    for op in off_periods:
+        s.delete(op)
+    schedules = s.query(Schedule).filter(Schedule.date < now - timedelta(days=properties.history_size)).all()
+    for schedule in schedules:
+        s.delete(schedule)
+    s.commit()
+
+
 def configure_query_model(box: QComboBox, query: str):
     model = QSqlQueryModel(box)
     model.setQuery(query)

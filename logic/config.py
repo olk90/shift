@@ -17,7 +17,7 @@ class Properties(QObject):
     locales = ["English", "Deutsch"]
     locale_index = 0
 
-    history_size = 12
+    history_size = 360
 
     def get_themes(self) -> list:
         themes = [self.tr("dark"), self.tr("light")]

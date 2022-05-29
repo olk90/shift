@@ -236,8 +236,9 @@
     </message>
     <message>
         <location filename="ui/optionsEditor.ui" line="58"/>
-        <source>Keep Months in History</source>
-        <translation>Behalte Monate in Historie</translation>
+        <source>Keep Days in History</source>
+        <oldsource>Keep Months in History</oldsource>
+        <translation>Behalte Tage in Historie</translation>
     </message>
     <message>
         <location filename="ui/repeatingOffPeriodAddDialog.ui" line="32"/>
@@ -442,12 +443,12 @@
 <context>
     <name>Properties</name>
     <message>
-        <location filename="logic/config.py" line="21"/>
+        <location filename="logic/config.py" line="23"/>
         <source>dark</source>
         <translation>dunkel</translation>
     </message>
     <message>
-        <location filename="logic/config.py" line="22"/>
+        <location filename="logic/config.py" line="24"/>
         <source>light</source>
         <translation>hell</translation>
     </message>

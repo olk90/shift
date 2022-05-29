@@ -7,17 +7,11 @@ from PySide6.QtCore import QTranslator, QLocale
 from PySide6.QtWidgets import QApplication, QWidget
 
 from logic.config import properties
-from logic.database import init_database
+from logic.database import init_database, cleanup_database
 from views.mainView import MainWindow
 
-if __name__ == "__main__":
-    QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
 
-    properties.load_config_file()
-    init_database()
-
-    app = QApplication()
-
+def load_translations():
     translator = QTranslator(app)
     path = './translations'
     if properties.locale_index == 1:
@@ -25,13 +19,25 @@ if __name__ == "__main__":
         locale.setlocale(locale.LC_TIME, "de_DE.utf8")
         app.installTranslator(translator)
 
+
+def load_theme():
     if properties.theme_index == 0:
         app.setStyleSheet(qdarktheme.load_stylesheet())
     elif properties.theme_index == 1:
         app.setStyleSheet(qdarktheme.load_stylesheet("light"))
-    else:
-        print("Use system style sheet")
-        app.setStyleSheet(None)
+
+
+if __name__ == "__main__":
+    QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
+
+    properties.load_config_file()
+    init_database()
+
+    app = QApplication(sys.argv)
+
+    load_translations()
+    load_theme()
+    cleanup_database()
 
     form = QWidget(None)
     MainWindow(form)
