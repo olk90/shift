@@ -40,9 +40,13 @@ class EmployeeModel(SearchTableModel):
 
 
 class OffPeriodModel(SearchTableModel):
-    def __init__(self, search: str = ""):
+    def __init__(self, year: int, month: int, search: str = ""):
         super(OffPeriodModel, self).__init__(search)
-        query = off_period_query(self.search)
+
+        self.year: int = year
+        self.month: int = month
+
+        query = off_period_query(self.year, self.month, self.search)
         self.setQuery(query)
         self.setHeaderData(0, Qt.Horizontal, "ID")
         self.setHeaderData(1, Qt.Horizontal, self.tr("Start"))

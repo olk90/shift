@@ -168,7 +168,13 @@ class OffPeriodWidget(TableDialog):
     def __init__(self):
         super(OffPeriodWidget, self).__init__(table_ui_name="ui/offPeriodView.ui", configure_widgets=False)
         self.add_dialog = AddOffPeriodDialog(self)
-        self.setup_table(OffPeriodModel(), range(1, 4))
+
+        self.month_box: QComboBox = self.table_widget.monthBox  # noqa
+        self.year_box: QSpinBox = self.table_widget.yearBox  # noqa
+
+        year = self.year_box.value()
+        month = self.month_box.currentIndex() + 1
+        self.setup_table(OffPeriodModel(year, month), range(1, 4))
 
         self.repeating_button: QPushButton = self.table_widget.repeatingButton  # noqa
         self.add_repeating_dialog = AddRepeatingOffPeriodDialog(self)
@@ -182,7 +188,22 @@ class OffPeriodWidget(TableDialog):
 
     def configure_widgets(self):
         super(OffPeriodWidget, self).configure_widgets()
+        self.configure_month_box()
+        self.configure_year_box()
         self.repeating_button.clicked.connect(self.repeating_day)
+
+    def configure_month_box(self):
+        configure_month_box(self.month_box)
+        self.month_box.currentIndexChanged.connect(self.trigger_reload)
+
+    def configure_year_box(self):
+        configure_year_box(self.year_box)
+        self.year_box.valueChanged.connect(self.trigger_reload)
+
+    def trigger_reload(self):
+        month: int = self.month_box.currentIndex() + 1
+        year: int = self.year_box.value()
+        self.reload_table_contents(OffPeriodModel(year, month))
 
     def repeating_day(self):
         self.add_repeating_dialog.clear_fields()
@@ -193,7 +214,13 @@ class OffPeriodWidget(TableDialog):
 
     def configure_search(self):
         self.searchLine.textChanged.connect(
-            lambda x: self.reload_table_contents(OffPeriodModel(self.searchLine.text())))
+            lambda x: self.reload_table_contents(self.update_search_model()))
+
+    def update_search_model(self) -> OffPeriodModel:
+        year: int = self.year_box.value()
+        month: int = self.month_box.currentIndex() + 1
+        search: str = self.searchLine.text()
+        return OffPeriodModel(year, month, search)
 
     def get_selected_item(self):
         item_id = super(OffPeriodWidget, self).get_selected_item()

@@ -69,7 +69,9 @@ class MainWindow(QMainWindow):
             elif isinstance(current, EmployeeWidget):
                 current.reload_table_contents(EmployeeModel(search))
             elif isinstance(current, OffPeriodWidget):
-                current.reload_table_contents(OffPeriodModel(search))
+                year = current.year_box.value()
+                month = current.month_box.currentIndex() + 1
+                current.reload_table_contents(OffPeriodModel(year, month, search))
             elif isinstance(current, PlanningWidget):
                 year = current.year_box.value()
                 month = current.month_box.currentIndex() + 1

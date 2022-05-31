@@ -57,7 +57,7 @@ def employee_type_designation_query() -> str:
     return query
 
 
-def off_period_query(search: str) -> str:
+def off_period_query(year: int, month: int, search: str) -> str:
     query = """
     select
         p.id,
@@ -68,10 +68,19 @@ def off_period_query(search: str) -> str:
     inner join Employee e 
     on p.e_id = e.id
     where 
-        e.firstname like '%{search}%'
-        or e.lastname like '%{search}%'
-    order by e.lastname, e.firstname
-    """.format(search=search)
+        (strftime('%m', p.start) = '{month}' and strftime('%Y', p.start) = '{year}'
+        or strftime('%m', p.end) = '{month}' and strftime('%Y', p.end) = '{year}')
+    
+    """.format(year=year, month=str(month).zfill(2))
+    if len(search) > 0:
+        query += """
+            and (e.firstname like '%{search}%'
+            or e.lastname like '%{search}%')
+            
+        """.format(search=search)
+    query += """
+        order by e.lastname, e.firstname
+    """
     return query
 
 
