@@ -39,14 +39,20 @@ class AddOffPeriodDialog(EditorDialog):
 
     def configure_widgets(self):
         super(AddOffPeriodDialog, self).configure_widgets()
-        self.end_edit.selectionChanged.connect(self.update_date_selections)
-        self.start_edit.selectionChanged.connect(self.update_date_selections)
+        self.end_edit.selectionChanged.connect(self.update_start_date)
+        self.start_edit.selectionChanged.connect(self.update_end_date)
 
-    def update_date_selections(self):
-        end_date: QDate = self.end_edit.selectedDate()
-        self.start_edit.setMaximumDate(end_date)
+    def update_start_date(self):
         start_date: QDate = self.start_edit.selectedDate()
-        self.end_edit.setMinimumDate(start_date)
+        end_date: QDate = self.end_edit.selectedDate()
+        if end_date < start_date:
+            self.start_edit.setSelectedDate(end_date)
+
+    def update_end_date(self):
+        start_date: QDate = self.start_edit.selectedDate()
+        end_date: QDate = self.end_edit.selectedDate()
+        if start_date > end_date:
+            self.end_edit.setSelectedDate(start_date)
 
     def commit(self):
         model: QSqlTableModel = self.employee_box.model()
@@ -78,6 +84,7 @@ class AddRepeatingOffPeriodDialog(EditorDialog):
 
     def __init__(self, parent: QWidget):
         super().__init__(parent=parent, ui_file_name="ui/repeatingOffPeriodAddDialog.ui")
+        self.parent = parent
 
         self.layout = QHBoxLayout(self)
         self.layout.addWidget(self.widget)
@@ -95,20 +102,25 @@ class AddRepeatingOffPeriodDialog(EditorDialog):
 
     def configure_widgets(self):
         super(AddRepeatingOffPeriodDialog, self).configure_widgets()
-        configure_month_box(self.month_box)
-        configure_year_box(self.year_box)
+        self.reload_month_and_year()
         configure_weekday_box(self.weekday_box)
 
     def clear_fields(self):
         query: str = employee_fullname_query()
         self.employee_box.model().setQuery(query)
         self.employee_box.setCurrentIndex(0)  # noqa
+        self.reload_month_and_year()
+
+    def reload_month_and_year(self):
+        initial_date = datetime.date(year=self.parent.year, month=self.parent.month, day=1)
+        configure_month_box(self.month_box, initial_date)
+        configure_year_box(self.year_box, initial_date)
 
     def commit(self):
         model: QSqlTableModel = self.employee_box.model()
         index: int = self.employee_box.currentIndex()
         e_id = model.index(index, 1).data()
-        month: int = self.month_box.currentIndex()
+        month: int = self.month_box.currentIndex() + 1
         year: int = self.year_box.value()
         weekday: int = self.weekday_box.currentIndex()
         day_range = get_day_range(month, year)
@@ -120,7 +132,7 @@ class AddRepeatingOffPeriodDialog(EditorDialog):
                 off_period = OffPeriod(start=date, end=date, e_id=e_id)
                 s.add(off_period)
         s.commit()
-        self.parent.reload_table_contents(model=OffPeriodModel())
+        self.parent.reload_table_contents(model=OffPeriodModel(year, month))
 
 
 class OffPeriodEditorWidget(EditorWidget):
@@ -173,6 +185,7 @@ class OffPeriodWidget(TableDialog):
 
         self.month_box: QComboBox = self.table_widget.monthBox  # noqa
         self.year_box: QSpinBox = self.table_widget.yearBox  # noqa
+        self.configure_widgets()
 
         self.year = self.year_box.value()
         self.month = self.month_box.currentIndex() + 1
@@ -182,19 +195,18 @@ class OffPeriodWidget(TableDialog):
 
         self.repeating_button: QPushButton = self.table_widget.repeatingButton  # noqa
         self.add_repeating_dialog = AddRepeatingOffPeriodDialog(self)
+        self.repeating_button.clicked.connect(self.repeating_day)
 
         tableview: QTableView = self.get_table()
         delegate: OffPeriodItemDelegate = OffPeriodItemDelegate()
         tableview.setItemDelegate(delegate)
 
-        self.configure_widgets()
         self.configure_search()
 
     def configure_widgets(self):
         super(OffPeriodWidget, self).configure_widgets()
         self.configure_month_box()
         self.configure_year_box()
-        self.repeating_button.clicked.connect(self.repeating_day)
 
     def configure_month_box(self):
         configure_month_box(self.month_box)
@@ -242,13 +254,13 @@ class OffPeriodWidget(TableDialog):
             item: OffPeriod = self.get_selected_item()
             delete_item(item)
             search = self.searchLine.text()
-            self.reload_table_contents(model=OffPeriodModel(search))
+            self.reload_table_contents(model=OffPeriodModel(self.year, self.month, search))
 
     def commit_changes(self):
         value_dict: dict = self.editor.get_values()
         update_off_period(value_dict)
         search = self.searchLine.text()
-        self.reload_table_contents(model=OffPeriodModel(search))
+        self.reload_table_contents(model=OffPeriodModel(self.year, self.month, search))
 
     def revert_changes(self):
         period: OffPeriod = find_off_period_by_id(self.editor.item_id)

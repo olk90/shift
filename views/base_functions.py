@@ -16,10 +16,9 @@ def load_ui_file(filename):
     return ui_file
 
 
-def configure_month_box(month_box: QComboBox):
+def configure_month_box(month_box: QComboBox, date=datetime.date.today()):
     items = MonthList().months
     month_box.addItems(items)
-    date = datetime.date.today()
     month: int = date.month - 1  # indices start at 0!
     month_box.setCurrentIndex(month)
 
@@ -32,8 +31,7 @@ def configure_weekday_box(weekday_box: QComboBox):
     weekday_box.setCurrentIndex(day)
 
 
-def configure_year_box(year_box: QSpinBox):
-    date = datetime.date.today()
+def configure_year_box(year_box: QSpinBox, date=datetime.date.today()):
     year: int = date.year
     year_box.setMinimum(year)
     year_box.setValue(year)
