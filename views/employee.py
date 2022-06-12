@@ -27,7 +27,7 @@ class AddEmployeeDialog(EditorDialog):
 
         self.layout = QHBoxLayout(self)
         self.layout.addWidget(self.widget)
-        self.buttonBox: QDialogButtonBox = self.widget.buttonBox  # noqa
+        self.button_box: QDialogButtonBox = self.widget.buttonBox  # noqa
 
         self.configure_widgets()
 

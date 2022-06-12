@@ -33,13 +33,13 @@ class EditorDialog(QDialog):
         self.widget = loader.load(ui_file)
         ui_file.close()
 
-        self.buttonBox: QDialogButtonBox = self.widget.buttonBox  # noqa
+        self.button_box: QDialogButtonBox = self.widget.buttonBox  # noqa
 
     def configure_widgets(self):
-        self.buttonBox.accepted.connect(self.commit)
-        self.buttonBox.rejected.connect(self.close)
-        self.buttonBox.button(QDialogButtonBox.Ok).setText(self.tr("OK"))
-        self.buttonBox.button(QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
+        self.button_box.accepted.connect(self.commit)
+        self.button_box.rejected.connect(self.close)
+        self.button_box.button(QDialogButtonBox.Ok).setText(self.tr("OK"))
+        self.button_box.button(QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
 
     def commit(self):
         """Must be implemented by subclass"""
