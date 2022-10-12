@@ -4,7 +4,7 @@ from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt
 from PySide6.QtGui import QPainter
 from PySide6.QtSql import QSqlQueryModel
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialogButtonBox, QTableView, QMessageBox, QStyleOptionViewItem, \
-    QStyleOptionButton
+    QStyleOptionButton, QLabel, QComboBox, QSpinBox, QLineEdit, QCheckBox
 
 from logic.database import configure_query_model, persist_item, delete_item, update_employee, find_by_id
 from logic.table_models import EmployeeModel
@@ -19,26 +19,38 @@ class AddEmployeeDialog(EditorDialog):
     def __init__(self, parent: QWidget):
         super().__init__(parent=parent, ui_file_name="ui/employeeEditor.ui")
 
-        self.widget.editorTitle.setText(self.tr("Add Employee"))  # noqa
-        self.type_box = self.widget.typeCombobox  # noqa
+        self.get_widget(QLabel, "editorTitle").setText(self.tr("Add Employee"))  # noqa
+
+        self.firstname_edit: QLineEdit = self.get_widget(QLineEdit, "firstNameEdit")
+        self.lastname_edit: QLineEdit = self.get_widget(QLineEdit, "lastNameEdit")
+        self.firstname_edit.textChanged.connect(self.validate)
+        self.lastname_edit.textChanged.connect(self.validate)
+
+        self.append_validation_fields(self.firstname_edit, self.lastname_edit)
+
+        self.reference_spinner: QSpinBox = self.get_widget(QSpinBox, "referenceSpinner")
+        self.score_spinner: QSpinBox = self.get_widget(QSpinBox, "scoreSpinner")
+        self.type_combobox: QComboBox = self.get_widget(QComboBox, "typeCombobox")
+        self.nightshift_edit: QCheckBox = self.get_widget(QCheckBox, "nightShiftsEdit")
+
         query: str = employee_type_designation_query()
-        configure_query_model(self.type_box, query)
+        configure_query_model(self.type_combobox, query)
 
         self.layout = QHBoxLayout(self)
         self.layout.addWidget(self.widget)
-        self.button_box: QDialogButtonBox = self.widget.buttonBox  # noqa
+        self.button_box: QDialogButtonBox = self.get_widget(QDialogButtonBox, "buttonBox")  # noqa
 
         self.configure_widgets()
 
     def commit(self):
-        first_name: str = self.widget.firstNameEdit.text()  # noqa
-        last_name: str = self.widget.lastNameEdit.text()  # noqa
-        reference: int = self.widget.referenceSpinner.value()  # noqa
-        score: int = self.widget.scoreSpinner.value()  # noqa
-        night_shifts: bool = self.widget.nightShiftsEdit.isChecked()  # noqa
+        first_name: str = self.firstname_edit.text()
+        last_name: str = self.lastname_edit.text()
+        reference: int = self.reference_spinner.value()
+        score: int = self.score_spinner.value()
+        night_shifts: bool = self.nightshift_edit.isChecked()
 
-        model: QSqlQueryModel = self.type_box.model()
-        index: int = self.type_box.currentIndex()
+        model: QSqlQueryModel = self.type_combobox.model()
+        index: int = self.type_combobox.currentIndex()
         et_id = model.index(index, 1).data()
         employee = Employee(firstname=first_name, lastname=last_name, reference_value=reference,
                             night_shifts=night_shifts, e_type_id=et_id, score=score)
@@ -46,55 +58,57 @@ class AddEmployeeDialog(EditorDialog):
         self.parent.reload_table_contents(model=EmployeeModel())
         self.close()
 
-    def clear_fields(self):
-        query: str = employee_type_designation_query()
-        self.type_box.model().setQuery(query)
-        self.widget.firstNameEdit.setText("")  # noqa
-        self.widget.lastNameEdit.setText("")  # noqa
-        self.widget.referenceSpinner.setValue(0)  # noqa
-        self.widget.scoreSpinner.setValue(0)  # noqa
-        self.widget.typeCombobox.setCurrentIndex(0)  # noqa
-
 
 class EmployeeEditorWidget(EditorWidget):
 
     def __init__(self, item_id=None):
         super().__init__(ui_file_name="ui/employeeEditor.ui", item_id=item_id)
 
-        self.firstNameEdit = self.widget.firstNameEdit  # noqa
-        self.lastNameEdit = self.widget.lastNameEdit  # noqa
-        self.typeCombobox = self.widget.typeCombobox  # noqa
-        self.referenceSpinner = self.widget.referenceSpinner  # noqa
-        self.nightShiftsEdit = self.widget.nightShiftsEdit  # noqa
-        self.scoreSpinner = self.widget.scoreSpinner  # noqa
+        self.firstname_edit = self.widget.firstNameEdit  # noqa
+        self.lastname_edit = self.widget.lastNameEdit  # noqa
+        self.type_combobox = self.widget.typeCombobox  # noqa
+        self.reference_spinner = self.widget.referenceSpinner  # noqa
+        self.nightshift_edit = self.widget.nightShiftsEdit  # noqa
+        self.score_spinner = self.widget.scoreSpinner  # noqa
 
         query: str = employee_type_designation_query()
-        configure_query_model(self.typeCombobox, query)
+        configure_query_model(self.type_combobox, query)
 
     def fill_fields(self, employee: Employee):
         self.item_id = employee.id
-        self.firstNameEdit.setText(employee.firstname)
-        self.lastNameEdit.setText(employee.lastname)
-        self.referenceSpinner.setValue(employee.reference_value)
-        self.nightShiftsEdit.setChecked(employee.night_shifts)
-        self.scoreSpinner.setValue(employee.score)
+        self.firstname_edit.setText(employee.firstname)
+        self.lastname_edit.setText(employee.lastname)
+        self.reference_spinner.setValue(employee.reference_value)
+        self.nightshift_edit.setChecked(employee.night_shifts)
+        self.score_spinner.setValue(employee.score)
 
         query: str = employee_type_designation_query()
-        configure_query_model(self.typeCombobox, query)
+        configure_query_model(self.type_combobox, query)
         et_id: int = employee.e_type_id
         et: EmployeeType = find_by_id(et_id, EmployeeType)
-        self.typeCombobox.setCurrentText(et.designation)
+        self.type_combobox.setCurrentText(et.designation)
 
     def get_values(self) -> dict:
         return {
             "item_id": self.item_id,
-            "firstname": self.firstNameEdit.text(),
-            "lastname": self.lastNameEdit.text(),
-            "reference_value": self.referenceSpinner.value(),
-            "score": self.scoreSpinner.value(),
-            "night_shifts": self.nightShiftsEdit.isChecked(),
-            "e_type": self.typeCombobox.currentText()
+            "firstname": self.firstname_edit.text(),
+            "lastname": self.lastname_edit.text(),
+            "reference_value": self.reference_spinner.value(),
+            "score": self.score_spinner.value(),
+            "night_shifts": self.nightshift_edit.isChecked(),
+            "e_type": self.type_combobox.currentText()
         }
+
+    def clear_fields(self):
+        query: str = employee_type_designation_query()
+        self.type_combobox.model().setQuery(query)
+        self.type_combobox.setCurrentIndex(0)
+
+        self.firstname_edit.setText("")
+        self.lastname_edit.setText("")
+        self.reference_spinner.setValue(0)
+        self.score_spinner.setValue(0)
+        self.toggle_buttons(False)
 
 
 class EmployeeWidget(TableDialog):
@@ -131,6 +145,7 @@ class EmployeeWidget(TableDialog):
             delete_item(employee)
             search = self.searchLine.text()
             self.reload_table_contents(model=EmployeeModel(search))
+            self.editor.clear_fields()
 
     def commit_changes(self):
         value_dict: dict = self.editor.get_values()

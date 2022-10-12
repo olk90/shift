@@ -27,13 +27,10 @@ class EditorDialog(QDialog):
         self.setMinimumWidth(450)
         self.setWindowTitle(" ")
 
-        ui_file = load_ui_file(ui_file_name)
+        self.widget = EditorWidget(ui_file_name)
+        self.validation_fields = []
 
-        loader = QUiLoader()
-        self.widget = loader.load(ui_file)
-        ui_file.close()
-
-        self.button_box: QDialogButtonBox = self.widget.buttonBox  # noqa
+        self.button_box: QDialogButtonBox = self.get_widget(QDialogButtonBox, "buttonBox")  # noqa
 
     def configure_widgets(self):
         self.button_box.accepted.connect(self.commit)
@@ -41,8 +38,27 @@ class EditorDialog(QDialog):
         self.button_box.button(QDialogButtonBox.Ok).setText(self.tr("OK"))
         self.button_box.button(QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
 
+    def validate(self):
+        enable = True
+        for field in self.validation_fields:
+            if isinstance(field, QLineEdit):
+                if not field.text():
+                    enable = False
+                    break
+        self.widget.toggle_buttons(enable)
+
+    def append_validation_fields(self, *fields):
+        for field in fields:
+            self.validation_fields.append(field)
+
     def commit(self):
         """Must be implemented by subclass"""
+
+    def get_widget(self, widget_type: type, name: str):
+        return self.widget.widget.findChild(widget_type, name)
+
+    def clear_fields(self):
+        self.widget.clear_fields()
 
 
 class EditorWidget(QWidget):
@@ -63,9 +79,12 @@ class EditorWidget(QWidget):
         self.configure_buttons()
 
     def configure_buttons(self):
-        self.buttonBox.button(QDialogButtonBox.Ok).setText(self.tr("OK"))
-        self.buttonBox.button(QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
-        self.toggle_buttons(False)
+        ok_button = self.buttonBox.button(QDialogButtonBox.Ok)
+        cancel_button = self.buttonBox.button(QDialogButtonBox.Cancel)
+        if ok_button and cancel_button:
+            ok_button.setText(self.tr("OK"))
+            cancel_button.setText(self.tr("Cancel"))
+            self.toggle_buttons(False)
 
     def toggle_buttons(self, activate: bool):
         self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(activate)
@@ -77,17 +96,20 @@ class EditorWidget(QWidget):
     def fill_fields(self, item):
         """Must be implemented by subclass"""
 
+    def clear_fields(self):
+        """Must be implemented by subclass"""
+
 
 class OptionsEditorDialog(EditorDialog):
 
     def __init__(self, parent: QMainWindow):
         super().__init__(parent=parent, ui_file_name="ui/optionsEditor.ui")
 
-        self.locale_box: QComboBox = self.widget.localeBox  # noqa
-        self.theme_box: QComboBox = self.widget.themeBox  # noqa
-        self.button_box: QDialogButtonBox = self.widget.buttonBox  # noqa
+        self.locale_box: QComboBox = self.get_widget(QComboBox, "localeBox")  # noqa
+        self.theme_box: QComboBox = self.get_widget(QComboBox, "themeBox")  # noqa
+        self.button_box: QDialogButtonBox = self.get_widget(QDialogButtonBox, "buttonBox")  # noqa
 
-        self.history_box: QSpinBox = self.widget.historyBox  # noqa
+        self.history_box: QSpinBox = self.get_widget(QSpinBox, "historyBox")  # noqa
 
         self.configure_widgets()
 
@@ -104,6 +126,7 @@ class OptionsEditorDialog(EditorDialog):
         self.theme_box.setCurrentIndex(properties.theme_index)
 
         self.history_box.setValue(properties.history_size)
+        self.widget.toggle_buttons(True)
 
     def commit(self):
         restart_required: bool = self.update_locale()
@@ -143,8 +166,8 @@ class LogDialog(EditorDialog):
     def __init__(self, parent: QMainWindow):
         super(LogDialog, self).__init__(parent=parent, ui_file_name="ui/logDialog.ui")
 
-        self.database_log: QTextBrowser = self.widget.databaseLog  # noqa
-        self.planning_log: QTextBrowser = self.widget.planningLog  # noqa
+        self.database_log: QTextBrowser = self.get_widget(QTextBrowser, "databaseLog")  # noqa
+        self.planning_log: QTextBrowser = self.get_widget(QTextBrowser, "planningLog")  # noqa
 
         self.load_log_files()
         self.resize(1200, 800)

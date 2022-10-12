@@ -22,15 +22,15 @@ class AddOffPeriodDialog(EditorDialog):
     def __init__(self, parent: QWidget):
         super().__init__(parent=parent, ui_file_name="ui/offPeriodAddDialog.ui")
 
-        self.employee_box: QComboBox = self.widget.employeeBox
+        self.employee_box: QComboBox = self.get_widget(QComboBox, "employeeBox")
         query: str = employee_fullname_query()
         configure_query_model(self.employee_box, query)
 
         self.layout = QHBoxLayout(self)
         self.layout.addWidget(self.widget)
-        self.button_box: QDialogButtonBox = self.widget.buttonBox
-        self.start_edit: QCalendarWidget = self.widget.startEdit
-        self.end_edit: QCalendarWidget = self.widget.endEdit
+        self.button_box: QDialogButtonBox = self.get_widget(QDialogButtonBox, "buttonBox")
+        self.start_edit: QCalendarWidget = self.get_widget(QCalendarWidget, "startEdit")
+        self.end_edit: QCalendarWidget = self.get_widget(QCalendarWidget, "endEdit")
 
         self.parent = parent
 
@@ -89,13 +89,13 @@ class AddRepeatingOffPeriodDialog(EditorDialog):
         self.layout.addWidget(self.widget)
         self.buttonBox: QDialogButtonBox = self.widget.buttonBox  # noqa
 
-        self.employee_box: QComboBox = self.widget.employeeBox  # noqa
+        self.employee_box: QComboBox = self.get_widget(QComboBox, "employeeBox")  # noqa
         query: str = employee_fullname_query()
         configure_query_model(self.employee_box, query)
 
-        self.month_box: QComboBox = self.widget.monthBox  # noqa
-        self.year_box: QSpinBox = self.widget.yearBox  # noqa
-        self.weekday_box: QComboBox = self.widget.weekdayBox  # noqa
+        self.month_box: QComboBox = self.get_widget(QComboBox, "monthBox")  # noqa
+        self.year_box: QSpinBox = self.get_widget(QSpinBox, "yearBox")  # noqa
+        self.weekday_box: QComboBox = self.get_widget(QComboBox, "weekdayBox")  # noqa
 
         self.configure_widgets()
 
@@ -254,6 +254,7 @@ class OffPeriodWidget(TableDialog):
             delete_item(item)
             search = self.searchLine.text()
             self.reload_table_contents(model=OffPeriodModel(self.year, self.month, search))
+            self.editor.toggle_buttons(False)
 
     def commit_changes(self):
         value_dict: dict = self.editor.get_values()

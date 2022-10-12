@@ -1,4 +1,5 @@
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialogButtonBox, QTableView, QMessageBox
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialogButtonBox, QTableView, QMessageBox, QLabel, QComboBox, \
+    QLineEdit
 
 from logic.database import persist_item, delete_item, update_employee_type, find_by_id
 from logic.table_models import EmployeeTypeModel
@@ -12,26 +13,28 @@ class AddEmployeeTypeDialog(EditorDialog):
     def __init__(self, parent: QWidget):
         super().__init__(parent=parent, ui_file_name="ui/employeeTypeEditor.ui")
 
-        self.widget.editorTitle.setText(self.tr("Add Employee Type"))  # noqa
-        self.widget.rotationBox.addItems(RotationPeriod.periods)  # noqa
+        self.get_widget(QLabel, "editorTitle").setText(self.tr("Add Employee Type"))  # noqa
+
+        self.designation_edit: QLineEdit = self.get_widget(QLineEdit, "designationEdit")
+        self.designation_edit.textChanged.connect(self.validate)
+        self.append_validation_fields(self.designation_edit)
+
+        self.rotation_box = self.get_widget(QComboBox, "rotationBox")
+        self.rotation_box.addItems(RotationPeriod.periods)  # noqa
 
         self.layout = QHBoxLayout(self)
         self.layout.addWidget(self.widget)
-        self.button_box: QDialogButtonBox = self.widget.buttonBox  # noqa
+        self.button_box: QDialogButtonBox = self.get_widget(QDialogButtonBox, "buttonBox")  # noqa
 
         self.configure_widgets()
 
     def commit(self):
-        designation: str = self.widget.designationEdit.text()  # noqa
-        rotation_period: str = self.widget.rotationBox.currentText()  # noqa
+        designation: str = self.designation_edit.text()  # noqa
+        rotation_period: str = self.rotation_box.currentText()  # noqa
         employee_type = EmployeeType(designation=designation, rotation_period=rotation_period)
         persist_item(employee_type)
         self.parent.reload_table_contents(model=EmployeeTypeModel())
         self.close()
-
-    def clear_fields(self):
-        self.widget.designationEdit.setText("")  # noqa
-        self.widget.rotationBox.setCurrentIndex(0)  # noqa
 
 
 class EmployeeTypeEditorWidget(EditorWidget):
@@ -39,22 +42,27 @@ class EmployeeTypeEditorWidget(EditorWidget):
     def __init__(self, item_id=None):
         super().__init__(ui_file_name="ui/employeeTypeEditor.ui", item_id=item_id)
 
-        self.designationEdit = self.widget.designationEdit  # noqa
-        self.rotationBox = self.widget.rotationBox  # noqa
+        self.designation_edit = self.widget.designationEdit  # noqa
+        self.rotation_box = self.widget.rotationBox  # noqa
 
-        self.rotationBox.addItems(RotationPeriod.periods)
+        self.rotation_box.addItems(RotationPeriod.periods)
 
     def fill_fields(self, employee_type: EmployeeType):
         self.item_id = employee_type.id
-        self.designationEdit.setText(employee_type.designation)
-        self.rotationBox.setCurrentIndex(RotationPeriod.periods.index(employee_type.rotation_period))  # noqa
+        self.designation_edit.setText(employee_type.designation)
+        self.rotation_box.setCurrentIndex(RotationPeriod.periods.index(employee_type.rotation_period))
 
     def get_values(self) -> dict:
         return {
             "item_id": self.item_id,
-            "designation": self.designationEdit.text(),
-            "rotation_period": self.rotationBox.currentText()
+            "designation": self.designation_edit.text(),
+            "rotation_period": self.rotation_box.currentText()
         }
+
+    def clear_fields(self):
+        self.designation_edit.setText("")
+        self.rotation_box.setCurrentIndex(0)
+        self.toggle_buttons(False)
 
 
 class EmployeeTypeWidget(TableDialog):
@@ -92,6 +100,7 @@ class EmployeeTypeWidget(TableDialog):
             delete_item(item)
             search = self.searchLine.text()
             self.reload_table_contents(model=EmployeeTypeModel(search))
+            self.editor.clear_fields()
 
     def commit_changes(self):
         value_dict: dict = self.editor.get_values()
