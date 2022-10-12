@@ -7,8 +7,7 @@ from PySide6.QtWidgets import QComboBox, QToolButton, QTextEdit, QSpinBox, QPush
     QFileDialog, QStyleOptionViewItem
 
 from logic.config import properties
-from logic.database import configure_query_model, find_employee_by_id, find_schedule_by_id, \
-    schedule_exists, shift_plan_active, update_schedule
+from logic.database import configure_query_model, schedule_exists, shift_plan_active, update_schedule, find_by_id
 from logic.model import Schedule, Employee
 from logic.queries import day_shift_replacement_query, night_shift_replacement_query, \
     employee_id_by_name_and_score_query
@@ -77,14 +76,14 @@ class ScheduleEditorWidget(EditorWidget):
         self.date_display.setText(str(schedule.date.strftime("%a, %d %b %Y")))
 
         self.d_id: int = schedule.day_id
-        day_shift: Employee = find_employee_by_id(self.d_id)
+        day_shift: Employee = find_by_id(self.d_id, Employee)
         if day_shift is not None:
             self.day_box.setCurrentText(day_shift.get_full_name_and_score())
         else:
             self.day_box.setCurrentIndex(-1)
 
         self.n_id: int = schedule.night_id
-        night_shift: Employee = find_employee_by_id(self.n_id)
+        night_shift: Employee = find_by_id(self.n_id, Employee)
         if night_shift is not None:
             self.night_box.setCurrentText(night_shift.get_full_name_and_score())
         else:
@@ -150,7 +149,7 @@ class PlanningWidget(TableDialog):
 
     def get_selected_item(self):
         item_id = super(PlanningWidget, self).get_selected_item()
-        item = find_schedule_by_id(item_id)
+        item = find_by_id(item_id, Schedule)
         return item
 
     def update_search_model(self) -> ScheduleModel:
@@ -225,7 +224,7 @@ class PlanningWidget(TableDialog):
         self.reload_table_contents(ScheduleModel(year, month, search))
 
     def revert_changes(self):
-        schedule: Schedule = find_schedule_by_id(self.editor.item_id)
+        schedule: Schedule = find_by_id(self.editor.item_id, Schedule)
         self.editor.fill_fields(schedule)
 
     def export_schedule(self):

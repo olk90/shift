@@ -76,18 +76,11 @@ def delete_item(item: Base):
     logger.info("Removed entry from database: %s", item)
 
 
-def find_employee_type_by_id(e_id: int) -> EmployeeType:
+def find_by_id(identifier: int, entities):
     s = properties.open_session()
-    e_type: EmployeeType = s.query(EmployeeType).filter_by(id=e_id).first()
+    result = s.query(entities).filter_by(id=identifier).first()
     s.close()
-    return e_type
-
-
-def find_employee_by_id(e_id: int) -> Employee:
-    s = properties.open_session()
-    employee: Employee = s.query(Employee).filter_by(id=e_id).first()
-    s.close()
-    return employee
+    return result
 
 
 def update_employee_type(value_dict: dict):
@@ -109,13 +102,6 @@ def update_employee(value_dict: dict):
     e_type = s.query(EmployeeType).filter_by(designation=value_dict["e_type"]).one()
     employee.e_type = e_type
     s.commit()
-
-
-def find_off_period_by_id(p_id: int) -> OffPeriod:
-    s = properties.open_session()
-    period: OffPeriod = s.query(OffPeriod).filter_by(id=p_id).first()
-    s.close()
-    return period
 
 
 def update_off_period(value_dict: dict):
@@ -159,13 +145,6 @@ def update_score(s, current_id: int, new_id: int, s_date: date):
                 new_night.score += off_period_bonus
             else:
                 new_night.score += score_offset
-
-
-def find_schedule_by_id(s_id: int) -> Schedule:
-    s = properties.open_session()
-    schedule: Schedule = s.query(Schedule).filter_by(id=s_id).first()
-    s.close()
-    return schedule
 
 
 def find_surrounding_schedules(schedule: Schedule) -> dict:

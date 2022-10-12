@@ -6,8 +6,7 @@ from PySide6.QtSql import QSqlQueryModel
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialogButtonBox, QTableView, QMessageBox, QStyleOptionViewItem, \
     QStyleOptionButton
 
-from logic.database import configure_query_model, persist_item, find_employee_type_by_id, \
-    find_employee_by_id, delete_item, update_employee
+from logic.database import configure_query_model, persist_item, delete_item, update_employee, find_by_id
 from logic.table_models import EmployeeModel
 from logic.model import Employee, EmployeeType
 from logic.queries import employee_type_designation_query
@@ -83,7 +82,7 @@ class EmployeeEditorWidget(EditorWidget):
         query: str = employee_type_designation_query()
         configure_query_model(self.typeCombobox, query)
         et_id: int = employee.e_type_id
-        et: EmployeeType = find_employee_type_by_id(et_id)
+        et: EmployeeType = find_by_id(et_id, EmployeeType)
         self.typeCombobox.setCurrentText(et.designation)
 
     def get_values(self) -> dict:
@@ -117,7 +116,7 @@ class EmployeeWidget(TableDialog):
 
     def get_selected_item(self):
         item_id = super().get_selected_item()
-        employee = find_employee_by_id(item_id)
+        employee = find_by_id(item_id, Employee)
         return employee
 
     def add_item(self):
@@ -140,7 +139,7 @@ class EmployeeWidget(TableDialog):
         self.reload_table_contents(model=EmployeeModel(search))
 
     def revert_changes(self):
-        employee: Employee = find_employee_by_id(self.editor.item_id)
+        employee: Employee = find_by_id(self.editor.item_id, Employee)
         self.editor.fill_fields(employee)
 
 

@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialogButtonBox, QTableView, QMessageBox
 
-from logic.database import persist_item, find_employee_type_by_id, delete_item, update_employee_type
+from logic.database import persist_item, delete_item, update_employee_type, find_by_id
 from logic.table_models import EmployeeTypeModel
 from logic.model import RotationPeriod, EmployeeType
 from views.confirmationDialogs import ConfirmDeletionDialog
@@ -77,7 +77,7 @@ class EmployeeTypeWidget(TableDialog):
 
     def get_selected_item(self):
         item_id = super(EmployeeTypeWidget, self).get_selected_item()
-        item = find_employee_type_by_id(item_id)
+        item = find_by_id(item_id, EmployeeType)
         return item
 
     def add_item(self):
@@ -100,5 +100,5 @@ class EmployeeTypeWidget(TableDialog):
         self.reload_table_contents(model=EmployeeTypeModel(search))
 
     def revert_changes(self):
-        e_type: EmployeeType = find_employee_type_by_id(self.editor.item_id)
+        e_type: EmployeeType = find_by_id(self.editor.item_id, EmployeeType)
         self.editor.fill_fields(e_type)

@@ -8,8 +8,7 @@ from PySide6.QtWidgets import QWidget, QComboBox, QHBoxLayout, QDialogButtonBox,
     QMessageBox, QStyleOptionViewItem, QCalendarWidget
 
 from logic.config import properties
-from logic.database import configure_query_model, persist_item, find_employee_by_id, \
-    find_off_period_by_id, delete_item, update_off_period
+from logic.database import configure_query_model, persist_item, delete_item, update_off_period, find_by_id
 from logic.model import OffPeriod, Employee
 from logic.queries import employee_fullname_query
 from logic.table_models import OffPeriodModel
@@ -159,7 +158,7 @@ class OffPeriodEditorWidget(EditorWidget):
 
     def fill_fields(self, period: OffPeriod):
         self.item_id = period.id
-        employee: Employee = find_employee_by_id(period.e_id)
+        employee: Employee = find_by_id(period.e_id, Employee)
         self.name_label.setText(employee.get_full_name())
 
         start = period.start
@@ -240,7 +239,7 @@ class OffPeriodWidget(TableDialog):
 
     def get_selected_item(self):
         item_id = super(OffPeriodWidget, self).get_selected_item()
-        item = find_off_period_by_id(item_id)
+        item = find_by_id(item_id, OffPeriod)
         return item
 
     def add_item(self):
@@ -263,7 +262,7 @@ class OffPeriodWidget(TableDialog):
         self.reload_table_contents(model=OffPeriodModel(self.year, self.month, search))
 
     def revert_changes(self):
-        period: OffPeriod = find_off_period_by_id(self.editor.item_id)
+        period: OffPeriod = find_by_id(self.editor.item_id, OffPeriod)
         self.editor.fill_fields(period)
 
 
