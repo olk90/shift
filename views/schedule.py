@@ -26,26 +26,26 @@ class ScheduleEditorWidget(EditorWidget):
         self.d_id: int = 0
         self.n_id: int = 0
 
-        self.date_display: QLabel = self.widget.dateDisplay  # noqa
+        self.date_display: QLabel = self.widget.dateDisplay
 
-        self.day_box: QComboBox = self.widget.dayBox  # noqa
+        self.day_box: QComboBox = self.widget.dayBox
         self.day_box.currentTextChanged.connect(lambda x: self.update_selection_id(self.day_box))
         day_query: str = day_shift_replacement_query()
         configure_query_model(self.day_box, day_query)
         self.day_box.setCurrentIndex(-1)
 
-        self.night_box: QComboBox = self.widget.nightBox  # noqa
+        self.night_box: QComboBox = self.widget.nightBox
         self.night_box.currentTextChanged.connect(lambda x: self.update_selection_id(self.night_box))
         night_query: str = night_shift_replacement_query()
         configure_query_model(self.night_box, night_query)
         self.night_box.setCurrentIndex(-1)
 
-        self.remove_day_button: QToolButton = self.widget.removeDayButton  # noqa
-        self.remove_night_button: QToolButton = self.widget.removeNightButton  # noqa
+        self.remove_day_button: QToolButton = self.widget.removeDayButton
+        self.remove_night_button: QToolButton = self.widget.removeNightButton
         self.remove_day_button.clicked.connect(lambda x: self.remove_shift(self.day_box))
         self.remove_night_button.clicked.connect(lambda x: self.remove_shift(self.night_box))
 
-        self.comment_edit: QTextEdit = self.widget.commentEdit  # noqa
+        self.comment_edit: QTextEdit = self.widget.commentEdit
 
     def update_selection_id(self, box: QComboBox):
         s = properties.open_session()
@@ -107,13 +107,13 @@ class PlanningWidget(TableDialog):
     def __init__(self):
         super(PlanningWidget, self).__init__(table_ui_name="ui/planningView.ui", configure_widgets=False)
 
-        self.month_box: QComboBox = self.table_widget.monthBox  # noqa
-        self.year_box: QSpinBox = self.table_widget.yearBox  # noqa
-        self.create_button: QPushButton = self.table_widget.createButton  # noqa
-        self.planning_button: QPushButton = self.table_widget.planningButton  # noqa
-        self.activate_button: QPushButton = self.table_widget.activateButton  # noqa
-        self.clear_button: QPushButton = self.table_widget.clearButton  # noqa
-        self.export_button: QPushButton = self.table_widget.exportButton  # noqa
+        self.month_box: QComboBox = self.table_widget.monthBox
+        self.year_box: QSpinBox = self.table_widget.yearBox
+        self.create_button: QPushButton = self.table_widget.createButton
+        self.planning_button: QPushButton = self.table_widget.planningButton
+        self.activate_button: QPushButton = self.table_widget.activateButton
+        self.clear_button: QPushButton = self.table_widget.clearButton
+        self.export_button: QPushButton = self.table_widget.exportButton
 
         self.configure_widgets()
         self.configure_search()

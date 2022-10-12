@@ -19,7 +19,7 @@ class AddEmployeeDialog(EditorDialog):
     def __init__(self, parent: QWidget):
         super().__init__(parent=parent, ui_file_name="ui/employeeEditor.ui")
 
-        self.get_widget(QLabel, "editorTitle").setText(self.tr("Add Employee"))  # noqa
+        self.get_widget(QLabel, "editorTitle").setText(self.tr("Add Employee"))
 
         self.firstname_edit: QLineEdit = self.get_widget(QLineEdit, "firstNameEdit")
         self.lastname_edit: QLineEdit = self.get_widget(QLineEdit, "lastNameEdit")
@@ -40,7 +40,7 @@ class AddEmployeeDialog(EditorDialog):
 
         self.layout = QHBoxLayout(self)
         self.layout.addWidget(self.widget)
-        self.button_box: QDialogButtonBox = self.get_widget(QDialogButtonBox, "buttonBox")  # noqa
+        self.button_box: QDialogButtonBox = self.get_widget(QDialogButtonBox, "buttonBox")
 
         self.configure_widgets()
 
@@ -66,18 +66,18 @@ class EmployeeEditorWidget(EditorWidget):
     def __init__(self, item_id=None):
         super().__init__(ui_file_name="ui/employeeEditor.ui", item_id=item_id)
 
-        self.firstname_edit = self.widget.firstNameEdit  # noqa
-        self.lastname_edit = self.widget.lastNameEdit  # noqa
+        self.firstname_edit = self.widget.firstNameEdit
+        self.lastname_edit = self.widget.lastNameEdit
 
         self.firstname_edit.textChanged.connect(self.validate)
         self.lastname_edit.textChanged.connect(self.validate)
 
         self.append_validation_fields(self.firstname_edit, self.lastname_edit)
 
-        self.type_combobox = self.widget.typeCombobox  # noqa
-        self.reference_spinner = self.widget.referenceSpinner  # noqa
-        self.nightshift_edit = self.widget.nightShiftsEdit  # noqa
-        self.score_spinner = self.widget.scoreSpinner  # noqa
+        self.type_combobox = self.widget.typeCombobox
+        self.reference_spinner = self.widget.referenceSpinner
+        self.nightshift_edit = self.widget.nightShiftsEdit
+        self.score_spinner = self.widget.scoreSpinner
 
         query: str = employee_type_designation_query()
         configure_query_model(self.type_combobox, query)

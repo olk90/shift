@@ -29,7 +29,7 @@ class EditorDialog(QDialog):
 
         self.widget = EditorWidget(ui_file_name)
 
-        self.button_box: QDialogButtonBox = self.get_widget(QDialogButtonBox, "buttonBox")  # noqa
+        self.button_box: QDialogButtonBox = self.get_widget(QDialogButtonBox, "buttonBox")
 
     def configure_widgets(self):
         self.button_box.accepted.connect(self.commit)
@@ -64,7 +64,7 @@ class EditorWidget(QWidget):
         self.layout = QHBoxLayout(self)
         self.layout.addWidget(self.widget)
 
-        self.buttonBox: QDialogButtonBox = self.widget.buttonBox  # noqa
+        self.buttonBox: QDialogButtonBox = self.widget.buttonBox
         self.configure_buttons()
 
     def configure_buttons(self):
@@ -107,11 +107,11 @@ class OptionsEditorDialog(EditorDialog):
     def __init__(self, parent: QMainWindow):
         super().__init__(parent=parent, ui_file_name="ui/optionsEditor.ui")
 
-        self.locale_box: QComboBox = self.get_widget(QComboBox, "localeBox")  # noqa
-        self.theme_box: QComboBox = self.get_widget(QComboBox, "themeBox")  # noqa
-        self.button_box: QDialogButtonBox = self.get_widget(QDialogButtonBox, "buttonBox")  # noqa
+        self.locale_box: QComboBox = self.get_widget(QComboBox, "localeBox")
+        self.theme_box: QComboBox = self.get_widget(QComboBox, "themeBox")
+        self.button_box: QDialogButtonBox = self.get_widget(QDialogButtonBox, "buttonBox")
 
-        self.history_box: QSpinBox = self.get_widget(QSpinBox, "historyBox")  # noqa
+        self.history_box: QSpinBox = self.get_widget(QSpinBox, "historyBox")
 
         self.configure_widgets()
 
@@ -168,8 +168,8 @@ class LogDialog(EditorDialog):
     def __init__(self, parent: QMainWindow):
         super(LogDialog, self).__init__(parent=parent, ui_file_name="ui/logDialog.ui")
 
-        self.database_log: QTextBrowser = self.get_widget(QTextBrowser, "databaseLog")  # noqa
-        self.planning_log: QTextBrowser = self.get_widget(QTextBrowser, "planningLog")  # noqa
+        self.database_log: QTextBrowser = self.get_widget(QTextBrowser, "databaseLog")
+        self.planning_log: QTextBrowser = self.get_widget(QTextBrowser, "planningLog")
 
         self.load_log_files()
         self.resize(1200, 800)
@@ -200,7 +200,7 @@ class TableDialog(QWidget):
         table_file = load_ui_file(table_ui_name)
         self.table_widget = loader.load(table_file)
         table_file.close()
-        self.searchLine: QLineEdit = self.table_widget.searchLine  # noqa
+        self.searchLine: QLineEdit = self.table_widget.searchLine
 
         self.editor: EditorWidget = self.get_editor_widget()
 
@@ -214,7 +214,7 @@ class TableDialog(QWidget):
             self.configure_search()
 
     def get_table(self) -> QTableView:
-        return self.table_widget.table  # noqa -> loaded from ui file
+        return self.table_widget.table -> loaded from ui file
 
     def setup_table(self, model: SearchTableModel, header_range: range):
         tableview: QTableView = self.get_table()
@@ -241,8 +241,8 @@ class TableDialog(QWidget):
         self.editor.toggle_buttons(True)
 
     def configure_widgets(self):
-        self.table_widget.addButton.clicked.connect(self.add_item)  # noqa -> button loaded from ui file
-        self.table_widget.deleteButton.clicked.connect(self.delete_item)  # noqa -> button loaded from ui file
+        self.table_widget.addButton.clicked.connect(self.add_item) -> button loaded from ui file
+        self.table_widget.deleteButton.clicked.connect(self.delete_item) -> button loaded from ui file
         self.editor.buttonBox.accepted.connect(self.commit_changes)
         self.editor.buttonBox.rejected.connect(self.revert_changes)
 

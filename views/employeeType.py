@@ -13,7 +13,7 @@ class AddEmployeeTypeDialog(EditorDialog):
     def __init__(self, parent: QWidget):
         super().__init__(parent=parent, ui_file_name="ui/employeeTypeEditor.ui")
 
-        self.get_widget(QLabel, "editorTitle").setText(self.tr("Add Employee Type"))  # noqa
+        self.get_widget(QLabel, "editorTitle").setText(self.tr("Add Employee Type"))
 
         self.designation_edit: QLineEdit = self.get_widget(QLineEdit, "designationEdit")
         self.designation_edit.textChanged.connect(self.widget.validate)
@@ -21,17 +21,17 @@ class AddEmployeeTypeDialog(EditorDialog):
         self.widget.append_validation_fields(self.designation_edit)
 
         self.rotation_box = self.get_widget(QComboBox, "rotationBox")
-        self.rotation_box.addItems(RotationPeriod.periods)  # noqa
+        self.rotation_box.addItems(RotationPeriod.periods)
 
         self.layout = QHBoxLayout(self)
         self.layout.addWidget(self.widget)
-        self.button_box: QDialogButtonBox = self.get_widget(QDialogButtonBox, "buttonBox")  # noqa
+        self.button_box: QDialogButtonBox = self.get_widget(QDialogButtonBox, "buttonBox")
 
         self.configure_widgets()
 
     def commit(self):
-        designation: str = self.designation_edit.text()  # noqa
-        rotation_period: str = self.rotation_box.currentText()  # noqa
+        designation: str = self.designation_edit.text()
+        rotation_period: str = self.rotation_box.currentText()
         employee_type = EmployeeType(designation=designation, rotation_period=rotation_period)
         persist_item(employee_type)
         self.parent.reload_table_contents(model=EmployeeTypeModel())
@@ -43,12 +43,12 @@ class EmployeeTypeEditorWidget(EditorWidget):
     def __init__(self, item_id=None):
         super().__init__(ui_file_name="ui/employeeTypeEditor.ui", item_id=item_id)
 
-        self.designation_edit = self.widget.designationEdit  # noqa
+        self.designation_edit = self.widget.designationEdit
 
         self.designation_edit.textChanged.connect(self.validate)
         self.append_validation_fields(self.designation_edit)
 
-        self.rotation_box = self.widget.rotationBox  # noqa
+        self.rotation_box = self.widget.rotationBox
 
         self.rotation_box.addItems(RotationPeriod.periods)
 
