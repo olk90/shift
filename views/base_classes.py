@@ -28,7 +28,6 @@ class EditorDialog(QDialog):
         self.setWindowTitle(" ")
 
         self.widget = EditorWidget(ui_file_name)
-        self.validation_fields = []
 
         self.button_box: QDialogButtonBox = self.get_widget(QDialogButtonBox, "buttonBox")  # noqa
 
@@ -37,19 +36,6 @@ class EditorDialog(QDialog):
         self.button_box.rejected.connect(self.close)
         self.button_box.button(QDialogButtonBox.Ok).setText(self.tr("OK"))
         self.button_box.button(QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
-
-    def validate(self):
-        enable = True
-        for field in self.validation_fields:
-            if isinstance(field, QLineEdit):
-                if not field.text():
-                    enable = False
-                    break
-        self.widget.toggle_buttons(enable)
-
-    def append_validation_fields(self, *fields):
-        for field in fields:
-            self.validation_fields.append(field)
 
     def commit(self):
         """Must be implemented by subclass"""
@@ -65,6 +51,9 @@ class EditorWidget(QWidget):
 
     def __init__(self, ui_file_name: str, item_id: int = None):
         super(EditorWidget, self).__init__()
+
+        self.validation_fields = []
+
         self.item_id = item_id
         ui_file = load_ui_file(ui_file_name)
 
@@ -89,6 +78,19 @@ class EditorWidget(QWidget):
     def toggle_buttons(self, activate: bool):
         self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(activate)
         self.buttonBox.button(QDialogButtonBox.Cancel).setEnabled(activate)
+
+    def validate(self):
+        enable = True
+        for field in self.validation_fields:
+            if isinstance(field, QLineEdit):
+                if not field.text():
+                    enable = False
+                    break
+        self.toggle_buttons(enable)
+
+    def append_validation_fields(self, *fields):
+        for field in fields:
+            self.validation_fields.append(field)
 
     def get_values(self) -> dict:
         """Must be implemented by subclass"""

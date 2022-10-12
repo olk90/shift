@@ -16,8 +16,9 @@ class AddEmployeeTypeDialog(EditorDialog):
         self.get_widget(QLabel, "editorTitle").setText(self.tr("Add Employee Type"))  # noqa
 
         self.designation_edit: QLineEdit = self.get_widget(QLineEdit, "designationEdit")
-        self.designation_edit.textChanged.connect(self.validate)
-        self.append_validation_fields(self.designation_edit)
+        self.designation_edit.textChanged.connect(self.widget.validate)
+
+        self.widget.append_validation_fields(self.designation_edit)
 
         self.rotation_box = self.get_widget(QComboBox, "rotationBox")
         self.rotation_box.addItems(RotationPeriod.periods)  # noqa
@@ -43,6 +44,10 @@ class EmployeeTypeEditorWidget(EditorWidget):
         super().__init__(ui_file_name="ui/employeeTypeEditor.ui", item_id=item_id)
 
         self.designation_edit = self.widget.designationEdit  # noqa
+
+        self.designation_edit.textChanged.connect(self.validate)
+        self.append_validation_fields(self.designation_edit)
+
         self.rotation_box = self.widget.rotationBox  # noqa
 
         self.rotation_box.addItems(RotationPeriod.periods)

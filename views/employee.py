@@ -23,10 +23,12 @@ class AddEmployeeDialog(EditorDialog):
 
         self.firstname_edit: QLineEdit = self.get_widget(QLineEdit, "firstNameEdit")
         self.lastname_edit: QLineEdit = self.get_widget(QLineEdit, "lastNameEdit")
-        self.firstname_edit.textChanged.connect(self.validate)
-        self.lastname_edit.textChanged.connect(self.validate)
 
-        self.append_validation_fields(self.firstname_edit, self.lastname_edit)
+        self.firstname_edit.textChanged.connect(self.widget.validate)
+        self.lastname_edit.textChanged.connect(self.widget.validate)
+
+        self.widget.append_validation_fields(self.firstname_edit)
+        self.widget.append_validation_fields(self.lastname_edit)
 
         self.reference_spinner: QSpinBox = self.get_widget(QSpinBox, "referenceSpinner")
         self.score_spinner: QSpinBox = self.get_widget(QSpinBox, "scoreSpinner")
@@ -66,6 +68,12 @@ class EmployeeEditorWidget(EditorWidget):
 
         self.firstname_edit = self.widget.firstNameEdit  # noqa
         self.lastname_edit = self.widget.lastNameEdit  # noqa
+
+        self.firstname_edit.textChanged.connect(self.validate)
+        self.lastname_edit.textChanged.connect(self.validate)
+
+        self.append_validation_fields(self.firstname_edit, self.lastname_edit)
+
         self.type_combobox = self.widget.typeCombobox  # noqa
         self.reference_spinner = self.widget.referenceSpinner  # noqa
         self.nightshift_edit = self.widget.nightShiftsEdit  # noqa
