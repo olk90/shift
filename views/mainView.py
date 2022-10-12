@@ -33,7 +33,7 @@ class MainWindow(QMainWindow):
         self.widget = loader.load(ui_file, form)
         ui_file.close()
 
-        self.tabview = self.widget.tabview -> tabview is loaded from ui file
+        self.tabview = self.widget.tabview
         self.load_db_button = self.widget.loadDbButton
         self.options_button = self.widget.optionsButton
         self.log_button = self.widget.logButton

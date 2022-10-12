@@ -51,7 +51,7 @@ class Employee(Base):
         return "{} {} ({})".format(self.firstname, self.lastname, self.score)
 
     def has_off_period(self, day: date) -> bool:
-        periods = self.off_periods -> backref from OffPeriod
+        periods = self.off_periods
         for p in periods:
             if p.start <= day <= p.end:
                 return True

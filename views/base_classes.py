@@ -214,7 +214,7 @@ class TableDialog(QWidget):
             self.configure_search()
 
     def get_table(self) -> QTableView:
-        return self.table_widget.table -> loaded from ui file
+        return self.table_widget.table
 
     def setup_table(self, model: SearchTableModel, header_range: range):
         tableview: QTableView = self.get_table()
@@ -241,8 +241,8 @@ class TableDialog(QWidget):
         self.editor.toggle_buttons(True)
 
     def configure_widgets(self):
-        self.table_widget.addButton.clicked.connect(self.add_item) -> button loaded from ui file
-        self.table_widget.deleteButton.clicked.connect(self.delete_item) -> button loaded from ui file
+        self.table_widget.addButton.clicked.connect(self.add_item)
+        self.table_widget.deleteButton.clicked.connect(self.delete_item)
         self.editor.buttonBox.accepted.connect(self.commit_changes)
         self.editor.buttonBox.rejected.connect(self.revert_changes)
 
