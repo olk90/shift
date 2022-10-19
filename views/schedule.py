@@ -4,7 +4,7 @@ from typing import Union
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt
 from PySide6.QtGui import QPainter, QColor, QBrush, QPen
 from PySide6.QtWidgets import QComboBox, QToolButton, QTextEdit, QSpinBox, QPushButton, QTableView, QMessageBox, \
-    QFileDialog, QStyleOptionViewItem
+    QFileDialog, QStyleOptionViewItem, QLabel
 
 from logic.config import properties
 from logic.database import configure_query_model, schedule_exists, shift_plan_active, update_schedule, find_by_id
