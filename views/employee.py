@@ -27,8 +27,7 @@ class AddEmployeeDialog(EditorDialog):
         self.firstname_edit.textChanged.connect(self.widget.validate)
         self.lastname_edit.textChanged.connect(self.widget.validate)
 
-        self.widget.append_validation_fields(self.firstname_edit)
-        self.widget.append_validation_fields(self.lastname_edit)
+        self.widget.append_validation_fields(self.firstname_edit, self.lastname_edit)
 
         self.reference_spinner: QSpinBox = self.get_widget(QSpinBox, "referenceSpinner")
         self.score_spinner: QSpinBox = self.get_widget(QSpinBox, "scoreSpinner")
@@ -116,7 +115,7 @@ class EmployeeEditorWidget(EditorWidget):
         self.lastname_edit.setText("")
         self.reference_spinner.setValue(0)
         self.score_spinner.setValue(0)
-        self.toggle_buttons(False)
+        self.toggle_buttons(False, False)
 
 
 class EmployeeWidget(TableDialog):

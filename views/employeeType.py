@@ -67,7 +67,7 @@ class EmployeeTypeEditorWidget(EditorWidget):
     def clear_fields(self):
         self.designation_edit.setText("")
         self.rotation_box.setCurrentIndex(0)
-        self.toggle_buttons(False)
+        self.toggle_buttons(False, False)
 
 
 class EmployeeTypeWidget(TableDialog):
