@@ -9,8 +9,7 @@ from PySide6.QtWidgets import QComboBox, QToolButton, QTextEdit, QSpinBox, QPush
 from logic.config import properties
 from logic.database import configure_query_model, schedule_exists, shift_plan_active, update_schedule, find_by_id
 from logic.model import Schedule, Employee
-from logic.queries import day_shift_replacement_query, night_shift_replacement_query, \
-    employee_id_by_name_and_score_query
+from logic.queries import day_shift_replacement_query, night_shift_replacement_query
 from logic.schedule.planning import create_schedule, fill_schedule, toggle_schedule_state, clear_schedule
 from logic.table_models import ScheduleModel
 from views.base_classes import EditorWidget, TableDialog, CenteredItemDelegate
@@ -29,16 +28,16 @@ class ScheduleEditorWidget(EditorWidget):
         self.date_display: QLabel = self.widget.dateDisplay
 
         self.day_box: QComboBox = self.widget.dayBox
-        self.day_box.currentTextChanged.connect(lambda x: self.update_selection_id(self.day_box))
         day_query: str = day_shift_replacement_query()
         configure_query_model(self.day_box, day_query)
         self.day_box.setCurrentIndex(-1)
+        self.day_box.currentIndexChanged.connect(lambda x: self.update_selection_id(self.day_box))
 
         self.night_box: QComboBox = self.widget.nightBox
-        self.night_box.currentTextChanged.connect(lambda x: self.update_selection_id(self.night_box))
         night_query: str = night_shift_replacement_query()
         configure_query_model(self.night_box, night_query)
         self.night_box.setCurrentIndex(-1)
+        self.night_box.currentIndexChanged.connect(lambda x: self.update_selection_id(self.night_box))
 
         self.remove_day_button: QToolButton = self.widget.removeDayButton
         self.remove_night_button: QToolButton = self.widget.removeNightButton
@@ -48,15 +47,13 @@ class ScheduleEditorWidget(EditorWidget):
         self.comment_edit: QTextEdit = self.widget.commentEdit
 
     def update_selection_id(self, box: QComboBox):
-        s = properties.open_session()
-        name_and_score: str = box.currentText()
-        query = employee_id_by_name_and_score_query(name_and_score)
-        result = s.execute(query)
-        for e_id in result:
-            if box == self.day_box:
-                self.d_id = e_id[0]
-            elif box == self.night_box:
-                self.n_id = e_id[0]
+        index = box.currentIndex()
+        selected_id: int = box.model().index(index, 1).data()
+
+        if box == self.day_box:
+            self.d_id = selected_id
+        elif box == self.night_box:
+            self.n_id = selected_id
 
     def remove_shift(self, box: QComboBox):
         box.setCurrentIndex(-1)
@@ -77,14 +74,14 @@ class ScheduleEditorWidget(EditorWidget):
 
         self.d_id: int = schedule.day_id
         day_shift: Employee = find_by_id(self.d_id, Employee)
-        if day_shift is not None:
+        if day_shift:
             self.day_box.setCurrentText(day_shift.get_full_name_and_score())
         else:
             self.day_box.setCurrentIndex(-1)
 
         self.n_id: int = schedule.night_id
         night_shift: Employee = find_by_id(self.n_id, Employee)
-        if night_shift is not None:
+        if night_shift:
             self.night_box.setCurrentText(night_shift.get_full_name_and_score())
         else:
             self.night_box.setCurrentIndex(-1)
