@@ -3,6 +3,7 @@ pyinstaller -n "shift"^
   --add-data "ui/employeeTypeEditor.ui;./ui"^
   --add-data "ui/employeeTypeView.ui;./ui"^
   --add-data "ui/employeeView.ui;./ui"^
+  --add-data "ui/encryptEditor.ui;./ui"^
   --add-data "ui/main.ui;./ui"^
   --add-data "ui/offPeriodAddDialog.ui;./ui"^
   --add-data "ui/offPeriodEditor.ui;./ui"^

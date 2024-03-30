@@ -13,6 +13,7 @@ pyside6 = "==6.3.2"
 shiboken6 = "==6.3.2"
 sqlalchemy = "==1.4.41"
 xlsxwriter = "==3.0.3"
+cryptography = "==42.0.5"
 
 [dev-packages]
 

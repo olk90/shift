@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QFileDialog
 from logic.config import properties
 from logic.database import init_database
 from logic.table_models import EmployeeTypeModel, EmployeeModel, OffPeriodModel, ScheduleModel
-from views.base_classes import OptionsEditorDialog, TableDialog, LogDialog
+from views.base_classes import OptionsEditorDialog, TableDialog, LogDialog, EncryptEditorDialog
 from views.base_functions import load_ui_file
 from views.employee import EmployeeWidget
 from views.employeeType import EmployeeTypeWidget
@@ -23,6 +23,7 @@ class MainWindow(QMainWindow):
         form.setWindowIcon(QIcon("icon.svg"))
 
         self.layout = QVBoxLayout(form)
+        self.encrypt_dialog = EncryptEditorDialog(self)
         self.options_dialog = OptionsEditorDialog(self)
         self.log_dialog = LogDialog(self)
 
@@ -35,6 +36,7 @@ class MainWindow(QMainWindow):
 
         self.tabview = self.widget.tabview
         self.load_db_button = self.widget.loadDbButton
+        self.encrypt_button = self.widget.encryptButton
         self.options_button = self.widget.optionsButton
         self.log_button = self.widget.logButton
 
@@ -79,6 +81,7 @@ class MainWindow(QMainWindow):
 
     def configure_buttons(self):
         self.load_db_button.clicked.connect(self.load_database)
+        self.encrypt_button.clicked.connect(self.open_encrypt)
         self.options_button.clicked.connect(self.open_options)
         self.log_button.clicked.connect(self.open_logs)
 
@@ -97,6 +100,9 @@ class MainWindow(QMainWindow):
 
     def open_options(self):
         self.options_dialog.exec_()
+
+    def open_encrypt(self):
+        self.encrypt_dialog.exec_()
 
     def open_logs(self):
         self.log_dialog.load_log_files()

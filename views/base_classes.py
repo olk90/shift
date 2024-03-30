@@ -5,14 +5,15 @@ from typing import Union
 
 import qdarktheme
 from PySide6.QtCore import QItemSelectionModel, QModelIndex, \
-    QPersistentModelIndex, Qt
+    QPersistentModelIndex, Qt, QSize
 from PySide6.QtGui import QPainter
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QDialog, QWidget, QDialogButtonBox, QHBoxLayout, QMainWindow, QComboBox, QApplication, \
     QLineEdit, QTableView, QAbstractItemView, QHeaderView, QItemDelegate, QStyleOptionViewItem, QTextBrowser, \
-    QMessageBox, QSpinBox
+    QMessageBox, QSpinBox, QPlainTextEdit, QPushButton
 
 from logic.config import properties
+from logic.crypt import generate_key
 from logic.table_models import SearchTableModel
 from views.base_functions import load_ui_file
 from views.confirmationDialogs import ConfirmRestartDialog
@@ -35,7 +36,9 @@ class EditorDialog(QDialog):
         self.button_box.accepted.connect(self.commit)
         self.button_box.rejected.connect(self.close)
         self.button_box.button(QDialogButtonBox.Ok).setText(self.tr("OK"))
+        self.button_box.button(QDialogButtonBox.Ok).setFixedSize(150, 36)
         self.button_box.button(QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
+        self.button_box.button(QDialogButtonBox.Cancel).setFixedSize(150, 36)
 
     def commit(self):
         """Must be implemented by subclass"""
@@ -100,6 +103,35 @@ class EditorWidget(QWidget):
 
     def clear_fields(self):
         """Must be implemented by subclass"""
+
+
+class EncryptEditorDialog(EditorDialog):
+
+    def __init__(self, parent: QMainWindow):
+        super().__init__(parent=parent, ui_file_name="ui/encryptEditor.ui")
+
+        self.key_edit: QPlainTextEdit = self.get_widget(QPlainTextEdit, "keyEdit")
+        self.generate_button: QPushButton = self.get_widget(QPushButton, "generateButton")
+
+        self.configure_widgets()
+
+        self.layout = QHBoxLayout(self)
+        self.layout.addWidget(self.widget)
+
+    def configure_widgets(self):
+        super(EncryptEditorDialog, self).configure_widgets()
+
+        self.generate_button.clicked.connect(self.generate_key)
+        self.widget.toggle_buttons(True)
+
+    def generate_key(self):
+        key = generate_key()
+        self.key_edit.setPlainText(key)
+
+    def commit(self):
+        key = self.key_edit.toPlainText()
+        properties.encryption_key = key
+        self.close()
 
 
 class OptionsEditorDialog(EditorDialog):

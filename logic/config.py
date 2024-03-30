@@ -18,6 +18,7 @@ class Properties(QObject):
     locale_index = 0
 
     history_size = 360
+    encryption_key = None
 
     def get_themes(self) -> list:
         themes = [self.tr("dark"), self.tr("light")]
