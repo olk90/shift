@@ -2,7 +2,7 @@ import datetime as dt
 
 import logic.schedule.filter_rules as fr
 from logic.config import properties
-from logic.database import find_candidates, find_days_off, count_shifts
+from logic.database import find_all_off, find_days_off, count_shifts
 from logic.model import Schedule
 from logic.queries import schedule_id_query
 from logic.schedule import logger
@@ -25,7 +25,7 @@ def fill_schedule(month: int, year: int):
     logger.info("Fill open shifts of %d/%d", month, year)
     day_range = get_day_range(month, year)
 
-    candidates: list = find_candidates()
+    candidates: list = find_all_off()
     c_dict = init_candidate_dict(month, year, candidates)
     weekends = calculate_weekends(year, month)
     for day in day_range:

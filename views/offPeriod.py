@@ -188,7 +188,7 @@ class OffPeriodWidget(TableDialog):
 
         self.year = self.year_box.value()
         self.month = self.month_box.currentIndex() + 1
-        self.setup_table(OffPeriodModel(self.year, self.month), range(1, 4))
+        self.setup_table(OffPeriodModel(self.year, self.month))
 
         self.add_dialog = AddOffPeriodDialog(self)
 

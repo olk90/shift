@@ -117,7 +117,7 @@ class PlanningWidget(TableDialog):
 
         year = self.year_box.value()
         month = self.month_box.currentIndex() + 1
-        self.setup_table(ScheduleModel(year, month), range(1, 5))
+        self.setup_table(ScheduleModel(year, month))
 
         tableview: QTableView = self.get_table()
         delegate: ScheduleItemDelegate = ScheduleItemDelegate()

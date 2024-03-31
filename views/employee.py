@@ -1,17 +1,19 @@
 from typing import Union
 
-from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt
+from PySide6.QtCore import QModelIndex, QPersistentModelIndex, Qt, QAbstractItemModel
 from PySide6.QtGui import QPainter
 from PySide6.QtSql import QSqlQueryModel
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QDialogButtonBox, QTableView, QMessageBox, QStyleOptionViewItem, \
     QStyleOptionButton, QLabel, QComboBox, QSpinBox, QLineEdit, QCheckBox
 
-from logic.database import configure_query_model, persist_item, delete_item, update_employee, find_by_id
-from logic.table_models import EmployeeModel
+from logic.config import properties
+from logic.crypt import decrypt_string
+from logic.database import configure_query_model, persist_item, delete_item, update_employee, find_by_id, find_all_off
 from logic.model import Employee, EmployeeType
 from logic.queries import employee_type_designation_query
-from views.confirmationDialogs import ConfirmDeletionDialog
+from logic.table_models import EmployeeModel
 from views.base_classes import EditorDialog, EditorWidget, TableDialog, CenteredItemDelegate
+from views.confirmationDialogs import ConfirmDeletionDialog
 
 
 class AddEmployeeDialog(EditorDialog):
@@ -123,11 +125,14 @@ class EmployeeWidget(TableDialog):
     def __init__(self):
         super(EmployeeWidget, self).__init__(table_ui_name="ui/employeeView.ui")
         self.add_dialog = AddEmployeeDialog(self)
-        self.setup_table(EmployeeModel(), range(1, 7))
+        self.setup_table(EmployeeModel())
 
-        tableview: QTableView = self.get_table()
-        delegate: EmployeeItemDelegate = EmployeeItemDelegate()
-        tableview.setItemDelegate(delegate)
+        self.tableview: QTableView = self.get_table()
+        delegate: EmployeeItemDelegate = EmployeeItemDelegate(self)
+        self.tableview.setItemDelegate(delegate)
+
+    def setup_table(self, model: EmployeeModel):
+        super().setup_table(model)
 
     def get_editor_widget(self) -> EditorWidget:
         return EmployeeEditorWidget()
@@ -167,13 +172,31 @@ class EmployeeWidget(TableDialog):
 
 class EmployeeItemDelegate(CenteredItemDelegate):
 
-    def __init__(self):
+    def __init__(self, parent: QWidget):
         super(EmployeeItemDelegate, self).__init__()
+        self.editor = parent
+
+    def setEditorData(self, editor: QWidget, index: QModelIndex):
+        model = index.model()
+        data = model.data(index, Qt.EditRole)
+        key = properties.encryption_key
+        if key is not None:
+            dec = decrypt_string(key, data)
+            editor.setText(dec)
+
+    def setModelData(self, editor: QWidget, model: QAbstractItemModel, index: QModelIndex):
+        value = editor.text()
+        key = properties.encryption_key
+        if key is not None:
+            dec = decrypt_string(key, value)
+            model.setData(index, dec, Qt.EditRole)
 
     def paint(self, painter: QPainter, option: QStyleOptionViewItem, index: Union[QModelIndex, QPersistentModelIndex]):
+        model = index.model()
+        model_index = model.index(index.row(), index.column())
+        data = model_index.data()
+
         if index.column() == 4:
-            model = index.model()
-            data = model.index(index.row(), index.column()).data()
             opt: QStyleOptionButton = QStyleOptionButton()
             opt.rect = option.rect
             if data:

@@ -184,11 +184,11 @@ def shift_plan_active(year: int, month: int) -> bool:
     return schedule is not None and schedule.activated
 
 
-def find_candidates() -> list:
+def find_all_off(entities) -> list:
     s = properties.open_session()
-    employees: list = s.query(Employee).all()
+    result: list = s.query(entities).all()
     s.close()
-    return employees
+    return result
 
 
 def find_days_off(month: int, year: int, e_id: int) -> list:

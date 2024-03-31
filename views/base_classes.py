@@ -13,7 +13,7 @@ from PySide6.QtWidgets import QDialog, QWidget, QDialogButtonBox, QHBoxLayout, Q
     QMessageBox, QSpinBox, QPlainTextEdit, QPushButton
 
 from logic.config import properties
-from logic.crypt import generate_key
+from logic.crypt import generate_key, encrypt_employees
 from logic.table_models import SearchTableModel
 from views.base_functions import load_ui_file
 from views.confirmationDialogs import ConfirmRestartDialog
@@ -112,6 +112,7 @@ class EncryptEditorDialog(EditorDialog):
 
         self.key_edit: QPlainTextEdit = self.get_widget(QPlainTextEdit, "keyEdit")
         self.generate_button: QPushButton = self.get_widget(QPushButton, "generateButton")
+        self.encrypt_button: QPushButton = self.get_widget(QPushButton, "encryptButton")
 
         self.configure_widgets()
 
@@ -122,11 +123,21 @@ class EncryptEditorDialog(EditorDialog):
         super(EncryptEditorDialog, self).configure_widgets()
 
         self.generate_button.clicked.connect(self.generate_key)
+        self.encrypt_button.clicked.connect(self.encrypt_database)
         self.widget.toggle_buttons(True)
 
     def generate_key(self):
         key = generate_key()
         self.key_edit.setPlainText(key)
+
+    def encrypt_database(self):
+        key = properties.encryption_key
+        if key is not None:
+            encrypt_employees(key)
+        else:
+            key = self.key_edit.toPlainText()
+            if key is not None:
+                encrypt_employees(key)
 
     def commit(self):
         key = self.key_edit.toPlainText()
@@ -248,7 +259,7 @@ class TableDialog(QWidget):
     def get_table(self) -> QTableView:
         return self.table_widget.table
 
-    def setup_table(self, model: SearchTableModel, header_range: range):
+    def setup_table(self, model: SearchTableModel):
         tableview: QTableView = self.get_table()
         tableview.setModel(model)
         tableview.setSelectionBehavior(QTableView.SelectRows)
@@ -259,6 +270,7 @@ class TableDialog(QWidget):
         tableview.setColumnHidden(0, True)
 
         header = tableview.horizontalHeader()
+        header_range = range(1, model.col_count)
         for i in header_range:
             header.setSectionResizeMode(i, QHeaderView.Stretch)
 

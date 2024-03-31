@@ -75,7 +75,7 @@ class EmployeeTypeWidget(TableDialog):
     def __init__(self):
         super(EmployeeTypeWidget, self).__init__(table_ui_name="ui/employeeTypeView.ui")
         self.add_dialog = AddEmployeeTypeDialog(self)
-        self.setup_table(EmployeeTypeModel(), range(1, 3))
+        self.setup_table(EmployeeTypeModel())
 
         tableview: QTableView = self.get_table()
         delegate: CenteredItemDelegate = CenteredItemDelegate()
