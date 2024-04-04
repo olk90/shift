@@ -4,7 +4,7 @@
 <context>
     <name>AddEmployeeDialog</name>
     <message>
-        <location filename="views/employee.py" line="22"/>
+        <location filename="views/employee.py" line="24"/>
         <source>Add Employee</source>
         <translation>Mitarbeiter hinzufügen</translation>
     </message>
@@ -83,32 +83,32 @@
 <context>
     <name>EmployeeModel</name>
     <message>
-        <location filename="logic/table_models.py" line="34"/>
+        <location filename="logic/table_models.py" line="105"/>
         <source>First Name</source>
         <translation>Vorname</translation>
     </message>
     <message>
-        <location filename="logic/table_models.py" line="35"/>
+        <location filename="logic/table_models.py" line="107"/>
         <source>Last Name</source>
         <translation>Nachname</translation>
     </message>
     <message>
-        <location filename="logic/table_models.py" line="36"/>
+        <location filename="logic/table_models.py" line="109"/>
         <source>Reference Value</source>
         <translation>Referenzwert</translation>
     </message>
     <message>
-        <location filename="logic/table_models.py" line="37"/>
+        <location filename="logic/table_models.py" line="111"/>
         <source>Night Shifts</source>
         <translation>Nachtschichten</translation>
     </message>
     <message>
-        <location filename="logic/table_models.py" line="38"/>
+        <location filename="logic/table_models.py" line="113"/>
         <source>Score</source>
         <translation>Punkte</translation>
     </message>
     <message>
-        <location filename="logic/table_models.py" line="39"/>
+        <location filename="logic/table_models.py" line="115"/>
         <source>Type</source>
         <translation>Typ</translation>
     </message>
@@ -116,12 +116,12 @@
 <context>
     <name>EmployeeTypeModel</name>
     <message>
-        <location filename="logic/table_models.py" line="24"/>
+        <location filename="logic/table_models.py" line="61"/>
         <source>Designation</source>
         <translation>Bezeichnung</translation>
     </message>
     <message>
-        <location filename="logic/table_models.py" line="25"/>
+        <location filename="logic/table_models.py" line="63"/>
         <source>Rotation Period</source>
         <translation>Rotationsintervall</translation>
     </message>
@@ -319,14 +319,24 @@
         <translation>Verschlüsselung</translation>
     </message>
     <message>
-        <location filename="ui/encryptEditor.ui" line="46"/>
+        <location filename="ui/encryptEditor.ui" line="44"/>
+        <source>...</source>
+        <translation>...</translation>
+    </message>
+    <message>
+        <location filename="ui/encryptEditor.ui" line="61"/>
         <source>Generate Key</source>
         <translation>Schlüssel erzeugen</translation>
     </message>
     <message>
-        <location filename="ui/encryptEditor.ui" line="59"/>
+        <location filename="ui/encryptEditor.ui" line="74"/>
         <source>Encrypt Database</source>
         <translation>DB verschlüsseln</translation>
+    </message>
+    <message>
+        <location filename="ui/encryptEditor.ui" line="87"/>
+        <source>Decrypt Database</source>
+        <translation>Datenbank entschlüsseln</translation>
     </message>
 </context>
 <context>
@@ -428,17 +438,17 @@
 <context>
     <name>OffPeriodModel</name>
     <message>
-        <location filename="logic/table_models.py" line="52"/>
+        <location filename="logic/table_models.py" line="147"/>
         <source>Start</source>
         <translation>Anfang</translation>
     </message>
     <message>
-        <location filename="logic/table_models.py" line="53"/>
+        <location filename="logic/table_models.py" line="149"/>
         <source>End</source>
         <translation>Ende</translation>
     </message>
     <message>
-        <location filename="logic/table_models.py" line="54"/>
+        <location filename="logic/table_models.py" line="151"/>
         <source>Employee</source>
         <translation>Mitarbeiter</translation>
     </message>
@@ -472,26 +482,26 @@
 <context>
     <name>ScheduleModel</name>
     <message>
-        <location filename="logic/table_models.py" line="67"/>
-        <location filename="logic/table_models.py" line="77"/>
+        <location filename="logic/table_models.py" line="184"/>
+        <location filename="logic/table_models.py" line="197"/>
         <source>Date</source>
         <translation>Datum</translation>
     </message>
     <message>
-        <location filename="logic/table_models.py" line="68"/>
-        <location filename="logic/table_models.py" line="78"/>
+        <location filename="logic/table_models.py" line="186"/>
+        <location filename="logic/table_models.py" line="198"/>
         <source>Day Shift</source>
         <translation>Tagschicht</translation>
     </message>
     <message>
-        <location filename="logic/table_models.py" line="69"/>
-        <location filename="logic/table_models.py" line="79"/>
+        <location filename="logic/table_models.py" line="188"/>
+        <location filename="logic/table_models.py" line="199"/>
         <source>Night Shift</source>
         <translation>Nachtschicht</translation>
     </message>
     <message>
-        <location filename="logic/table_models.py" line="70"/>
-        <location filename="logic/table_models.py" line="80"/>
+        <location filename="logic/table_models.py" line="190"/>
+        <location filename="logic/table_models.py" line="200"/>
         <source>Comment</source>
         <translation>Kommentar</translation>
     </message>

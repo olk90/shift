@@ -5,15 +5,15 @@ from typing import Union
 
 import qdarktheme
 from PySide6.QtCore import QItemSelectionModel, QModelIndex, \
-    QPersistentModelIndex, Qt, QSize
-from PySide6.QtGui import QPainter
+    QPersistentModelIndex, Qt
+from PySide6.QtGui import QPainter, QIcon
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QDialog, QWidget, QDialogButtonBox, QHBoxLayout, QMainWindow, QComboBox, QApplication, \
     QLineEdit, QTableView, QAbstractItemView, QHeaderView, QItemDelegate, QStyleOptionViewItem, QTextBrowser, \
-    QMessageBox, QSpinBox, QPlainTextEdit, QPushButton
+    QMessageBox, QSpinBox, QPushButton, QToolButton
 
 from logic.config import properties
-from logic.crypt import generate_key, encrypt_employees
+from logic.crypt import generate_key, encrypt_employees, decrypt_employees
 from logic.table_models import SearchTableModel
 from views.base_functions import load_ui_file
 from views.confirmationDialogs import ConfirmRestartDialog
@@ -110,9 +110,11 @@ class EncryptEditorDialog(EditorDialog):
     def __init__(self, parent: QMainWindow):
         super().__init__(parent=parent, ui_file_name="ui/encryptEditor.ui")
 
-        self.key_edit: QPlainTextEdit = self.get_widget(QPlainTextEdit, "keyEdit")
+        self.key_edit: QLineEdit = self.get_widget(QLineEdit, "keyEdit")
+        self.clipboard_button: QToolButton = self.get_widget(QToolButton, "clipboardButton")
         self.generate_button: QPushButton = self.get_widget(QPushButton, "generateButton")
         self.encrypt_button: QPushButton = self.get_widget(QPushButton, "encryptButton")
+        self.decrypt_button: QPushButton = self.get_widget(QPushButton, "decryptButton")
 
         self.configure_widgets()
 
@@ -122,25 +124,44 @@ class EncryptEditorDialog(EditorDialog):
     def configure_widgets(self):
         super(EncryptEditorDialog, self).configure_widgets()
 
+        copy_icon = QIcon.fromTheme("edit-copy")
+        self.clipboard_button.setIcon(copy_icon)
+
         self.generate_button.clicked.connect(self.generate_key)
+        self.clipboard_button.clicked.connect(self.copy_to_clipboard)
         self.encrypt_button.clicked.connect(self.encrypt_database)
+        self.decrypt_button.clicked.connect(self.decrypt_database)
         self.widget.toggle_buttons(True)
 
     def generate_key(self):
         key = generate_key()
-        self.key_edit.setPlainText(key)
+        self.key_edit.setText(key)
 
     def encrypt_database(self):
         key = properties.encryption_key
         if key is not None:
             encrypt_employees(key)
         else:
-            key = self.key_edit.toPlainText()
+            key = self.key_edit.text()
             if key is not None:
                 encrypt_employees(key)
 
+    def decrypt_database(self):
+        key = properties.encryption_key
+        if key is not None:
+            decrypt_employees(key)
+        else:
+            key = self.key_edit.text()
+            if key is not None:
+                encrypt_employees(key)
+
+    def copy_to_clipboard(self):
+        app = QApplication.instance()
+        value = self.key_edit.text()
+        app.clipboard().setText(value)
+
     def commit(self):
-        key = self.key_edit.toPlainText()
+        key = self.key_edit.text()
         properties.encryption_key = key
         self.close()
 
