@@ -11,6 +11,7 @@ from sqlalchemy import create_engine as ce, and_, extract, or_
 
 from logic import configure_file_handler
 from logic.config import properties
+from logic.crypt import encrypt_string
 from logic.model import create_tables, Employee, EmployeeType, OffPeriod, Schedule, Base
 
 rfh: RotatingFileHandler = configure_file_handler("database")
@@ -94,8 +95,17 @@ def update_employee_type(value_dict: dict):
 def update_employee(value_dict: dict):
     s = properties.open_session()
     employee: Employee = s.query(Employee).filter_by(id=value_dict["item_id"]).first()
-    employee.firstname = value_dict["firstname"]
-    employee.lastname = value_dict["lastname"]
+
+    key = properties.encryption_key
+    firstname = value_dict["firstname"]
+    lastname = value_dict["lastname"]
+    if key is not None:
+        employee.firstname = encrypt_string(key, firstname)
+        employee.lastname = encrypt_string(key, lastname)
+    else:
+        employee.firstname = firstname
+        employee.lastname = lastname
+
     employee.reference_value = value_dict["reference_value"]
     employee.score = value_dict["score"]
     employee.night_shifts = value_dict["night_shifts"]

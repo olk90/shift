@@ -85,8 +85,17 @@ class EmployeeEditorWidget(EditorWidget):
 
     def fill_fields(self, employee: Employee):
         self.item_id = employee.id
-        self.firstname_edit.setText(employee.firstname)
-        self.lastname_edit.setText(employee.lastname)
+
+        firstname = employee.firstname
+        lastname = employee.lastname
+
+        key = properties.encryption_key
+        if key is not None:
+            firstname = decrypt_string(key, firstname)
+            lastname = decrypt_string(key, lastname)
+
+        self.firstname_edit.setText(firstname)
+        self.lastname_edit.setText(lastname)
         self.reference_spinner.setValue(employee.reference_value)
         self.nightshift_edit.setChecked(employee.night_shifts)
         self.score_spinner.setValue(employee.score)

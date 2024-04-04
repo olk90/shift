@@ -6,7 +6,7 @@ from logic.model import Employee
 
 def encrypt_string(key, string_to_encrypt):
     f = Fernet(key)
-    encrypted_string = f.encrypt(string_to_encrypt.encode())
+    encrypted_string = f.encrypt(string_to_encrypt.encode()).decode()
     return encrypted_string
 
 
