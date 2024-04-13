@@ -29,11 +29,10 @@ def load_theme():
 
 if __name__ == "__main__":
     QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
+    app = QApplication()
 
     properties.load_config_file()
     init_database()
-
-    app = QApplication(sys.argv)
 
     load_translations()
     load_theme()
