@@ -20,3 +20,6 @@ simply choose the style in the _Options_ dialog and apply the changes.
 ## Contributing
 
 Miss any feature? Feel free to submit a pull request or open an issue.
+
+I have moved this repository to https://codeberg.org/olk90/shift.git where
+I will continue development.
